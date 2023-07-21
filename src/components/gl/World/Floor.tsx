@@ -1,18 +1,10 @@
+import { MeshProps } from "@react-three/fiber";
 import { forwardRef } from "react";
 import { Mesh } from "three";
 
-type Floor = {
-  setDrag: React.Dispatch<React.SetStateAction<boolean>>;
-};
-
-export const Floor = forwardRef<Mesh, Floor>(({ setDrag }, ref) => (
+export const Floor = forwardRef<Mesh, MeshProps>((props, ref) => (
   // todo : use ref in machine instead
-  <mesh
-    ref={ref}
-    position-y={-1}
-    rotation-x={Math.PI * -0.5}
-    onClick={() => setDrag(false)}
-  >
+  <mesh ref={ref} position-y={-1} rotation-x={Math.PI * -0.5} {...props}>
     <planeBufferGeometry args={[100, 100]} />
     <meshBasicMaterial />
   </mesh>
