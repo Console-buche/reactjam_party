@@ -7,7 +7,7 @@ export const Scene = () => {
     <Canvas style={{ width: "100vw", height: "100vh" }}>
       <World />
       <OrbitControls />
-      <Stats />
+      {/* <Stats /> */}
     </Canvas>
   );
 };
