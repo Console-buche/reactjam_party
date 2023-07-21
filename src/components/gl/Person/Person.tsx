@@ -23,8 +23,13 @@ export const Person = ({
   pos?: Vector3;
 }) => {
   const isExists = useRef(false);
-  const { isDragging, setIsDragging, draggingId, setDraggingId } =
-    useContext(DraggingContext);
+  const {
+    isDragging,
+    setIsDragging,
+    draggingId,
+    setDraggingId,
+    setDraggingRef,
+  } = useContext(DraggingContext);
   const ref = useRef<Mesh>(null);
   const refGroup = useRef<Group>(null);
   const refShadow = useRef<Mesh>(null);
@@ -52,6 +57,7 @@ export const Person = ({
       ref.current.geometry.translate(0, PERSON_HEIGHT * 0.5, 0);
       refGroup.current.position.copy(pos || new Vector3(0, 0, 0));
       isExists.current = true;
+      setDraggingRef(ref.current);
     }
   }, [isExists, pos]);
 

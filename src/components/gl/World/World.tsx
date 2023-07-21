@@ -1,26 +1,28 @@
 import { OrbitControls, Text } from "@react-three/drei";
 import { useSelector } from "@xstate/react";
-import { createContext, useMemo, useRef, useState } from "react";
+import { createContext, useRef, useState } from "react";
 import { Mesh, Vector3 } from "three";
 import { useGameMachineProvider } from "../../../hooks/use";
-import { Person } from "../Person/Person";
-import { DummyBox } from "./DummyBox";
-import { Floor } from "./Floor";
 import { Hotspot } from "../Environment/HotSpot/Hotspot";
+import { Person } from "../Person/Person";
+import { Floor } from "./Floor";
 
 // initialize a react context with two values : isDragging and setIsDragging
 // TODO/nice to have : dragging machine. But this works nice as is.
-
 export const DraggingContext = createContext<{
   isDragging: boolean;
   draggingId: string | null;
   setIsDragging: (isDragging: boolean) => void;
   setDraggingId: (draggingId: string | null) => void;
+  draggingRef: Mesh | null;
+  setDraggingRef: (draggingRef: Mesh | null) => void;
 }>({
   isDragging: false,
   setIsDragging: () => {},
   setDraggingId: () => {},
   draggingId: null,
+  draggingRef: null,
+  setDraggingRef: () => {},
 });
 
 DraggingContext.displayName = "DraggingContext";
@@ -29,27 +31,21 @@ export const World = () => {
   const refFloor = useRef<Mesh>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [draggingId, setDraggingId] = useState<null | string>(null);
+  const [draggingRef, setDraggingRef] = useState<null | Mesh>(null);
 
   const service = useGameMachineProvider();
   const PISS_COUNT = useSelector(service, (state) => state.context.PISS_COUNT);
 
-  // const dummyBoxes = useMemo(
-  //   () =>
-  //     Array.from({ length: 50 }, (_, i) => ({
-  //       i,
-  //       scaleY: Math.random() * 3 + 1,
-  //       pos: new Vector3(
-  //         Math.random() * 50 - 25,
-  //         -0.5,
-  //         Math.random() * 50 - 25
-  //       ),
-  //     })),
-  //   []
-  // );
-
   return (
     <DraggingContext.Provider
-      value={{ isDragging, setIsDragging, setDraggingId, draggingId }}
+      value={{
+        isDragging,
+        setIsDragging,
+        setDraggingId,
+        draggingId,
+        draggingRef,
+        setDraggingRef,
+      }}
     >
       {!isDragging && <OrbitControls />}
 
