@@ -1,4 +1,4 @@
-import { useSpring, a, easings } from "@react-spring/three";
+import { useSpring, a } from "@react-spring/three";
 import { Html, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useContext, useEffect, useId, useRef } from "react";
@@ -44,21 +44,17 @@ export const Person = ({
 
   const isBeingDragged = draggingId === uuid;
 
-  const { spring } = useSpring({
-    spring: isBeingDragged,
-    config: {
-      mass: 1,
-      tension: 1000,
-      friction: 30,
-      easing: easings.easeInCirc,
-    },
+  // setup easings
+  const shadow = useSpring({
+    opacity: isBeingDragged ? 0.9 : 0.1,
+    color: isBeingDragged ? "#FFA500" : "grey", // orange to grey
+    scale: isBeingDragged
+      ? ([1.25, 1.25, 1.25] as const)
+      : ([0.75, 0.75, 0.75] as const),
   });
 
-  // interpolate values from commong spring
-  const scale = spring.to([0, 1], [1, 1.1]);
-  const opacity = spring.to([0, 1], [0.3, 0.6]);
-
   useEffect(() => {
+    // init position & transform offsets
     if (ref.current && refGroup.current && !isExists.current) {
       ref.current.geometry.translate(0, PERSON_HEIGHT * 0.5, 0);
       refGroup.current.position.copy(pos || new Vector3(0, 0, 0));
@@ -121,7 +117,6 @@ export const Person = ({
             setDraggingId(null);
             setIsDragging(false);
           }}
-          scale={isBeingDragged ? [1, 1.2, 1] : 1}
         >
           <planeBufferGeometry args={[2, PERSON_HEIGHT]} />
           <meshBasicMaterial map={tex} transparent alphaTest={0.1} />
@@ -132,25 +127,27 @@ export const Person = ({
           ref={refShadow}
           rotation-x={Math.PI * -0.5}
           position-y={-0.9}
-          scale={scale}
+          scale={shadow.scale}
         >
           <circleBufferGeometry />
           {/* @ts-ignore */}
           <a.meshLambertMaterial
-            color="black"
             transparent
-            opacity={opacity}
+            opacity={shadow.opacity}
             depthWrite={false}
+            color={shadow.color}
           />
         </a.mesh>
         <Html>
           <button
+            style={{ position: "absolute", right: -100, top: 0 }}
             type={"button"}
             onClick={() => service.send({ type: "onDrag" })}
           >
             On Drag
           </button>
           <button
+            style={{ position: "absolute", right: -100, top: 20 }}
             type={"button"}
             onClick={() => service.send({ type: "onDrop", action: "drink" })}
           >
