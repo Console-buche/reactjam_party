@@ -1,6 +1,5 @@
 import { useId, useRef } from "react";
 import { Mesh, Vector3 } from "three";
-import { DropSpotQuality } from "../HotSpot/types";
 import { DropSpot } from "./DropSpot";
 import { DROPSPOT_SIZE, RING_SIZE, RING_WIDTH } from "./dropSpots.constants";
 

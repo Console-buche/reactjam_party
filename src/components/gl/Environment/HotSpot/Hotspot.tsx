@@ -19,29 +19,45 @@ type HotSpotProps = {
   dropSpotQuality: DropSpotQuality;
 } & MeshProps;
 
+type State = {
+  personsIdsOnSpot: Set<string>;
+  spotIdsAndAvailability: Map<number, boolean>;
+};
+
 type Action =
   | {
       type: "ADD";
-      payload: { uuid: string; isDragging: boolean; onHotSpotDrop: () => void };
+      payload: {
+        uuid: string;
+        isDragging: boolean;
+        onHotSpotDrop: () => void;
+        spotId: number;
+      };
     }
   | { type: "REMOVE"; payload: string }; // TODO
 
-type DropSpot = {
-  spotsSet: Set<string>;
-};
-
 // TODO : removing happens when person is dragged & dropped outside of the dropspot
 
-function hopSpotReducer(state: Set<string>, action: Action) {
+function hopSpotReducer(state: State, action: Action): State {
   switch (action.type) {
     case "ADD":
       if (!action.payload.isDragging) {
         return state;
       }
-      const updatedSet = new Set(state.add(action.payload.uuid));
+      const personsIdsOnSpot = new Set(
+        ...state.personsIdsOnSpot,
+        action.payload.uuid
+      );
+
+      const currentSpotIds = new Map(state.spotIdsAndAvailability);
+      currentSpotIds.delete(action.payload.spotId);
+      const spotIdsAndAvailability = currentSpotIds;
+
       action.payload.onHotSpotDrop();
-      console.log("dropped");
-      return updatedSet;
+      return {
+        personsIdsOnSpot,
+        spotIdsAndAvailability,
+      };
 
     case "REMOVE":
       // TODO
@@ -54,14 +70,6 @@ function hopSpotReducer(state: Set<string>, action: Action) {
 
 export const Hotspot = ({ type, dropSpotQuality, ...props }: HotSpotProps) => {
   const { isDragging, draggingRef } = useContext(DraggingContext);
-
-  const [isHovered, setIsHovered] = useState(false);
-  const [_, dispatch] = useReducer<React.Reducer<Set<string>, Action>>(
-    hopSpotReducer,
-    new Set()
-  );
-
-  const refHotSpot = useRef<Mesh>(null);
   const uuid = useId();
 
   const positions = useMemo(
@@ -77,6 +85,18 @@ export const Hotspot = ({ type, dropSpotQuality, ...props }: HotSpotProps) => {
     []
   );
 
+  const [isHovered, setIsHovered] = useState(false);
+  const [_, dispatch] = useReducer<React.Reducer<State, Action>>(
+    hopSpotReducer,
+    {
+      personsIdsOnSpot: new Set(),
+      spotIdsAndAvailability: new Map([...positions].map((_, i) => [i, true])),
+    }
+  );
+
+  // console.log(_);
+  const refHotSpot = useRef<Mesh>(null);
+
   return (
     <group>
       <mesh
@@ -84,17 +104,29 @@ export const Hotspot = ({ type, dropSpotQuality, ...props }: HotSpotProps) => {
         onPointerLeave={() => setIsHovered(false)}
         ref={refHotSpot}
         uuid={uuid}
-        onPointerUp={() =>
+        onPointerUp={() => {
+          const availableSpotId = Array.from(
+            _.spotIdsAndAvailability.entries()
+          ).find(([, isAvailable]) => isAvailable)?.[0];
+
           dispatch({
             type: "ADD",
             payload: {
               uuid,
+              spotId: availableSpotId ?? 0, // FIXME : PERSONS shouldn't stack. If no available spot: do somthing.
               isDragging,
-              onHotSpotDrop: () =>
-                draggingRef?.position.set(...positions[0].pos.toArray()),
+              onHotSpotDrop: () => {
+                const worldPosition = refHotSpot.current?.localToWorld(
+                  positions[0].pos.clone()
+                );
+                if (!worldPosition) {
+                  return;
+                }
+                draggingRef?.position.set(...worldPosition.toArray());
+              },
             },
-          })
-        }
+          });
+        }}
         onPointerDown={() => {}}
         {...props}
       >

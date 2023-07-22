@@ -1,6 +1,8 @@
 import { useFrame } from "@react-three/fiber";
+import { useSelector } from "@xstate/react";
 import { useMemo, useRef } from "react";
 import { BufferGeometry, Mesh } from "three";
+import { usePersonMachineProvider } from "../../../hooks/use";
 
 const vertexShader = `
     varying vec2 vUv;
@@ -26,6 +28,7 @@ const fragmentShader = `
 `;
 
 export const Statbar = () => {
+  const service = usePersonMachineProvider();
   const ref = useRef<Mesh<BufferGeometry, THREE.ShaderMaterial>>(null);
 
   const uniforms = useMemo(
@@ -46,7 +49,7 @@ export const Statbar = () => {
 
     // TODO : add bounds + decrease on event only
     ref.current.material.uniforms.percent.value =
-      ref.current.material.uniforms.percent.value + 0.001;
+      service.getSnapshot().context.thirst / 100;
 
     ref.current.material.uniformsNeedUpdate = true;
   });

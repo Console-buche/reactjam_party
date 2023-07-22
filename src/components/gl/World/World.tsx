@@ -1,7 +1,7 @@
-import { OrbitControls, Text } from "@react-three/drei";
+import { OrbitControls } from "@react-three/drei";
 import { useSelector } from "@xstate/react";
 import { createContext, useRef, useState } from "react";
-import { Mesh, Vector3 } from "three";
+import { Group, Mesh } from "three";
 import { useGameMachineProvider } from "../../../hooks/use";
 import { Hotspot } from "../Environment/HotSpot/Hotspot";
 import { Person } from "../Person/Person";
@@ -14,8 +14,8 @@ export const DraggingContext = createContext<{
   draggingId: string | null;
   setIsDragging: (isDragging: boolean) => void;
   setDraggingId: (draggingId: string | null) => void;
-  draggingRef: Mesh | null;
-  setDraggingRef: (draggingRef: Mesh | null) => void;
+  draggingRef: Group | null;
+  setDraggingRef: (draggingRef: Group | null) => void;
 }>({
   isDragging: false,
   setIsDragging: () => {},
@@ -31,10 +31,10 @@ export const World = () => {
   const refFloor = useRef<Mesh>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [draggingId, setDraggingId] = useState<null | string>(null);
-  const [draggingRef, setDraggingRef] = useState<null | Mesh>(null);
+  const [draggingRef, setDraggingRef] = useState<Group | null>(null);
 
-  const service = useGameMachineProvider();
-  const PISS_COUNT = useSelector(service, (state) => state.context.PISS_COUNT);
+  const gameService = useGameMachineProvider();
+  const persons = useSelector(gameService, (state) => state.context.persons);
 
   return (
     <DraggingContext.Provider
@@ -57,14 +57,15 @@ export const World = () => {
         }}
       />
 
-      <Person refFloor={refFloor} pos={new Vector3(9, 0, 5)} />
+      {persons.map(({ id }) => (
+        <Person key={id} refFloor={refFloor} />
+      ))}
+
+      {/* <Person refFloor={refFloor} pos={new Vector3(9, 0, 5)} />
       <Person refFloor={refFloor} pos={new Vector3(-3, 0, 0)} />
       <Person refFloor={refFloor} pos={new Vector3(-1, 0, 5)} />
-      <Person refFloor={refFloor} pos={new Vector3(-10, 0, 10)} />
+      <Person refFloor={refFloor} pos={new Vector3(-10, 0, 10)} /> */}
 
-      <Text color={"red"} position-y={3} scale={10}>
-        {PISS_COUNT}
-      </Text>
       {/* {dummyBoxes.map(({ i, scaleY, pos }) => ( */}
       <Hotspot type="battery" dropSpotQuality={5} position={[-6, 0, -7]} />
       <Hotspot type="drink" dropSpotQuality={7} position={[3, 0, -10]} />

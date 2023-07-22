@@ -1,23 +1,21 @@
-import { useInterpret } from "@xstate/react";
+import { useMachine } from "@xstate/react";
 import { Scene } from "./components/gl/Scene";
 import { GameMachineProvider } from "./hooks/use";
-import { personMachine } from "./machines/person.machine";
+import { gameMachine } from "./machines/game.machine";
 import "./style/App.css";
 
 function App() {
-  // const [state, send, service] = useMarchine(personMachine);
-  const service = useInterpret(personMachine);
+  const [state, _, service] = useMachine(gameMachine);
 
   return (
     <GameMachineProvider value={service}>
-      {/* {JSON.stringify(state.event)}
-
-      <button type={"button"} onClick={() => send({ type: "on drag" })}>
-        On Drag
+      {JSON.stringify(state.context)}
+      <button onClick={() => service.send({ type: "onAddPerson" })}>
+        add person
       </button>
-      <button type={"button"} onClick={() => send({ type: "Dropped" })}>
-        Dropped
-      </button> */}
+      <button onClick={() => service.send({ type: "onRemovePerson", id: "1" })}>
+        remove person
+      </button>
       <Scene />
     </GameMachineProvider>
   );

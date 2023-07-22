@@ -1,30 +1,32 @@
-import { createMachine } from 'xstate';
+import { assign, createMachine } from "xstate";
 
 export const personMachine = createMachine(
   {
-    id: 'Person',
+    id: "Person",
     context: {
+      amounts: {
+        peeAmount: 25,
+        drinkAmount: 10,
+        hypeAmount: 50,
+      },
       thirst: 0,
       hype: 50,
-      action: 'none',
+      action: "none",
     },
-    description: 'A person',
-    initial: 'Resting',
+    description: "A person",
+    initial: "Resting",
     states: {
       Resting: {
-        initial: 'Idle',
+        initial: "Idle",
         states: {
           Idle: {
             after: {
-              '1000': [
+              "1000": [
                 {
-                  target: '#Person.Resting.Idle',
+                  target: "#Person.Resting.Idle",
                   actions: [
                     {
-                      params: {
-                        amount: 5,
-                      },
-                      type: 'decreaseHype',
+                      type: "decreaseHype",
                     },
                   ],
                 },
@@ -35,7 +37,7 @@ export const personMachine = createMachine(
             },
             on: {
               onDrag: {
-                target: 'Dragging',
+                target: "Dragging",
               },
             },
           },
@@ -43,11 +45,15 @@ export const personMachine = createMachine(
             on: {
               onDrop: [
                 {
-                  target: '#Person.Doing',
-                  cond: 'onAction',
+                  target: "#Person.Doing.Drinking",
+                  cond: "actionIsDrink",
                 },
                 {
-                  target: 'Idle',
+                  target: "#Person.Doing.Pissing",
+                  cond: "actionIsPiss",
+                },
+                {
+                  target: "Idle",
                 },
               ],
             },
@@ -55,87 +61,48 @@ export const personMachine = createMachine(
         },
       },
       Doing: {
-        initial: 'BeginAction',
         states: {
-          BeginAction: {
-            always: [
-              {
-                target: 'Drinking',
-                cond: 'actionIsDrink',
-              },
-              {
-                target: 'Pissing',
-                cond: 'ActionIsPiss',
-              },
-            ],
-          },
           Drinking: {
             after: {
-              '1000': [
+              "1000": [
                 {
-                  target: '#Person.Doing.Drinking',
-                  cond: 'thirsty',
+                  target: "#Person.Doing.Drinking",
+                  cond: "thirsty",
                   actions: [
                     {
-                      params: {
-                        amount: 10,
-                      },
-                      type: 'drink',
+                      type: "drink",
                     },
                     {
-                      params: {
-                        amount: 5,
-                      },
-                      type: 'increaseHype',
+                      type: "increaseHype",
                     },
                   ],
                 },
                 {
-                  internal: true,
-                },
-                {
-                  target: '#Person.Blocking.PissingHimself',
-                  cond: 'thirstFull',
+                  target: "#Person.Blocking.PissingHimself",
+                  cond: "thirstFull",
                   actions: [
                     {
-                      params: {
-                        amount: 50,
-                      },
-                      type: 'decreaseHype',
+                      type: "decreaseHype",
                     },
                   ],
-                },
-                {
-                  internal: false,
                 },
               ],
             },
           },
           Pissing: {
             after: {
-              '1000': [
+              "1000": [
                 {
-                  target: '#Person.Doing.Pissing',
-                  cond: 'canPee',
+                  cond: "canPee",
                   actions: [
                     {
-                      params: {
-                        amount: 25,
-                      },
-                      type: 'piss',
+                      type: "piss",
                     },
                   ],
                 },
                 {
-                  internal: false,
-                },
-                {
-                  target: '#Person.Resting',
-                  cond: 'thirstEmpty',
-                  actions: [],
-                },
-                {
-                  internal: false,
+                  target: "#Person.Resting",
+                  cond: "thirstEmpty",
                 },
               ],
             },
@@ -143,7 +110,7 @@ export const personMachine = createMachine(
         },
         on: {
           onDrag: {
-            target: '#Person.Resting.Dragging',
+            target: "#Person.Resting.Dragging",
           },
         },
       },
@@ -151,7 +118,7 @@ export const personMachine = createMachine(
         states: {
           PissingHimself: {
             always: {
-              target: '#Person.Resting',
+              target: "#Person.Resting",
             },
           },
         },
@@ -161,41 +128,63 @@ export const personMachine = createMachine(
       context: {} as {
         thirst: number;
         hype: number;
-        action: 'none' | 'drink' | 'piss';
+        action: "none" | "drink" | "piss";
+        amounts: {
+          peeAmount: number;
+          drinkAmount: number;
+          hypeAmount: number;
+        };
       },
-      events: {} as { type: 'onDrag' } | { type: 'onDrop' },
+      events: {} as
+        | { type: "onDrag" }
+        | { type: "onDrop"; action: "drink" | "piss" | "none" },
       actions: {} as
-        | { type: 'drink'; amount: number }
-        | { type: 'piss'; amount: number }
-        | { type: 'increaseHype'; amount: number }
-        | { type: 'decreaseHype'; amount: number },
+        | { type: "drink" }
+        | { type: "piss" }
+        | { type: "increaseHype" }
+        | { type: "decreaseHype" },
     },
     predictableActionArguments: true,
     preserveActionOrder: true,
-    tsTypes: {} as import('./person.machine.typegen').Typegen0,
+    tsTypes: {} as import("./person.machine.typegen").Typegen0,
   },
   {
     actions: {
-      drink: (context, _, meta) => {
-        context.thirst += meta.action.amount;
-      },
-      piss: (context, _, meta) => {
-        context.thirst -= meta.action.amount;
-      },
-      increaseHype: (context, _, meta) => {
-        context.hype += meta.action.amount;
-      },
-      decreaseHype: (context, _, meta) => {
-        context.hype -= meta.action.amount;
-      },
+      drink: assign((context) => {
+        return {
+          ...context,
+          thirst: context.thirst + context.amounts.drinkAmount,
+        };
+      }),
+      piss: assign((context) => {
+        return {
+          ...context,
+          thirst: context.thirst - context.amounts.peeAmount,
+        };
+      }),
+      increaseHype: assign((context) => {
+        return {
+          ...context,
+          hype: context.hype + context.amounts.hypeAmount,
+        };
+      }),
+      decreaseHype: assign((context) => {
+        return {
+          ...context,
+          hype: context.hype - context.amounts.hypeAmount,
+        };
+      }),
     },
     services: {},
     guards: {
-      thirsty: (context, _) => context.thirst < 100,
-      thirstFull: (context, _) => context.thirst === 100,
-      onAction: (context, _) => context.action !== 'none',
-      actionIsDrink: (context, _) => context.action === 'drink',
-      ActionIsPiss: (context, _) => context.action === 'piss',
+      thirsty: (context, _) => {
+        return context.thirst < 100;
+      },
+      thirstFull: (context, _) => {
+        return context.thirst === 100;
+      },
+      actionIsDrink: (_, event) => event.action === "drink",
+      actionIsPiss: (_, event) => event.action === "piss",
       canPee: (context, _) => context.thirst > 0,
       thirstEmpty: (context, _) => context.thirst === 0,
     },

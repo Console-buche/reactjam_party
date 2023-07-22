@@ -1,5 +1,5 @@
 import { useSpring, a, easings } from "@react-spring/three";
-import { useTexture } from "@react-three/drei";
+import { Html, useTexture } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { useContext, useEffect, useId, useRef } from "react";
 import {
@@ -12,6 +12,9 @@ import {
 } from "three";
 import { DraggingContext } from "../World/World";
 import { Statbar } from "./Statbar";
+import { useInterpret } from "@xstate/react";
+import { personMachine } from "../../../machines/person.machine";
+import { PersonMachineProvider } from "../../../hooks/use";
 
 const PERSON_HEIGHT = 4;
 
@@ -22,6 +25,8 @@ export const Person = ({
   refFloor: React.RefObject<Mesh<BufferGeometry, Material | Material[]>>;
   pos?: Vector3;
 }) => {
+  const service = useInterpret(personMachine);
+
   const isExists = useRef(false);
   const {
     isDragging,
@@ -30,6 +35,7 @@ export const Person = ({
     setDraggingId,
     setDraggingRef,
   } = useContext(DraggingContext);
+
   const ref = useRef<Mesh>(null);
   const refGroup = useRef<Group>(null);
   const refShadow = useRef<Mesh>(null);
@@ -57,7 +63,6 @@ export const Person = ({
       ref.current.geometry.translate(0, PERSON_HEIGHT * 0.5, 0);
       refGroup.current.position.copy(pos || new Vector3(0, 0, 0));
       isExists.current = true;
-      setDraggingRef(ref.current);
     }
   }, [isExists, pos]);
 
@@ -102,40 +107,57 @@ export const Person = ({
   });
 
   return (
-    <group ref={refGroup}>
-      <mesh
-        ref={ref}
-        uuid={uuid}
-        onPointerDown={() => {
-          setIsDragging(true);
-          ref.current && setDraggingId(uuid);
-        }}
-        onPointerUp={() => {
-          setDraggingId(null);
-          setIsDragging(false);
-        }}
-        scale={isBeingDragged ? [1, 1.2, 1] : 1}
-      >
-        <planeBufferGeometry args={[2, PERSON_HEIGHT]} />
-        <meshBasicMaterial map={tex} transparent alphaTest={0.1} />
-      </mesh>
-      <Statbar />
+    <PersonMachineProvider value={service}>
+      <group ref={refGroup}>
+        <mesh
+          ref={ref}
+          uuid={uuid}
+          onPointerDown={() => {
+            setIsDragging(true);
+            setDraggingRef(refGroup.current);
+            ref.current && setDraggingId(uuid);
+          }}
+          onPointerUp={() => {
+            setDraggingId(null);
+            setIsDragging(false);
+          }}
+          scale={isBeingDragged ? [1, 1.2, 1] : 1}
+        >
+          <planeBufferGeometry args={[2, PERSON_HEIGHT]} />
+          <meshBasicMaterial map={tex} transparent alphaTest={0.1} />
+        </mesh>
+        <Statbar />
 
-      <a.mesh
-        ref={refShadow}
-        rotation-x={Math.PI * -0.5}
-        position-y={-0.9}
-        scale={scale}
-      >
-        <circleBufferGeometry />
-        {/* @ts-ignore */}
-        <a.meshLambertMaterial
-          color="black"
-          transparent
-          opacity={opacity}
-          depthWrite={false}
-        />
-      </a.mesh>
-    </group>
+        <a.mesh
+          ref={refShadow}
+          rotation-x={Math.PI * -0.5}
+          position-y={-0.9}
+          scale={scale}
+        >
+          <circleBufferGeometry />
+          {/* @ts-ignore */}
+          <a.meshLambertMaterial
+            color="black"
+            transparent
+            opacity={opacity}
+            depthWrite={false}
+          />
+        </a.mesh>
+        <Html>
+          <button
+            type={"button"}
+            onClick={() => service.send({ type: "onDrag" })}
+          >
+            On Drag
+          </button>
+          <button
+            type={"button"}
+            onClick={() => service.send({ type: "onDrop", action: "drink" })}
+          >
+            Dropped
+          </button>
+        </Html>
+      </group>
+    </PersonMachineProvider>
   );
 };

@@ -1,8 +1,12 @@
-import { InterpreterFrom } from "xstate";
+import { ActorRefFrom, InterpreterFrom } from "xstate";
 import { createContextWithHook } from "../context/machineContext";
 import { personMachine } from "../machines/person.machine";
+import { gameMachine } from "../machines/game.machine";
+
+export const [PersonMachineProvider, usePersonMachineProvider] =
+  createContextWithHook<InterpreterFrom<typeof personMachine>>(
+    "PersonMarchineContext"
+  );
 
 export const [GameMachineProvider, useGameMachineProvider] =
-  createContextWithHook<InterpreterFrom<typeof personMachine>>(
-    "GameMachineContext"
-  );
+  createContextWithHook<ActorRefFrom<typeof gameMachine>>("GameMachineContext");
