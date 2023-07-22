@@ -1,7 +1,6 @@
 import { useFrame } from "@react-three/fiber";
-import { useSelector } from "@xstate/react";
 import { useMemo, useRef } from "react";
-import { BufferGeometry, Mesh } from "three";
+import { BufferGeometry, MathUtils, Mesh } from "three";
 import { usePersonMachineProvider } from "../../../hooks/use";
 
 const vertexShader = `
@@ -17,7 +16,7 @@ const fragmentShader = `
     varying vec2 vUv;
     void main() {
 
-        if (vUv.x > percent && vUv.y > 0.05 && vUv.y < 0.95 && vUv.x < 0.99) {
+        if (vUv.x > percent && vUv.y > 0.05 && vUv.y < 0.95 && vUv.x < 0.99 && vUv.x > 0.01) {
 
             discard;
 
@@ -48,8 +47,11 @@ export const Statbar = () => {
     // update stat
 
     // TODO : add bounds + decrease on event only
-    ref.current.material.uniforms.percent.value =
-      service.getSnapshot().context.thirst / 100;
+    ref.current.material.uniforms.percent.value = MathUtils.lerp(
+      ref.current.material.uniforms.percent.value,
+      service.getSnapshot().context.thirst / 100,
+      0.1
+    );
 
     ref.current.material.uniformsNeedUpdate = true;
   });
