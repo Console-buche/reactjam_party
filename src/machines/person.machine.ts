@@ -172,7 +172,6 @@ export const personMachine = createMachine(
         | { type: 'onDrop'; action: 'drink' | 'piss' | 'none' }
         | { type: 'triggerPee' }
         | { type: 'triggerDrink' }
-        | { type: 'triggerNeeds' }
         | { type: 'triggerStart' }
         | { type: 'onTick' },
       actions: {} as
