@@ -26,9 +26,6 @@ dependencies:
   '@xstate/react':
     specifier: ^3.2.2
     version: 3.2.2(@types/react@18.2.15)(react@18.2.0)(xstate@4.38.1)
-  D:
-    specifier: ^1.0.0
-    version: 1.0.0
   leva:
     specifier: ^0.9.35
     version: 0.9.35(@types/react-dom@18.2.7)(@types/react@18.2.15)(react-dom@18.2.0)(react@18.2.0)
@@ -3080,11 +3077,6 @@ packages:
       xstate: 4.38.1
     transitivePeerDependencies:
       - '@types/react'
-    dev: false
-
-  /D@1.0.0:
-    resolution: {integrity: sha512-nQvrCBu7K2pSSEtIM0EEF03FVjcczCXInMt3moLNFbjlWx6bZrX72uT6/1uAXDbnzGUAx9gTyDiQ+vrFi663oA==}
-    deprecated: Package no longer supported. Contact support@npmjs.com for more info.
     dev: false
 
   /abort-controller@3.0.0:
