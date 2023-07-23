@@ -1,5 +1,5 @@
 import { MathUtils } from 'three';
-import { assign, createMachine } from 'xstate';
+import { assign, createMachine, sendTo } from 'xstate';
 
 const METERS_CONFIG = {
   thirst: {
@@ -28,10 +28,12 @@ const METERS_CONFIG = {
 // -----------------------------------------------------------------
 export const personMachine = createMachine(
   {
-    /** @xstate-layout N4IgpgJg5mDOIC5QAUwCdYHsB2BiALmgJZQxqpgDaADALqKgAOmsR+RODIAHogCwBmAJwA6AEzUAbAEZq1IUIAcAdgCs05QBoQAT0QBaIWOnjVAXzPbUGHAWKl0AEWLYA1jXpIQzVu05feBAFpEzFVbT0EQ2NTCyt0LDxCEjIAOTBIWA8uHzYObC5A1WUTAVUBQUkhGWVqaTEIgyNQ80sQa0SRACU4dmwoEQBJCAAbMFwcZwBDKGyvXL8CgINa0UU5RWLq2TFFRqiq6hFN5Uk1RQF5C+k49oScbt6ifqHR8e5YfCn8MBEpgDMfmgABSyOQASlwHQePU+zwGwzGcyYLDy-lAgX0klUqhE1DEyj49WukgEZX2+k2khEwiJqjEu3pxmUt2h2EecJe01I8Im2GcmEYyO8qMWhQMuwEIhK0lUCmEssEYQph2OxTOqguV2CrPu7NhfQG3KgvMmaEFlGknhRvny4qiYmqIkEikVYkkxj4Kgp6pECiEciMAekQmULLabI5hpExtN-PNQrE1pFtvRPAl6xE9VU2IUiiJQj4kgpfHpzoUgcddVD4fiNnZjkwce5woWduWUT4pedfCMWoktS94V0K0J4l7dQE2JKYl7uvrMabXJcrl5Hy+Pz+gPQoLk1Ehkcb8JjK-hrdF7Yx-FDeOKinv+KJpyLFNOJlLxgEimn9TnEb1i7Hs4zyrv0uDrt8vwAkCu4QlCAFHsuIFnlaOQXmmgSuoofrGEI6iOrS5SvjIzr0tIX4-rOQjzp0iEDMgRCwKwYEQZu0E7mC+7wQudEiAxTFnnQaGpksV4IKoRI0lIOKCAIYiXJIxYjlE5TUgyOIlMowY1jRDy8fxzFQOBnyQVuMGcQeCFLvRjGGZayZthhiBlviYZBrK9K0kpkT6PS2G9gG8hViGYa6eyABCIyYAAxqBNkCf0AASRAALawGAIz-Lg54ifaOYUpxxzUMoAi1PmkjUHwjoWG02CYBAcBcGywloqJ6ZROsuLrNQJzbPiezKfoIRyUVJWnDm6z3ooYVRvCLVih2+hqMoRU9VsMj9RShZSoohbSHwPVEvUCgzQax6ImA82Xu1WKZpca3UGS0ikuSg3nD2YLCJIfBhvmp1PMuMwmv0V1OZ2qhHAyBISPSxWVZsKoBmqpznJcSg6v+PHWaDbWBMEUpVIoBK1BJuahhS+bYXhnoet+6h4TNvHAW4c3zOhuOIFOJiE8T1Ck3K5ODRqyMalq6M3JjtHWXxtmszarX2lVuI82GfNFgLWiDb6-qVtpoWSw8kUxXFOP2q6K1duU2Zbd2AX4sS2Ihq0dadEbsXHgZ8LJWlGX-KbHZ0z2VvKoNJx+hW5GUX+FhAA */
+    /** @xstate-layout N4IgpgJg5mDOIC5QAUwCdYHsB2A6AhgMYAuAljgGIA2mA7gMTFqlQxqpgDaADALqKgADplikyOASAAeiAOwAmADQgAnogCcAFnm4AzPoOGDAX2PLUGHARLls1Oo2at0AEWbYA1j35IQw0eLYkjIICspqCACMkQAcurhxRkmm5uhYeESB9rS4AEpwZNhQuACSEFRg9Dhu+FDekv5itsGIAKwxMbgAbK1d8q3hiF1dkbjciUkmZiAW6dZZNDn5sIXFZRX0Uiv4xGAEAGa7aAAUkdznAJT0s1aZttl5BaRFpeVcfA0iTRK+IZq6XT0-1kA1UbVamlw-RSMzStxslEWjxWz2KNVYqKq2DcmEE9V8jUCLQQ6i6kP6gyi3C68XGk0MMJuGQRdiRy1WuHRUEx1TQuM4kR8Qi+RN+GjJUNBER6slwkWGCsVw1ajLhzIWdGRHK5POxfLx8iFfhFzTFCHanR6fSlQzOuHa9KmqUs6vuSJcmF16PxwoCptAf24o10wJtCABKumTPmbs1HtRnPcHkxW2IOz2+EO6FO524V2jd0Rcc9Lzcz2TRR9xr9PwDiEi8lkgPkpJiIMpZNauFkdPkXVkMVaALbqpdMaLOXjpaTKe2uwORxzl2uavHrOLCbLnlRAqNhP90kQMSUYKi6i7kedc0L68nJeKyFIsFERU2c4zWZOZ2XBZZDynD5Pi+dQfASJq1oeUSNp0x7cLoDZhpoba4OecR9gOQ5dG2mijtef7uveuCPs+s5pvOmaLt+eYrmON7-oRxHAbunw1kEZq6OowahpS8GypesK0fhmoAEI0IQFaASRRQABKkAAtrAYBUPs9BVvuEEhLo3Bdtw6i6O2p4xNEeiOk6AlzHJYBHA8JTYHcABulRMCwbAAMppmgxBqeBbF1gg8i6F28ixAog76ZEsjypElKREOXa6PImiRCGQYNv8OFRqulnWUiACCNiOViAAqpDid5rHEiGOjyH2EJnOFkVdDFSWjLFsiaP2IaaK0TZdKY0zYJgEBwJITIsd8vmQQAtI2lIzZCuZwdpEU9UZ0KZYJGq0ONop+cFMXjLh8JbVqqI7QemkdEC+mIcM3atOcyW6a06jyB0fUbXhJ3sgm6xgOdGmIN16gdkO9pHa6E6ndOtTckUAOTSERnBghHYSnSpkQ2u9FnWBFVmg2b1Qq2BkRJo5y4N1iTqB0DbqCC-G-idAGJuWuO+hNxLJf0koDqjp6yAo3a9v2YVYbIWN0QRCaMez1acwTCWytEkVtmG7SyvIIsYcOEufcdsY5KJmDiXL6mI0MIMCzVCQGB12ivX08iS0JRtiRJRFAaiskKUp+wI1zEWUkZ3AmaZuhY9l6DZAHZoxKHwVtm9Q6RY10Wntz8QyiGNKyACugdJHVnR0itkOf9eMK35DadInoUpxFUUxXFCSJcl5PRIlIZFzlmr5WQjmx35+myrp+nJw18rN42lPcO1nWaN1vX9cYQA */
     id: 'Person',
     description:
       'A person is a character in the game, with its needs and actions.',
+    type: 'parallel',
+    initial: 'actionFlow',
     context: {
       meters: {
         thirst: 0,
@@ -40,99 +42,117 @@ export const personMachine = createMachine(
       },
       action: 'none',
     },
-    initial: 'Resting',
-    on: {
-      triggerPee: {
-        target: '#Person.Doing.Pissing',
-      },
-      triggerDrink: {
-        target: '#Person.Doing.Drinking',
-      },
-      triggerNeeds: {
-        target: '#Person.Doing.',
-      },
-    },
     states: {
-      Resting: {
-        initial: 'Idle',
+      actionFlow: {
+        on: {
+          triggerPee: {
+            target: '#Person.actionFlow.Doing.Pissing',
+          },
+          triggerDrink: {
+            target: '#Person.actionFlow.Doing.Drinking',
+          },
+        },
         states: {
-          Idle: {
-            after: {
-              '1000': [
-                {
-                  target: '#Person.Resting.Idle',
-                  actions: 'decreaseHype',
+          Resting: {
+            initial: 'Idle',
+            states: {
+              Idle: {
+                after: {
+                  '1000': [
+                    {
+                      target: '#Person.actionFlow.Resting.Idle',
+                      actions: 'decreaseHype',
+                    },
+                  ],
                 },
-              ],
-            },
-            on: {
-              onDrag: {
-                target: 'Dragging',
+                on: {
+                  onDrag: {
+                    target: 'Dragging',
+                  },
+                },
+              },
+              Dragging: {
+                on: {
+                  onDrop: [
+                    {
+                      target: '#Person.actionFlow.Doing.Drinking',
+                      cond: 'isActionDrink',
+                    },
+                    {
+                      target: '#Person.actionFlow.Doing.Pissing',
+                      cond: 'isActionPiss',
+                    },
+                    'Idle',
+                  ],
+                },
               },
             },
           },
-          Dragging: {
+          Doing: {
+            states: {
+              Drinking: {
+                after: {
+                  '1000': [
+                    {
+                      target: '#Person.actionFlow.Doing.Drinking',
+                      cond: 'isThirsty',
+                      actions: ['drink', 'increaseHype'],
+                    },
+                    {
+                      target: '#Person.actionFlow.Blocking',
+                      cond: 'isPeeFull',
+                      actions: ['decreaseHype', 'emptyPee'],
+                    },
+                  ],
+                },
+              },
+              Pissing: {
+                after: {
+                  '1000': [
+                    {
+                      cond: 'canPee',
+                      actions: 'pee',
+                    },
+                    {
+                      target: '#Person.actionFlow.Resting',
+                      cond: 'isPeeEmpty',
+                    },
+                  ],
+                },
+              },
+            },
             on: {
-              onDrop: [
-                {
-                  target: '#Person.Doing.Drinking',
-                  cond: 'isActionDrink',
+              onDrag: {
+                target: '#Person.actionFlow.Resting.Dragging',
+              },
+            },
+          },
+          Blocking: {
+            initial: 'PissingHimself',
+            states: {
+              PissingHimself: {
+                always: {
+                  target: '#Person.actionFlow.Resting',
                 },
-                {
-                  target: '#Person.Doing.Pissing',
-                  cond: 'isActionPiss',
-                },
-                'Idle',
-              ],
+              },
             },
           },
         },
       },
-      Doing: {
+      meterFlow: {
+        initial: 'Inactive',
         states: {
-          Drinking: {
-            after: {
-              '1000': [
-                {
-                  target: '#Person.Doing.Drinking',
-                  cond: 'isThirsty',
-                  actions: ['drink', 'increaseHype'],
-                },
-                {
-                  target: '#Person.Blocking',
-                  cond: 'isPeeFull',
-                  actions: ['decreaseHype', 'emptyPee'],
-                },
-              ],
+          Inactive: {
+            on: {
+              triggerStart: 'Active',
             },
           },
-          Pissing: {
-            after: {
-              '1000': [
-                {
-                  cond: 'canPee',
-                  actions: 'pee',
-                },
-                {
-                  target: '#Person.Resting',
-                  cond: 'isPeeEmpty',
-                },
-              ],
-            },
-          },
-        },
-        on: {
-          onDrag: {
-            target: '#Person.Resting.Dragging',
-          },
-        },
-      },
-      Blocking: {
-        initial: 'PissingHimself',
-        states: {
-          PissingHimself: {
-            always: {
-              target: '#Person.Resting',
+          Active: {
+            entry: sendTo('onTick', { delay: 500 }),
+            on: {
+              onTick: {
+                actions: 'updateNeeds',
+              },
             },
           },
         },
@@ -152,7 +172,9 @@ export const personMachine = createMachine(
         | { type: 'onDrop'; action: 'drink' | 'piss' | 'none' }
         | { type: 'triggerPee' }
         | { type: 'triggerDrink' }
-        | { type: 'triggerNeeds' },
+        | { type: 'triggerNeeds' }
+        | { type: 'triggerStart' }
+        | { type: 'onTick' },
       actions: {} as
         | { type: 'drink' }
         | { type: 'pee' }
@@ -229,9 +251,6 @@ export const personMachine = createMachine(
             ...context.meters,
             thirst: METERS_CONFIG.thirst.clamp(
               context.meters.thirst + METERS_CONFIG.thirst.incrementValue,
-            ),
-            pee: METERS_CONFIG.pee.clamp(
-              context.meters.pee + METERS_CONFIG.pee.incrementValue,
             ),
           },
         };
