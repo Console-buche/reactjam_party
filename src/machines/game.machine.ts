@@ -1,38 +1,37 @@
-import { ActorRefFrom, assign, createMachine, spawn } from "xstate";
-import { personMachine } from "./person.machine";
+import { ActorRefFrom, assign, createMachine, spawn } from 'xstate';
+import { personMachine } from './person.machine';
 
 export const gameMachine = createMachine(
   {
-    id: "Game",
+    id: 'Game',
     context: {
       persons: [],
     },
     on: {
       onAddPerson: {
-        actions: ["addPerson"],
+        actions: ['addPerson'],
       },
       onRemovePerson: {
-        actions: ["removePerson"],
+        actions: ['removePerson'],
       },
     },
-    description: "Game machine",
+    description: 'Game machine',
 
     schema: {
       context: {} as {
         persons: ActorRefFrom<typeof personMachine>[];
       },
       events: {} as
-        | { type: "onAddPerson" }
-        | { type: "onRemovePerson"; id: string },
+        | { type: 'onAddPerson' }
+        | { type: 'onRemovePerson'; id: string },
     },
     predictableActionArguments: true,
     preserveActionOrder: true,
-    tsTypes: {} as import("./game.machine.typegen").Typegen0,
+    tsTypes: {} as import('./game.machine.typegen').Typegen0,
   },
   {
     actions: {
       addPerson: assign((context) => {
-        console.log("onAddPerson", context);
         return {
           ...context,
           persons: [

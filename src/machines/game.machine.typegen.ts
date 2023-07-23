@@ -1,9 +1,9 @@
 // This file was automatically generated. Edits will be overwritten
 
 export interface Typegen0 {
-  "@@xstate/typegen": true;
+  '@@xstate/typegen': true;
   internalEvents: {
-    "xstate.init": { type: "xstate.init" };
+    'xstate.init': { type: 'xstate.init' };
   };
   invokeSrcNameMap: {};
   missingImplementations: {
@@ -13,8 +13,8 @@ export interface Typegen0 {
     services: never;
   };
   eventsCausingActions: {
-    addPerson: "onAddPerson";
-    removePerson: "onRemovePerson";
+    addPerson: 'onAddPerson';
+    removePerson: 'onRemovePerson';
   };
   eventsCausingDelays: {};
   eventsCausingGuards: {};
