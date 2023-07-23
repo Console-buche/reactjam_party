@@ -1,7 +1,7 @@
-import { useSpring, a } from "@react-spring/three";
-import { Html, useTexture } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
-import { useContext, useEffect, useId, useRef } from "react";
+import { useSpring, a } from '@react-spring/three';
+import { Html, useTexture } from '@react-three/drei';
+import { useFrame } from '@react-three/fiber';
+import { useContext, useEffect, useId, useRef } from 'react';
 import {
   BufferGeometry,
   Group,
@@ -9,12 +9,14 @@ import {
   MathUtils,
   Mesh,
   Vector3,
-} from "three";
-import { DraggingContext } from "../World/World";
-import { Statbar } from "./Statbar";
-import { useInterpret } from "@xstate/react";
-import { personMachine } from "../../../machines/person.machine";
-import { PersonMachineProvider } from "../../../hooks/use";
+} from 'three';
+import { DraggingContext } from '../World/World';
+import { Statbar } from './Statbar';
+import { useInterpret } from '@xstate/react';
+import { personMachine } from '../../../machines/person.machine';
+import { PersonMachineProvider } from '../../../hooks/use';
+import { PersonShadowRecall } from './PersonShadowRecall';
+import { is } from '@react-three/fiber/dist/declarations/src/core/utils';
 
 const PERSON_HEIGHT = 4;
 
@@ -37,9 +39,10 @@ export const Person = ({
   } = useContext(DraggingContext);
 
   const ref = useRef<Mesh>(null);
+  const beforeDragPosition = useRef<Vector3>(new Vector3(0, 0, 0));
   const refGroup = useRef<Group>(null);
   const refShadow = useRef<Mesh>(null);
-  const tex = useTexture("assets/dudess.png");
+  const tex = useTexture('assets/dudess.png');
   const uuid = useId();
 
   const isBeingDragged = draggingId === uuid;
@@ -47,11 +50,17 @@ export const Person = ({
   // setup easings
   const shadow = useSpring({
     opacity: isBeingDragged ? 0.9 : 0.1,
-    color: isBeingDragged ? "#FFA500" : "grey", // orange to grey
+    color: isBeingDragged ? '#FFA500' : 'grey', // orange to grey
     scale: isBeingDragged
       ? ([1.25, 1.25, 1.25] as const)
       : ([0.75, 0.75, 0.75] as const),
   });
+
+  useEffect(() => {
+    if (isBeingDragged && refGroup.current) {
+      beforeDragPosition.current.copy(refGroup.current.position);
+    }
+  }, [isBeingDragged]);
 
   useEffect(() => {
     // init position & transform offsets
@@ -104,57 +113,66 @@ export const Person = ({
 
   return (
     <PersonMachineProvider value={service}>
-      <group ref={refGroup}>
-        <mesh
-          ref={ref}
-          uuid={uuid}
-          onPointerDown={() => {
-            setIsDragging(true);
-            setDraggingRef(refGroup.current);
-            ref.current && setDraggingId(uuid);
-          }}
-          onPointerUp={() => {
-            setDraggingId(null);
-            setIsDragging(false);
-          }}
-        >
-          <planeBufferGeometry args={[2, PERSON_HEIGHT]} />
-          <meshBasicMaterial map={tex} transparent alphaTest={0.1} />
-        </mesh>
-        <Statbar />
+      <>
+        <group ref={refGroup}>
+          <mesh
+            ref={ref}
+            uuid={uuid}
+            onPointerDown={() => {
+              setIsDragging(true);
+              setDraggingRef(refGroup.current);
+              if (refGroup.current) {
+                setDraggingId(uuid);
+                beforeDragPosition.current.copy(refGroup.current.position);
+              }
+            }}
+            onPointerUp={() => {
+              setDraggingId(null);
+              setIsDragging(false);
+            }}
+          >
+            <planeBufferGeometry args={[2, PERSON_HEIGHT]} />
+            <meshBasicMaterial map={tex} transparent alphaTest={0.1} />
+          </mesh>
+          <Statbar />
 
-        <a.mesh
-          ref={refShadow}
-          rotation-x={Math.PI * -0.5}
-          position-y={-0.9}
-          scale={shadow.scale}
-        >
-          <circleBufferGeometry />
-          {/* @ts-ignore */}
-          <a.meshLambertMaterial
-            transparent
-            opacity={shadow.opacity}
-            depthWrite={false}
-            color={shadow.color}
-          />
-        </a.mesh>
-        <Html>
-          <button
-            style={{ position: "absolute", right: -100, top: 0 }}
-            type={"button"}
-            onClick={() => service.send({ type: "onDrag" })}
+          <a.mesh
+            ref={refShadow}
+            rotation-x={Math.PI * -0.5}
+            position-y={-0.9}
+            scale={shadow.scale}
           >
-            On Drag
-          </button>
-          <button
-            style={{ position: "absolute", right: -100, top: 20 }}
-            type={"button"}
-            onClick={() => service.send({ type: "onDrop", action: "drink" })}
-          >
-            Dropped
-          </button>
-        </Html>
-      </group>
+            <circleBufferGeometry />
+            {/* @ts-ignore */}
+            <a.meshLambertMaterial
+              transparent
+              opacity={shadow.opacity}
+              depthWrite={false}
+              color={shadow.color}
+            />
+          </a.mesh>
+          <Html>
+            <button
+              style={{ position: 'absolute', right: -100, top: 0 }}
+              type={'button'}
+              onClick={() => service.send({ type: 'onDrag' })}
+            >
+              On Drag
+            </button>
+            <button
+              style={{ position: 'absolute', right: -100, top: 20 }}
+              type={'button'}
+              onClick={() => service.send({ type: 'onDrop', action: 'drink' })}
+            >
+              Dropped
+            </button>
+          </Html>
+        </group>
+        <PersonShadowRecall
+          beforeDragPosition={beforeDragPosition.current}
+          isBeingDragged={isBeingDragged}
+        />
+      </>
     </PersonMachineProvider>
   );
 };

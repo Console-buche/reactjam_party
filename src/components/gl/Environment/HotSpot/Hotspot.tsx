@@ -1,18 +1,19 @@
+import { MeshProps } from '@react-three/fiber';
 import {
   useContext,
+  useEffect,
   useId,
   useMemo,
   useReducer,
   useRef,
   useState,
-} from "react";
-import { Mesh } from "three";
-import { DropSpots } from "../DropSpots/DropSpots";
-import { DropSpotQuality, HotSpot } from "./types";
-import { MeshProps } from "@react-three/fiber";
-import { DraggingContext } from "../../World/World";
-import { getPositionsOnCircle } from "../../../../helpers/getPositionOnCircle";
-import { DROPSPOT_SIZE, RING_SIZE } from "../DropSpots/dropSpots.constants";
+} from 'react';
+import { CircleGeometry, Mesh } from 'three';
+import { getPositionsOnCircle } from '../../../../helpers/getPositionOnCircle';
+import { DraggingContext } from '../../World/World';
+import { DropSpots } from '../DropSpots/DropSpots';
+import { DROPSPOT_SIZE, RING_SIZE } from '../DropSpots/dropSpots.constants';
+import { DropSpotQuality, HotSpot } from './types';
 
 type HotSpotProps = {
   type: HotSpot;
@@ -26,7 +27,7 @@ type State = {
 
 type Action =
   | {
-      type: "ADD";
+      type: 'ADD';
       payload: {
         uuid: string;
         isDragging: boolean;
@@ -34,13 +35,13 @@ type Action =
         spotId: number;
       };
     }
-  | { type: "REMOVE"; payload: string }; // TODO
+  | { type: 'REMOVE'; payload: string }; // TODO
 
 // TODO : removing happens when person is dragged & dropped outside of the dropspot
 
 function hopSpotReducer(state: State, action: Action): State {
   switch (action.type) {
-    case "ADD":
+    case 'ADD':
       if (!action.payload.isDragging) {
         return state;
       }
@@ -50,7 +51,7 @@ function hopSpotReducer(state: State, action: Action): State {
       );
 
       const currentSpotIds = new Map(state.spotIdsAndAvailability);
-      currentSpotIds.delete(action.payload.spotId);
+      currentSpotIds.set(action.payload.spotId, false);
       const spotIdsAndAvailability = currentSpotIds;
 
       action.payload.onHotSpotDrop();
@@ -59,7 +60,7 @@ function hopSpotReducer(state: State, action: Action): State {
         spotIdsAndAvailability,
       };
 
-    case "REMOVE":
+    case 'REMOVE':
       // TODO
       return state;
 
@@ -69,8 +70,22 @@ function hopSpotReducer(state: State, action: Action): State {
 }
 
 export const Hotspot = ({ type, dropSpotQuality, ...props }: HotSpotProps) => {
+  const refHotSpotGeometry = useRef<CircleGeometry>(null);
+  const refHotSpot = useRef<Mesh>(null);
+  const [isHovered, setIsHovered] = useState(false);
   const { isDragging, draggingRef } = useContext(DraggingContext);
   const uuid = useId();
+
+  const isExists = useRef(false);
+
+  // setup transforms
+  useEffect(() => {
+    if (!refHotSpotGeometry.current || isExists.current) {
+      return;
+    }
+    refHotSpotGeometry.current.rotateX(Math.PI * -0.5);
+    isExists.current = true;
+  }, [isExists]);
 
   const positions = useMemo(
     () =>
@@ -85,7 +100,6 @@ export const Hotspot = ({ type, dropSpotQuality, ...props }: HotSpotProps) => {
     []
   );
 
-  const [isHovered, setIsHovered] = useState(false);
   const [_, dispatch] = useReducer<React.Reducer<State, Action>>(
     hopSpotReducer,
     {
@@ -93,9 +107,6 @@ export const Hotspot = ({ type, dropSpotQuality, ...props }: HotSpotProps) => {
       spotIdsAndAvailability: new Map([...positions].map((_, i) => [i, true])),
     }
   );
-
-  // console.log(_);
-  const refHotSpot = useRef<Mesh>(null);
 
   return (
     <group>
@@ -110,14 +121,14 @@ export const Hotspot = ({ type, dropSpotQuality, ...props }: HotSpotProps) => {
           ).find(([, isAvailable]) => isAvailable)?.[0];
 
           dispatch({
-            type: "ADD",
+            type: 'ADD',
             payload: {
               uuid,
               spotId: availableSpotId ?? 0, // FIXME : PERSONS shouldn't stack. If no available spot: do somthing.
               isDragging,
               onHotSpotDrop: () => {
                 const worldPosition = refHotSpot.current?.localToWorld(
-                  positions[0].pos.clone()
+                  positions[availableSpotId ?? 0].pos.clone()
                 );
                 if (!worldPosition) {
                   return;
@@ -130,9 +141,9 @@ export const Hotspot = ({ type, dropSpotQuality, ...props }: HotSpotProps) => {
         onPointerDown={() => {}}
         {...props}
       >
-        <boxBufferGeometry args={[2, 1]} />
-        <meshBasicMaterial color={isHovered ? "hotpink" : "black"} />
-        {isHovered && <DropSpots positions={positions} />}
+        <circleBufferGeometry args={[RING_SIZE, 16]} ref={refHotSpotGeometry} />
+        <meshBasicMaterial transparent opacity={0.3} color="black" />
+        {isHovered && <DropSpots positions={positions} />}é
       </mesh>
     </group>
   );
