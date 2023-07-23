@@ -47,7 +47,7 @@ function hopSpotReducer(state: State, action: Action): State {
       }
       const personsIdsOnSpot = new Set(
         ...state.personsIdsOnSpot,
-        action.payload.uuid
+        action.payload.uuid,
       );
 
       const currentSpotIds = new Map(state.spotIdsAndAvailability);
@@ -93,11 +93,11 @@ export const Hotspot = ({ type, dropSpotQuality, ...props }: HotSpotProps) => {
         pos: getPositionsOnCircle(
           RING_SIZE - DROPSPOT_SIZE * 0.25,
           dropSpotQuality,
-          i
+          i,
         ),
         uuid: `${uuid}-${i}}`,
       })),
-    []
+    [],
   );
 
   const [_, dispatch] = useReducer<React.Reducer<State, Action>>(
@@ -105,11 +105,11 @@ export const Hotspot = ({ type, dropSpotQuality, ...props }: HotSpotProps) => {
     {
       personsIdsOnSpot: new Set(),
       spotIdsAndAvailability: new Map([...positions].map((_, i) => [i, true])),
-    }
+    },
   );
 
   return (
-    <group>
+    <group position-y={-1.1}>
       <mesh
         onPointerEnter={() => setIsHovered(true)}
         onPointerLeave={() => setIsHovered(false)}
@@ -117,7 +117,7 @@ export const Hotspot = ({ type, dropSpotQuality, ...props }: HotSpotProps) => {
         uuid={uuid}
         onPointerUp={() => {
           const availableSpotId = Array.from(
-            _.spotIdsAndAvailability.entries()
+            _.spotIdsAndAvailability.entries(),
           ).find(([, isAvailable]) => isAvailable)?.[0];
 
           dispatch({
@@ -128,12 +128,13 @@ export const Hotspot = ({ type, dropSpotQuality, ...props }: HotSpotProps) => {
               isDragging,
               onHotSpotDrop: () => {
                 const worldPosition = refHotSpot.current?.localToWorld(
-                  positions[availableSpotId ?? 0].pos.clone()
+                  positions[availableSpotId ?? 0].pos.clone(),
                 );
                 if (!worldPosition) {
                   return;
                 }
-                draggingRef?.position.set(...worldPosition.toArray());
+                const newPos = worldPosition.clone().setY(0);
+                draggingRef?.position.set(...newPos.toArray());
               },
             },
           });
@@ -143,7 +144,7 @@ export const Hotspot = ({ type, dropSpotQuality, ...props }: HotSpotProps) => {
       >
         <circleBufferGeometry args={[RING_SIZE, 16]} ref={refHotSpotGeometry} />
         <meshBasicMaterial transparent opacity={0.3} color="black" />
-        {isHovered && <DropSpots positions={positions} />}é
+        {isHovered && <DropSpots positions={positions} />}
       </mesh>
     </group>
   );

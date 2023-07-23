@@ -17,11 +17,14 @@
     "@react-three/fiber": "8.13.0",
     "@types/three": "0.149.0",
     "@xstate/react": "^3.2.2",
+    "D": "^1.0.0",
     "leva": "^0.9.35",
+    "prettier": "^3.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-spring": "^9.7.2",
     "three": "0.149.0",
+    "three-stdlib": "^2.23.13",
     "xstate": "^4.38.1"
   },
   "devDependencies": {

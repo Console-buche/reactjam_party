@@ -1,11 +1,11 @@
 import { useSelector } from '@xstate/react';
 import { Suspense, createContext, useRef, useState } from 'react';
 import { Group, Mesh } from 'three';
+import { Model } from '../../../../public/assets/Reactjam_party';
 import { useGameMachineProvider } from '../../../hooks/use';
 import { Hotspot } from '../Environment/HotSpot/Hotspot';
 import { Person } from '../Person/Person';
 import { Cam } from './Cam';
-import { Floor } from './Floor';
 
 // initialize a react context with two values : isDragging and setIsDragging
 // TODO/nice to have : dragging machine. But this works nice as is.
@@ -47,9 +47,11 @@ export const World = () => {
         setDraggingRef,
       }}
     >
+      <ambientLight />
+      <directionalLight />
       <Cam isDragging={isDragging} />
 
-      <Floor
+      <Model
         ref={refFloor}
         onPointerUp={() => {
           setIsDragging(false);
@@ -64,7 +66,7 @@ export const World = () => {
       </Suspense>
 
       <Hotspot type="battery" dropSpotQuality={5} position={[-6, 0, -7]} />
-      <Hotspot type="drink" dropSpotQuality={7} position={[3, 0, -10]} />
+      <Hotspot type="drink" dropSpotQuality={7} position={[13, 0, -10]} />
       <Hotspot type="battery" dropSpotQuality={3} position={[3, 0, 10]} />
     </DraggingContext.Provider>
   );
