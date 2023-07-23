@@ -19,7 +19,7 @@ function App() {
   return (
     <GameMachineProvider value={service}>
       {leva['Display machines JSON'] && JSON.stringify(state.context)}
-      <Hud />
+      {/* <Hud /> */}
       <Scene />
     </GameMachineProvider>
   );

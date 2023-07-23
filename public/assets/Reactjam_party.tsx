@@ -33,7 +33,7 @@ export const Model = forwardRef<Mesh, ModelProps>(
       <group
         {...props}
         dispose={null}
-        scale={2}
+        scale={1.8}
         position-y={-1.2}
         rotation-y={0 * DEG2RAD}
       >
