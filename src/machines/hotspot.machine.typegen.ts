@@ -10,7 +10,7 @@ export interface Typegen0 {
   };
   invokeSrcNameMap: {};
   missingImplementations: {
-    actions: never;
+    actions: 'updatePersons';
     delays: never;
     guards: never;
     services: never;
@@ -18,7 +18,7 @@ export interface Typegen0 {
   eventsCausingActions: {
     addPerson: 'onAddPerson';
     removePerson: 'onRemovePerson';
-    updatePersons: 'onUpdatePerson';
+    updatePersons: 'xstate.after(1000)#Hotspot.UpdatingPersons';
   };
   eventsCausingDelays: {};
   eventsCausingGuards: {

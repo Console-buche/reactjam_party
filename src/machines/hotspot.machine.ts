@@ -17,12 +17,7 @@ export const hotspotMachine = createMachine(
         after: {
           '1000': [
             {
-              target: '#Hotspot.UpdatingPersons',
-              actions: [
-                {
-                  type: 'updatePersons',
-                },
-              ],
+              actions: 'updatePersons',
             },
           ],
         },
@@ -37,9 +32,6 @@ export const hotspotMachine = createMachine(
         actions: ['removePerson'],
         cond: 'canRemovePerson',
       },
-      onUpdatePerson: {
-        actions: ['updatePersons'],
-      },
     },
     schema: {
       context: {} as {
@@ -47,7 +39,7 @@ export const hotspotMachine = createMachine(
         maxPersons: number;
       },
       events: {} as
-        | { type: 'onAddPerson' }
+        | { type: 'onAddPerson'; person: ActorRefFrom<typeof personMachine> }
         | { type: 'onRemovePerson'; id: string }
         | { type: 'onUpdatePerson' },
 
@@ -62,18 +54,10 @@ export const hotspotMachine = createMachine(
   },
   {
     actions: {
-      updatePersons: assign((context) => {
+      addPerson: assign((context, event) => {
         return {
           ...context,
-        };
-      }),
-      addPerson: assign((context) => {
-        return {
-          ...context,
-          persons: [
-            ...context.persons,
-            spawn(personMachine, context.persons.length.toString()),
-          ],
+          persons: [...context.persons, event.person],
         };
       }),
       removePerson: assign((context, event) => {
@@ -84,10 +68,8 @@ export const hotspotMachine = createMachine(
       }),
     },
     guards: {
-      canAddPerson: (context, _) => context.persons.length < context.maxPersons,
-      canRemovePerson: (context, _) => context.persons.length > 0,
+      canAddPerson: (context) => context.persons.length < context.maxPersons,
+      canRemovePerson: (context) => context.persons.length > 0,
     },
-    services: {},
-    delays: {},
   },
 );
