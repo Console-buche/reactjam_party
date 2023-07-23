@@ -9,6 +9,7 @@ import { forwardRef } from 'react';
 import * as THREE from 'three';
 import { Mesh } from 'three';
 import { GLTF } from 'three-stdlib';
+import { DEG2RAD } from 'three/src/math/MathUtils';
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -29,7 +30,13 @@ export const Model = forwardRef<Mesh, ModelProps>(
     ) as GLTFResult;
     return (
       // FIXME : magic transform numbers
-      <group {...props} dispose={null} scale={2} position-y={-1.2}>
+      <group
+        {...props}
+        dispose={null}
+        scale={2}
+        position-y={-1.2}
+        rotation-y={0 * DEG2RAD}
+      >
         <mesh ref={ref}>
           <group>
             <mesh geometry={nodes.Plane.geometry} scale={18.456}>

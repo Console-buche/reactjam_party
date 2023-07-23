@@ -1,12 +1,18 @@
-import { MeshProps } from '@react-three/fiber';
-import { forwardRef } from 'react';
-import { Mesh } from 'three';
+import { Grid } from '@react-three/drei';
 
 // USE for testing only
-export const Floor = forwardRef<Mesh, MeshProps>((props, ref) => (
-  // todo : use ref in machine instead
-  <mesh ref={ref} position-y={-1} rotation-x={Math.PI * -0.5} {...props}>
-    <planeBufferGeometry args={[100, 100]} />
-    <meshBasicMaterial />
-  </mesh>
-));
+export const Floor = () => {
+  const gridConfig = {
+    cellSize: 0.5,
+    cellThickness: 0.5,
+    cellColor: '#6f6f6f',
+    sectionSize: 3,
+    sectionThickness: 1,
+    sectionColor: '#9d4b4b',
+    fadeDistance: 500,
+    fadeStrength: 1,
+    followCamera: false,
+    infiniteGrid: true,
+  };
+  return <Grid position={[0, -2, 0]} args={[100.5, 100.5]} {...gridConfig} />;
+};

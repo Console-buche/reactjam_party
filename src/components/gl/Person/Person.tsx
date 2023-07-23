@@ -18,7 +18,7 @@ import { DraggingContext } from '../World/World';
 import { PersonShadowRecall } from './PersonShadowRecall';
 import { Statbar } from './Statbar';
 
-const PERSON_HEIGHT = 4;
+const PERSON_HEIGHT = 6;
 
 export const Person = ({
   refFloor,
@@ -67,7 +67,7 @@ export const Person = ({
     // init position & transform offsets
     if (ref.current && refGroup.current && !isExists.current) {
       ref.current.geometry.translate(0, PERSON_HEIGHT * 0.5, 0);
-      refGroup.current.position.copy(pos || new Vector3(0, 0, 0));
+      refGroup.current.position.copy(pos || new Vector3(0, 0, 30));
       isExists.current = true;
     }
   }, [isExists, pos]);
@@ -87,13 +87,13 @@ export const Person = ({
         const newGroupPos = new Vector3(
           intersect.point.x,
           0,
-          intersect.point.z
+          intersect.point.z,
         );
         refGroup.current.position.lerp(newGroupPos, 0.1);
         ref.current.position.y = MathUtils.lerp(
           ref.current.position.y,
           PERSON_HEIGHT * 0.15,
-          0.2
+          0.2,
         );
       }
     }
@@ -107,7 +107,7 @@ export const Person = ({
       ref.current.position.y = MathUtils.lerp(
         ref.current.position.y,
         PERSON_HEIGHT * -0.25,
-        0.2
+        0.2,
       );
     }
   });
@@ -132,7 +132,7 @@ export const Person = ({
               setIsDragging(false);
             }}
           >
-            <planeBufferGeometry args={[2, PERSON_HEIGHT]} />
+            <planeBufferGeometry args={[3, PERSON_HEIGHT]} />
             <meshBasicMaterial map={tex} transparent alphaTest={0.1} />
           </mesh>
           <Statbar />
