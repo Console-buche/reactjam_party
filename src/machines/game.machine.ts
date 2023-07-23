@@ -4,6 +4,8 @@ import { personMachine } from './person.machine';
 export const gameMachine = createMachine(
   {
     id: 'Game',
+    description:
+      'The game machine is the root machine of the game, it handles the game state.',
     context: {
       persons: [],
     },
@@ -15,7 +17,6 @@ export const gameMachine = createMachine(
         actions: ['removePerson'],
       },
     },
-    description: 'Game machine',
 
     schema: {
       context: {} as {

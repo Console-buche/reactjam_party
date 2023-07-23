@@ -1,8 +1,10 @@
-import { assign, createMachine } from "xstate";
+import { assign, createMachine } from 'xstate';
 
 export const personMachine = createMachine(
   {
-    id: "Person",
+    id: 'Person',
+    description:
+      'A person is a character in the game, with its needs and actions.',
     context: {
       amounts: {
         peeAmount: 25,
@@ -11,22 +13,21 @@ export const personMachine = createMachine(
       },
       thirst: 0,
       hype: 50,
-      action: "none",
+      action: 'none',
     },
-    description: "A person",
-    initial: "Resting",
+    initial: 'Resting',
     states: {
       Resting: {
-        initial: "Idle",
+        initial: 'Idle',
         states: {
           Idle: {
             after: {
-              "1000": [
+              '1000': [
                 {
-                  target: "#Person.Resting.Idle",
+                  target: '#Person.Resting.Idle',
                   actions: [
                     {
-                      type: "decreaseHype",
+                      type: 'decreaseHype',
                     },
                   ],
                 },
@@ -37,7 +38,7 @@ export const personMachine = createMachine(
             },
             on: {
               onDrag: {
-                target: "Dragging",
+                target: 'Dragging',
               },
             },
           },
@@ -45,15 +46,15 @@ export const personMachine = createMachine(
             on: {
               onDrop: [
                 {
-                  target: "#Person.Doing.Drinking",
-                  cond: "actionIsDrink",
+                  target: '#Person.Doing.Drinking',
+                  cond: 'actionIsDrink',
                 },
                 {
-                  target: "#Person.Doing.Pissing",
-                  cond: "actionIsPiss",
+                  target: '#Person.Doing.Pissing',
+                  cond: 'actionIsPiss',
                 },
                 {
-                  target: "Idle",
+                  target: 'Idle',
                 },
               ],
             },
@@ -64,25 +65,25 @@ export const personMachine = createMachine(
         states: {
           Drinking: {
             after: {
-              "1000": [
+              '1000': [
                 {
-                  target: "#Person.Doing.Drinking",
-                  cond: "thirsty",
+                  target: '#Person.Doing.Drinking',
+                  cond: 'thirsty',
                   actions: [
                     {
-                      type: "drink",
+                      type: 'drink',
                     },
                     {
-                      type: "increaseHype",
+                      type: 'increaseHype',
                     },
                   ],
                 },
                 {
-                  target: "#Person.Blocking.PissingHimself",
-                  cond: "thirstFull",
+                  target: '#Person.Blocking.PissingHimself',
+                  cond: 'thirstFull',
                   actions: [
                     {
-                      type: "decreaseHype",
+                      type: 'decreaseHype',
                     },
                   ],
                 },
@@ -91,18 +92,18 @@ export const personMachine = createMachine(
           },
           Pissing: {
             after: {
-              "1000": [
+              '1000': [
                 {
-                  cond: "canPee",
+                  cond: 'canPee',
                   actions: [
                     {
-                      type: "piss",
+                      type: 'piss',
                     },
                   ],
                 },
                 {
-                  target: "#Person.Resting",
-                  cond: "thirstEmpty",
+                  target: '#Person.Resting',
+                  cond: 'thirstEmpty',
                 },
               ],
             },
@@ -110,7 +111,7 @@ export const personMachine = createMachine(
         },
         on: {
           onDrag: {
-            target: "#Person.Resting.Dragging",
+            target: '#Person.Resting.Dragging',
           },
         },
       },
@@ -118,7 +119,7 @@ export const personMachine = createMachine(
         states: {
           PissingHimself: {
             always: {
-              target: "#Person.Resting",
+              target: '#Person.Resting',
             },
           },
         },
@@ -128,7 +129,7 @@ export const personMachine = createMachine(
       context: {} as {
         thirst: number;
         hype: number;
-        action: "none" | "drink" | "piss";
+        action: 'none' | 'drink' | 'piss';
         amounts: {
           peeAmount: number;
           drinkAmount: number;
@@ -136,17 +137,17 @@ export const personMachine = createMachine(
         };
       },
       events: {} as
-        | { type: "onDrag" }
-        | { type: "onDrop"; action: "drink" | "piss" | "none" },
+        | { type: 'onDrag' }
+        | { type: 'onDrop'; action: 'drink' | 'piss' | 'none' },
       actions: {} as
-        | { type: "drink" }
-        | { type: "piss" }
-        | { type: "increaseHype" }
-        | { type: "decreaseHype" },
+        | { type: 'drink' }
+        | { type: 'piss' }
+        | { type: 'increaseHype' }
+        | { type: 'decreaseHype' },
     },
     predictableActionArguments: true,
     preserveActionOrder: true,
-    tsTypes: {} as import("./person.machine.typegen").Typegen0,
+    tsTypes: {} as import('./person.machine.typegen').Typegen0,
   },
   {
     actions: {
@@ -183,8 +184,8 @@ export const personMachine = createMachine(
       thirstFull: (context, _) => {
         return context.thirst === 100;
       },
-      actionIsDrink: (_, event) => event.action === "drink",
-      actionIsPiss: (_, event) => event.action === "piss",
+      actionIsDrink: (_, event) => event.action === 'drink',
+      actionIsPiss: (_, event) => event.action === 'piss',
       canPee: (context, _) => context.thirst > 0,
       thirstEmpty: (context, _) => context.thirst === 0,
     },
