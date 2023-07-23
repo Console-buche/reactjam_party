@@ -22,15 +22,23 @@ export interface Typegen0 {
     guards: never;
     services: never;
   };
-  eventsCausingActions: {};
+  eventsCausingActions: {
+    decreaseHype:
+      | 'xstate.after(1000)#Person.Doing.Drinking'
+      | 'xstate.after(1000)#Person.Resting.Idle';
+    drink: 'xstate.after(1000)#Person.Doing.Drinking';
+    emptyPee: 'xstate.after(1000)#Person.Doing.Drinking';
+    increaseHype: 'xstate.after(1000)#Person.Doing.Drinking';
+    pee: 'xstate.after(1000)#Person.Doing.Pissing';
+  };
   eventsCausingDelays: {};
   eventsCausingGuards: {
-    actionIsDrink: 'onDrop';
-    actionIsPiss: 'onDrop';
     canPee: 'xstate.after(1000)#Person.Doing.Pissing';
-    thirstEmpty: 'xstate.after(1000)#Person.Doing.Pissing';
-    thirstFull: 'xstate.after(1000)#Person.Doing.Drinking';
-    thirsty: 'xstate.after(1000)#Person.Doing.Drinking';
+    isActionDrink: 'onDrop';
+    isActionPiss: 'onDrop';
+    isPeeEmpty: 'xstate.after(1000)#Person.Doing.Pissing';
+    isPeeFull: 'xstate.after(1000)#Person.Doing.Drinking';
+    isThirsty: 'xstate.after(1000)#Person.Doing.Drinking';
   };
   eventsCausingServices: {};
   matchesStates:
