@@ -112,26 +112,26 @@ export const Person = ({
     }
   });
 
+  const handleOnClick = () => {
+    console.log('clicked');
+    if (!isDragging) {
+      setIsDragging(true);
+      setDraggingRef(refGroup.current);
+      if (refGroup.current) {
+        setDraggingId(uuid);
+        beforeDragPosition.current.copy(refGroup.current.position);
+      }
+    } else {
+      setIsDragging(false);
+      setDraggingId(null);
+    }
+  };
+
   return (
     <PersonMachineProvider value={service}>
       <>
         <group ref={refGroup}>
-          <mesh
-            ref={ref}
-            uuid={uuid}
-            onPointerDown={() => {
-              setIsDragging(true);
-              setDraggingRef(refGroup.current);
-              if (refGroup.current) {
-                setDraggingId(uuid);
-                beforeDragPosition.current.copy(refGroup.current.position);
-              }
-            }}
-            onPointerUp={() => {
-              setDraggingId(null);
-              setIsDragging(false);
-            }}
-          >
+          <mesh ref={ref} uuid={uuid} onClick={handleOnClick}>
             <planeBufferGeometry args={[3, PERSON_HEIGHT]} />
             <meshBasicMaterial map={tex} transparent alphaTest={0.1} />
           </mesh>
@@ -144,6 +144,7 @@ export const Person = ({
             scale={shadow.scale}
           >
             <circleBufferGeometry />
+
             {/* @ts-ignore */}
             <a.meshLambertMaterial
               transparent

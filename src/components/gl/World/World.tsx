@@ -53,9 +53,11 @@ export const World = () => {
 
       <Model
         ref={refFloor}
-        onPointerUp={() => {
-          setIsDragging(false);
-          setDraggingId(null);
+        onClick={() => {
+          if (isDragging) {
+            setIsDragging(false);
+            setDraggingId(null);
+          }
         }}
       />
 

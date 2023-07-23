@@ -20,7 +20,7 @@ type GLTFResult = GLTF & {
 };
 
 type ModelProps = JSX.IntrinsicElements['group'] & {
-  onPointerUp: () => void;
+  onClick: () => void;
 };
 
 export const Model = forwardRef<Mesh, ModelProps>(
