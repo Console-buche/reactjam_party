@@ -1,6 +1,8 @@
-import { useSpring, a } from '@react-spring/three';
+import { a, useSpring } from '@react-spring/three';
 import { Html, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
+import { useInterpret } from '@xstate/react';
+import { useControls } from 'leva';
 import { useContext, useEffect, useId, useRef } from 'react';
 import {
   BufferGeometry,
@@ -10,13 +12,11 @@ import {
   Mesh,
   Vector3,
 } from 'three';
-import { DraggingContext } from '../World/World';
-import { Statbar } from './Statbar';
-import { useInterpret } from '@xstate/react';
-import { personMachine } from '../../../machines/person.machine';
 import { PersonMachineProvider } from '../../../hooks/use';
+import { personMachine } from '../../../machines/person.machine';
+import { DraggingContext } from '../World/World';
 import { PersonShadowRecall } from './PersonShadowRecall';
-import { is } from '@react-three/fiber/dist/declarations/src/core/utils';
+import { Statbar } from './Statbar';
 
 const PERSON_HEIGHT = 4;
 
@@ -27,6 +27,7 @@ export const Person = ({
   refFloor: React.RefObject<Mesh<BufferGeometry, Material | Material[]>>;
   pos?: Vector3;
 }) => {
+  const { showActionButtons } = useControls({ showActionButtons: false });
   const service = useInterpret(personMachine);
 
   const isExists = useRef(false);
@@ -151,22 +152,26 @@ export const Person = ({
               color={shadow.color}
             />
           </a.mesh>
-          <Html>
-            <button
-              style={{ position: 'absolute', right: -100, top: 0 }}
-              type={'button'}
-              onClick={() => service.send({ type: 'onDrag' })}
-            >
-              On Drag
-            </button>
-            <button
-              style={{ position: 'absolute', right: -100, top: 20 }}
-              type={'button'}
-              onClick={() => service.send({ type: 'onDrop', action: 'drink' })}
-            >
-              Dropped
-            </button>
-          </Html>
+          {showActionButtons && (
+            <Html>
+              <button
+                style={{ position: 'absolute', right: -100, top: 0 }}
+                type={'button'}
+                onClick={() => service.send({ type: 'onDrag' })}
+              >
+                On Drag
+              </button>
+              <button
+                style={{ position: 'absolute', right: -100, top: 20 }}
+                type={'button'}
+                onClick={() =>
+                  service.send({ type: 'onDrop', action: 'drink' })
+                }
+              >
+                Dropped
+              </button>
+            </Html>
+          )}
         </group>
         <PersonShadowRecall
           beforeDragPosition={beforeDragPosition.current}

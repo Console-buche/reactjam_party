@@ -1,10 +1,10 @@
-import { OrbitControls } from '@react-three/drei';
 import { useSelector } from '@xstate/react';
-import { createContext, useRef, useState } from 'react';
+import { Suspense, createContext, useRef, useState } from 'react';
 import { Group, Mesh } from 'three';
 import { useGameMachineProvider } from '../../../hooks/use';
 import { Hotspot } from '../Environment/HotSpot/Hotspot';
 import { Person } from '../Person/Person';
+import { Cam } from './Cam';
 import { Floor } from './Floor';
 
 // initialize a react context with two values : isDragging and setIsDragging
@@ -47,7 +47,7 @@ export const World = () => {
         setDraggingRef,
       }}
     >
-      {!isDragging && <OrbitControls />}
+      <Cam isDragging={isDragging} />
 
       <Floor
         ref={refFloor}
@@ -57,9 +57,11 @@ export const World = () => {
         }}
       />
 
-      {persons.map(({ id }) => (
-        <Person key={id} refFloor={refFloor} />
-      ))}
+      <Suspense fallback={null}>
+        {persons.map(({ id }) => (
+          <Person key={id} refFloor={refFloor} />
+        ))}
+      </Suspense>
 
       <Hotspot type="battery" dropSpotQuality={5} position={[-6, 0, -7]} />
       <Hotspot type="drink" dropSpotQuality={7} position={[3, 0, -10]} />
