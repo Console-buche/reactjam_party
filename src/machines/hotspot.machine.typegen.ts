@@ -18,6 +18,7 @@ export interface Typegen0 {
   eventsCausingActions: {
     addPerson: 'onAddPerson';
     removePerson: 'onRemovePerson';
+    updatePersons: 'onUpdatePerson';
   };
   eventsCausingDelays: {};
   eventsCausingGuards: {

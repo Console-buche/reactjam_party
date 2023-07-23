@@ -2,6 +2,7 @@ import { assign, createMachine } from 'xstate';
 
 export const personMachine = createMachine(
   {
+    /** @xstate-layout N4IgpgJg5mDOIC5QAUwCdYHsB2A6ASnAC4CW2UuAkhADZgDEOAImgIZQDaADALqKgAHTLBKkc-EAA9EAFgDMADlwAmOfIUKAnAoBsyrQHY5AGhABPRAEY5lzbhla9yyzOVcArMoMBfb6dQYOATEZBTUdPSSsESsRGC4rABmcWgAFJZcmQCU9AFYeITRoVS0YNx8SCBCImLYEtIIyu4yuArumjIelgZcOgoGCjKmFgiWznK4mu5yXApuXF5qvv7o+cFF5CURUTFxCcno6ZlcOXlBhaSb4WWWFYLCoiTilQ1uBpNyBu6W7dpcGToDMMrJYdDp7NMMnJlJpNLMuHJliAzgUQpsWOwoKFGNgWJgBOUJNVHs9QA1PMDRk1JrDaTp3J4dLNLEiUetLhQMVAseQcXiCbciQ9avVEHpKd1wTJaZp9G0MlMFKzVuc0Zy2Nzscw0PiOMo7lVhU86i9ZIoVGpFFpdPpNEYJco+pMtO4jAYfqDlYE8ExMFrcRrCZViSLTQhxeYrMp9BapgYvpobApLEq-MiVT6-ei0GQANbYnaxeJJFJHbK5DO4X3FFh50JB+41Y2ihCw+wyhQzdr-dyUzzKFQIywZZoI-TuL1ravZuu8wt7EuHDLltnT9WzziC4NG0lSRBqdyteRGZMGWGfayUnQ2XAGR3TPryA+aSdBNe4ZAkWAiOfRIv7UtlxOCtvSrLMKE-b9614IUm13Bo7UpOR6Vvdxjmsd03A0V9M2KSCfygSI-wXA40iA05K3ffD6y3RsSRNMl9xkQ9Bk+RRunPd0TEjBAZB0FoehsZRmKMV07x8NM2QAIRoTAAGN802ajyAACRIABbWAwBoRJ6AbQ04IYvcEApHiXB0OwjE0PQmXmAw+N8NNsEwCA4AkFFYPoltLEpABaQ8ZVlazehkESdBw9lQk80NGNGdoPi+H5YQUf5eiBMyuAGSZIVULQHC7CKLmKa5oubMNHQHWZ2mmRM5GmGEJRsSxJl6fRMs+V1ekKtUqw1HkoFK+CxSdITpRTM8DHpRro3sRx4zkOQ4WsidJMo8DBqMhppUpLwlCaY5oVhGE0MRVbQPfWtsEUgbt0M7zXEmZx+g8Gw6rGHQrz43AmUTOZh0yCzTpWc7wI-L8CI2+6B1lFN3EBaEuDhBbKT4iZBOHIwMhkCaIpk+TrshsN2gHYTYT0aF7I8TQ+xQqYmsWppOhkFkzrWPGFLw8HQjUzTtMSQnYv4rgVGlazVC8Tp2ivaYISa2w7RsAZHO8IA */
     id: 'Person',
     description:
       'A person is a character in the game, with its needs and actions.',
@@ -190,5 +191,5 @@ export const personMachine = createMachine(
       thirstEmpty: (context, _) => context.thirst === 0,
     },
     delays: {},
-  }
+  },
 );
