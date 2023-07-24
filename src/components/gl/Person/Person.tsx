@@ -1,6 +1,7 @@
 import { a, useSpring } from '@react-spring/three';
 import { Html, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
+import { useSelector } from '@xstate/react';
 import { useControls } from 'leva';
 import { useContext, useEffect, useRef } from 'react';
 import {
@@ -16,9 +17,7 @@ import type { personMachine } from '../../../machines/person.machine';
 import { DraggingContext } from '../World/World';
 import { PersonShadowRecall } from './PersonShadowRecall';
 import { Statbar } from './Statbar';
-import { useSelector } from '@xstate/react';
-
-const PERSON_HEIGHT = 6;
+import { PERSON_HEIGHT } from './person.constants';
 
 export const Person = ({
   refFloor,
@@ -56,23 +55,24 @@ export const Person = ({
 
   const isBeingDragged = draggingId === serviceId;
 
-  // setup easings
+  // init easings
   const shadow = useSpring({
     opacity: isBeingDragged ? 0.9 : 0.1,
-    color: isBeingDragged ? '#FFA500' : 'grey', // orange to grey
+    color: isBeingDragged ? '#FFA500' : 'grey',
     scale: isBeingDragged
       ? ([1.25, 1.25, 1.25] as const)
       : ([0.75, 0.75, 0.75] as const),
   });
 
+  // position tick for the drag back shadow
   useEffect(() => {
     if (isBeingDragged && refGroup.current) {
       beforeDragPosition.current.copy(refGroup.current.position);
     }
   }, [isBeingDragged]);
 
+  // init position & transform offsets
   useEffect(() => {
-    // init position & transform offsets
     if (ref.current && refGroup.current && !isExists.current) {
       ref.current.geometry.translate(0, PERSON_HEIGHT * 0.5, 0);
       refGroup.current.position.copy(pos || new Vector3(0, 0, 30));
@@ -162,6 +162,8 @@ export const Person = ({
             color={shadow.color}
           />
         </a.mesh>
+
+        {/* Debug  */}
         {showActionButtons && (
           <Html>
             <button

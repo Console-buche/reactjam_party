@@ -1,1 +1,0 @@
-export { World } from "./World";
