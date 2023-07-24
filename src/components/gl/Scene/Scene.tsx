@@ -11,7 +11,6 @@ export const Scene = () => {
       <color attach={'background'} args={['#ccc']} />
       <ambientLight />
       <World />
-      {/* <Stats /> */}
     </Canvas>
   );
 };

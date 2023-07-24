@@ -7,7 +7,7 @@ Files: HOUSE_LOW_POLY_WIP.gltf [797.6KB] > HOUSE_LOW_POLY_WIP-transformed.glb [9
 import { useGLTF } from '@react-three/drei';
 import { forwardRef } from 'react';
 import * as THREE from 'three';
-import { GLTF } from 'three-stdlib';
+import { type GLTF } from 'three-stdlib';
 import { Mesh } from 'three';
 
 type GLTFResult = GLTF & {

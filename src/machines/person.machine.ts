@@ -1,5 +1,5 @@
 import { MathUtils } from 'three';
-import { assign, createMachine, send, sendTo } from 'xstate';
+import { assign, createMachine } from 'xstate';
 
 const METERS_CONFIG = {
   thirst: {

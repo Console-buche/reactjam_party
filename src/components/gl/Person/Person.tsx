@@ -1,5 +1,5 @@
 import { a, useSpring } from '@react-spring/three';
-import { Html, useSelect, useTexture } from '@react-three/drei';
+import { Html, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useControls } from 'leva';
 import { useContext, useEffect, useRef } from 'react';
@@ -11,8 +11,8 @@ import {
   Mesh,
   Vector3,
 } from 'three';
-import { ActorRefFrom } from 'xstate';
-import { personMachine } from '../../../machines/person.machine';
+import type { ActorRefFrom } from 'xstate';
+import type { personMachine } from '../../../machines/person.machine';
 import { DraggingContext } from '../World/World';
 import { PersonShadowRecall } from './PersonShadowRecall';
 import { Statbar } from './Statbar';

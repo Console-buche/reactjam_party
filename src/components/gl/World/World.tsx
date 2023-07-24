@@ -1,10 +1,9 @@
 import { useSelector } from '@xstate/react';
 import { Suspense, createContext, useRef, useState } from 'react';
-import { Group, Mesh } from 'three';
-import { ActorRefFrom } from 'xstate';
+import type { Group, Mesh } from 'three';
+import type { ActorRefFrom } from 'xstate';
+import type { personMachine } from '../../../machines/person.machine';
 import { useGameMachineProvider } from '../../../hooks/use';
-import { personMachine } from '../../../machines/person.machine';
-import { Hotspot } from '../Environment/HotSpot/Hotspot';
 import { HouseModel } from '../House/HouseModel';
 import { Person } from '../Person/Person';
 import { Cam } from './Cam';
@@ -94,8 +93,6 @@ export const World = () => {
 
       <Bar />
       <Toilet />
-      {/* <Hotspot type="drink" dropSpotQuality={7} position={[13, 0, -10]} />
-      <Hotspot type="battery" dropSpotQuality={3} position={[3, 0, 10]} /> */}
     </DraggingContext.Provider>
   );
 };

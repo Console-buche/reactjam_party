@@ -1,4 +1,4 @@
-import { ActorRefFrom, assign, createMachine } from 'xstate';
+import { type ActorRefFrom, assign, createMachine } from 'xstate';
 import { personMachine } from './person.machine';
 
 export const hotspotMachine = createMachine(

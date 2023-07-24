@@ -1,4 +1,4 @@
-import { MeshProps, useFrame } from '@react-three/fiber';
+import { type MeshProps, useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import { BufferGeometry, MathUtils, Mesh } from 'three';
 

@@ -3,7 +3,7 @@ import React from 'react';
 /** @see https://antfu.me/posts/destructuring-with-object-or-array */
 export function createIsomorphicDestructurable<
   T extends Record<string, unknown>,
-  //@
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
   A extends readonly any[],
 >(obj: T, arr: A): T & A {
   const clone = { ...obj };
@@ -65,6 +65,7 @@ export function createContextWithHook<ContextType>(
 ): CreateContextReturn<ContextType>;
 export function createContextWithHook<ContextType>(
   nameOrOptions: string | CreateContextOptions<ContextType>,
+  //@ts-ignore
   optionsProp: CreateContextOptions<ContextType> = { name: undefined },
 ): CreateContextReturn<ContextType> {
   const options =

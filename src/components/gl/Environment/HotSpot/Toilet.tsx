@@ -10,7 +10,7 @@ export const Toilet = () => {
   return (
     <Hotspot
       type="battery"
-      dropSpotQuality={5}
+      slotsAmount={5}
       position={[-6, 0, 7]}
       onDropHotspot={() =>
         draggingActorRef &&

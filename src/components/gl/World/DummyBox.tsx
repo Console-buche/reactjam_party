@@ -1,4 +1,4 @@
-import { MeshProps } from "@react-three/fiber";
+import type { MeshProps } from '@react-three/fiber';
 
 export const DummyBox = (props: MeshProps) => {
   return (

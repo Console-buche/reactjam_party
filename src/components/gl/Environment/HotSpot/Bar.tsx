@@ -1,4 +1,4 @@
-import { useInterpret } from '@xstate/react';
+import { useInterpret, useSelector } from '@xstate/react';
 import { useContext } from 'react';
 import { barMachine } from '../../../../machines/bar.machine';
 import { DraggingContext } from '../../World/World';
@@ -6,11 +6,12 @@ import { Hotspot } from './Hotspot';
 
 export const Bar = () => {
   const service = useInterpret(barMachine);
-  const { draggingActorRef } = useContext(DraggingContext);
+  const maxPersons = useSelector(service, (s) => s.context.maxPersons);
+  const { draggingActorRef } = useContext(DraggingContext); //TODO: degager ce contexte de mort
+
   return (
     <Hotspot
-      type="battery"
-      dropSpotQuality={5}
+      slotsAmount={maxPersons}
       position={[-6, 0, -7]}
       onDropHotspot={() =>
         draggingActorRef &&

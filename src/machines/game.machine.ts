@@ -1,4 +1,4 @@
-import { ActorRefFrom, assign, createMachine, spawn } from 'xstate';
+import { type ActorRefFrom, assign, createMachine, spawn } from 'xstate';
 import { personMachine } from './person.machine';
 
 export const gameMachine = createMachine(
