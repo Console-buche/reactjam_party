@@ -1,9 +1,10 @@
-import React from "react";
+import React from 'react';
 
 /** @see https://antfu.me/posts/destructuring-with-object-or-array */
 export function createIsomorphicDestructurable<
   T extends Record<string, unknown>,
-  A extends readonly any[]
+  //@
+  A extends readonly any[],
 >(obj: T, arr: A): T & A {
   const clone = { ...obj };
 
@@ -56,28 +57,28 @@ type CreateContextReturn<T> = [React.Provider<T>, () => T, React.Context<T>] & {
  * @param options create context options
  */
 export function createContextWithHook<ContextType>(
-  options: CreateContextOptions<ContextType>
+  options: CreateContextOptions<ContextType>,
 ): CreateContextReturn<ContextType>;
 export function createContextWithHook<ContextType>(
   name: string,
-  options?: CreateContextOptions<ContextType>
+  options?: CreateContextOptions<ContextType>,
 ): CreateContextReturn<ContextType>;
 export function createContextWithHook<ContextType>(
   nameOrOptions: string | CreateContextOptions<ContextType>,
-  optionsProp: CreateContextOptions<ContextType> = { name: undefined }
+  optionsProp: CreateContextOptions<ContextType> = { name: undefined },
 ): CreateContextReturn<ContextType> {
   const options =
-    typeof nameOrOptions === "string" ? optionsProp : nameOrOptions;
-  const name = typeof nameOrOptions === "string" ? nameOrOptions : options.name;
+    typeof nameOrOptions === 'string' ? optionsProp : nameOrOptions;
+  const name = typeof nameOrOptions === 'string' ? nameOrOptions : options.name;
   const {
     strict = false,
     errorMessage = `useContext: "${
-      name || "context"
+      name || 'context'
     }" is undefined. Seems you forgot to wrap component within the Provider`,
   } = options;
 
   const Context = React.createContext<ContextType | undefined>(
-    options.initialValue
+    options.initialValue,
   );
 
   Context.displayName = name;
@@ -87,7 +88,7 @@ export function createContextWithHook<ContextType>(
 
     if (!context && strict) {
       const error = new Error(errorMessage);
-      error.name = "ContextError";
+      error.name = 'ContextError';
 
       // @ts-ignore
       Error.captureStackTrace?.(error, useContext);
@@ -104,6 +105,6 @@ export function createContextWithHook<ContextType>(
       Context: Context,
       Provider: Context.Provider,
     },
-    [Context.Provider, useContext, Context]
+    [Context.Provider, useContext, Context],
   ) as CreateContextReturn<ContextType>;
 }

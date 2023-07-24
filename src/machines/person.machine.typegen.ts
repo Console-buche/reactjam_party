@@ -13,6 +13,9 @@ export interface Typegen0 {
     'xstate.after(1000)#Person.actionFlow.Resting.Idle': {
       type: 'xstate.after(1000)#Person.actionFlow.Resting.Idle';
     };
+    'xstate.after(500)#Person.meterFlow.Active': {
+      type: 'xstate.after(500)#Person.meterFlow.Active';
+    };
     'xstate.init': { type: 'xstate.init' };
   };
   invokeSrcNameMap: {};
@@ -30,7 +33,7 @@ export interface Typegen0 {
     emptyPee: 'xstate.after(1000)#Person.actionFlow.Doing.Drinking';
     increaseHype: 'xstate.after(1000)#Person.actionFlow.Doing.Drinking';
     pee: 'xstate.after(1000)#Person.actionFlow.Doing.Pissing';
-    updateNeeds: 'onTick';
+    updateNeeds: 'xstate.after(500)#Person.meterFlow.Active';
   };
   eventsCausingDelays: {};
   eventsCausingGuards: {

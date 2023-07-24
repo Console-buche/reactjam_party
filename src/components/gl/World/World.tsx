@@ -1,11 +1,11 @@
 import { useSelector } from '@xstate/react';
 import { Suspense, createContext, useRef, useState } from 'react';
 import { Group, Mesh } from 'three';
-import { Model } from '../../../../public/assets/Reactjam_party';
 import { useGameMachineProvider } from '../../../hooks/use';
 import { Hotspot } from '../Environment/HotSpot/Hotspot';
 import { Person } from '../Person/Person';
 import { Cam } from './Cam';
+import { HouseModel } from '../House/HouseModel';
 
 // initialize a react context with two values : isDragging and setIsDragging
 // TODO/nice to have : dragging machine. But this works nice as is.
@@ -51,7 +51,7 @@ export const World = () => {
       <directionalLight />
       <Cam isDragging={isDragging} />
 
-      <Model
+      <HouseModel
         ref={refFloor}
         onClick={() => {
           if (isDragging) {
@@ -61,9 +61,19 @@ export const World = () => {
         }}
       />
 
+      {/* <Model
+        ref={refFloor}
+        onClick={() => {
+          if (isDragging) {
+            setIsDragging(false);
+            setDraggingId(null);
+          }
+        }}
+      /> */}
+
       <Suspense fallback={null}>
-        {persons.map(({ id }) => (
-          <Person key={id} refFloor={refFloor} />
+        {persons.map((actor) => (
+          <Person key={actor.id} refFloor={refFloor} actor={actor} />
         ))}
       </Suspense>
 

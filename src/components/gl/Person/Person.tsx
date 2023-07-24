@@ -1,9 +1,8 @@
 import { a, useSpring } from '@react-spring/three';
-import { Html, useTexture } from '@react-three/drei';
+import { Html, useSelect, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
-import { useInterpret } from '@xstate/react';
 import { useControls } from 'leva';
-import { useContext, useEffect, useId, useRef } from 'react';
+import { useContext, useEffect, useRef } from 'react';
 import {
   BufferGeometry,
   Group,
@@ -12,23 +11,25 @@ import {
   Mesh,
   Vector3,
 } from 'three';
-import { PersonMachineProvider } from '../../../hooks/use';
+import { ActorRefFrom } from 'xstate';
 import { personMachine } from '../../../machines/person.machine';
 import { DraggingContext } from '../World/World';
 import { PersonShadowRecall } from './PersonShadowRecall';
 import { Statbar } from './Statbar';
+import { useSelector } from '@xstate/react';
 
 const PERSON_HEIGHT = 6;
 
 export const Person = ({
   refFloor,
   pos,
+  actor,
 }: {
   refFloor: React.RefObject<Mesh<BufferGeometry, Material | Material[]>>;
   pos?: Vector3;
+  actor: ActorRefFrom<typeof personMachine>;
 }) => {
   const { showActionButtons } = useControls({ showActionButtons: false });
-  const service = useInterpret(personMachine);
 
   const isExists = useRef(false);
   const {
@@ -44,9 +45,15 @@ export const Person = ({
   const refGroup = useRef<Group>(null);
   const refShadow = useRef<Mesh>(null);
   const tex = useTexture('assets/dudess.png');
-  const uuid = useId();
+  const serviceId = actor.id;
 
-  const isBeingDragged = draggingId === uuid;
+  actor.send('triggerStart');
+  const { hype, pee, thirst } = useSelector(
+    actor,
+    (state) => state.context.meters,
+  );
+
+  const isBeingDragged = draggingId === serviceId;
 
   // setup easings
   const shadow = useSpring({
@@ -118,7 +125,7 @@ export const Person = ({
       setIsDragging(true);
       setDraggingRef(refGroup.current);
       if (refGroup.current) {
-        setDraggingId(uuid);
+        setDraggingId(serviceId);
         beforeDragPosition.current.copy(refGroup.current.position);
       }
     } else {
@@ -128,57 +135,55 @@ export const Person = ({
   };
 
   return (
-    <PersonMachineProvider value={service}>
-      <>
-        <group ref={refGroup}>
-          <mesh ref={ref} uuid={uuid} onClick={handleOnClick}>
-            <planeBufferGeometry args={[3, PERSON_HEIGHT]} />
-            <meshBasicMaterial map={tex} transparent alphaTest={0.1} />
-          </mesh>
-          <Statbar />
+    <>
+      <group ref={refGroup}>
+        <mesh ref={ref} uuid={serviceId} onClick={handleOnClick}>
+          <planeBufferGeometry args={[3, PERSON_HEIGHT]} />
+          <meshBasicMaterial map={tex} transparent alphaTest={0.1} />
+        </mesh>
+        <Statbar position-y={6} value={thirst} />
+        <Statbar position-y={8} value={pee} />
+        <Statbar position-y={10} value={hype} />
 
-          <a.mesh
-            ref={refShadow}
-            rotation-x={Math.PI * -0.5}
-            position-y={-0.9}
-            scale={shadow.scale}
-          >
-            <circleBufferGeometry />
+        <a.mesh
+          ref={refShadow}
+          rotation-x={Math.PI * -0.5}
+          position-y={-0.9}
+          scale={shadow.scale}
+        >
+          <circleBufferGeometry />
 
-            {/* @ts-ignore */}
-            <a.meshLambertMaterial
-              transparent
-              opacity={shadow.opacity}
-              depthWrite={false}
-              color={shadow.color}
-            />
-          </a.mesh>
-          {showActionButtons && (
-            <Html>
-              <button
-                style={{ position: 'absolute', right: -100, top: 0 }}
-                type={'button'}
-                onClick={() => service.send({ type: 'onDrag' })}
-              >
-                On Drag
-              </button>
-              <button
-                style={{ position: 'absolute', right: -100, top: 20 }}
-                type={'button'}
-                onClick={() =>
-                  service.send({ type: 'onDrop', action: 'drink' })
-                }
-              >
-                Dropped
-              </button>
-            </Html>
-          )}
-        </group>
-        <PersonShadowRecall
-          beforeDragPosition={beforeDragPosition.current}
-          isBeingDragged={isBeingDragged}
-        />
-      </>
-    </PersonMachineProvider>
+          {/* @ts-ignore */}
+          <a.meshLambertMaterial
+            transparent
+            opacity={shadow.opacity}
+            depthWrite={false}
+            color={shadow.color}
+          />
+        </a.mesh>
+        {showActionButtons && (
+          <Html>
+            <button
+              style={{ position: 'absolute', right: -100, top: 0 }}
+              type={'button'}
+              onClick={() => actor.send({ type: 'onDrag' })}
+            >
+              On Drag
+            </button>
+            <button
+              style={{ position: 'absolute', right: -100, top: 20 }}
+              type={'button'}
+              onClick={() => actor.send({ type: 'onDrop', action: 'drink' })}
+            >
+              Dropped
+            </button>
+          </Html>
+        )}
+      </group>
+      <PersonShadowRecall
+        beforeDragPosition={beforeDragPosition.current}
+        isBeingDragged={isBeingDragged}
+      />
+    </>
   );
 };

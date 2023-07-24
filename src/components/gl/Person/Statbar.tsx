@@ -1,7 +1,12 @@
-import { useFrame } from "@react-three/fiber";
-import { useMemo, useRef } from "react";
-import { BufferGeometry, MathUtils, Mesh } from "three";
-import { usePersonMachineProvider } from "../../../hooks/use";
+import { MeshProps, useFrame } from '@react-three/fiber';
+import { useMemo, useRef } from 'react';
+import { BufferGeometry, MathUtils, Mesh } from 'three';
+import {
+  useGameMachineProvider,
+  usePersonMachineProvider,
+} from '../../../hooks/use';
+import { personMachine } from '../../../machines/person.machine';
+import { useMachine, useSelector } from '@xstate/react';
 
 const vertexShader = `
     varying vec2 vUv;
@@ -26,15 +31,18 @@ const fragmentShader = `
     }
 `;
 
-export const Statbar = () => {
-  const service = usePersonMachineProvider();
+type Statbar = {
+  value: number;
+} & MeshProps;
+
+export const Statbar = ({ value, ...meshProps }: Statbar) => {
   const ref = useRef<Mesh<BufferGeometry, THREE.ShaderMaterial>>(null);
 
   const uniforms = useMemo(
     () => ({
       percent: { value: 0.01 },
     }),
-    []
+    [],
   );
 
   useFrame(({ camera }) => {
@@ -44,20 +52,23 @@ export const Statbar = () => {
 
     ref.current.lookAt(camera.position);
 
+    if (value > 0) {
+      console.log(value);
+    }
     // update stat
 
     // TODO : add bounds + decrease on event only
     ref.current.material.uniforms.percent.value = MathUtils.lerp(
       ref.current.material.uniforms.percent.value,
-      service.getSnapshot().context.thirst / 100,
-      0.1
+      value / 100,
+      0.1,
     );
 
     ref.current.material.uniformsNeedUpdate = true;
   });
 
   return (
-    <mesh ref={ref} position-y={4}>
+    <mesh ref={ref} {...meshProps}>
       <planeBufferGeometry args={[1.5, 0.2]} />
       <shaderMaterial
         uniforms={uniforms}

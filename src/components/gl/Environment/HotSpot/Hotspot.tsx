@@ -18,6 +18,7 @@ import { DropSpotQuality, HotSpot } from './types';
 type HotSpotProps = {
   type: HotSpot;
   dropSpotQuality: DropSpotQuality;
+  onDropHotspot: () => void;
 } & MeshProps;
 
 type State = {
@@ -69,11 +70,16 @@ function hopSpotReducer(state: State, action: Action): State {
   }
 }
 
-export const Hotspot = ({ type, dropSpotQuality, ...props }: HotSpotProps) => {
+export const Hotspot = ({
+  type,
+  dropSpotQuality,
+  onDropHotspot,
+  ...props
+}: HotSpotProps) => {
   const refHotSpotGeometry = useRef<CircleGeometry>(null);
   const refHotSpot = useRef<Mesh>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const { isDragging, draggingRef } = useContext(DraggingContext);
+  const { isDragging, draggingRef, draggingId } = useContext(DraggingContext);
   const uuid = useId();
 
   const isExists = useRef(false);
@@ -115,29 +121,30 @@ export const Hotspot = ({ type, dropSpotQuality, ...props }: HotSpotProps) => {
         onPointerLeave={() => setIsHovered(false)}
         ref={refHotSpot}
         uuid={uuid}
-        onPointerUp={() => {
-          const availableSpotId = Array.from(
-            _.spotIdsAndAvailability.entries(),
-          ).find(([, isAvailable]) => isAvailable)?.[0];
+        onClick={() => {
+          onDropHotspot();
 
-          dispatch({
-            type: 'ADD',
-            payload: {
-              uuid,
-              spotId: availableSpotId ?? 0, // FIXME : PERSONS shouldn't stack. If no available spot: do somthing.
-              isDragging,
-              onHotSpotDrop: () => {
-                const worldPosition = refHotSpot.current?.localToWorld(
-                  positions[availableSpotId ?? 0].pos.clone(),
-                );
-                if (!worldPosition) {
-                  return;
-                }
-                const newPos = worldPosition.clone().setY(0);
-                draggingRef?.position.set(...newPos.toArray());
-              },
-            },
-          });
+          // const availableSpotId = Array.from(
+          //   _.spotIdsAndAvailability.entries(),
+          // ).find(([, isAvailable]) => isAvailable)?.[0];
+          // dispatch({
+          //   type: 'ADD',
+          //   payload: {
+          //     uuid,
+          //     spotId: availableSpotId ?? 0, // FIXME : PERSONS shouldn't stack. If no available spot: do somthing.
+          //     isDragging,
+          //     onHotSpotDrop: () => {
+          //       const worldPosition = refHotSpot.current?.localToWorld(
+          //         positions[availableSpotId ?? 0].pos.clone(),
+          //       );
+          //       if (!worldPosition) {
+          //         return;
+          //       }
+          //       const newPos = worldPosition.clone().setY(0);
+          //       draggingRef?.position.set(...newPos.toArray());
+          //     },
+          //   },
+          // });
         }}
         onPointerDown={() => {}}
         {...props}

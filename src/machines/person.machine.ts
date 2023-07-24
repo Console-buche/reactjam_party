@@ -1,5 +1,5 @@
 import { MathUtils } from 'three';
-import { assign, createMachine, sendTo } from 'xstate';
+import { assign, createMachine, send, sendTo } from 'xstate';
 
 const METERS_CONFIG = {
   thirst: {
@@ -35,6 +35,7 @@ export const personMachine = createMachine(
     type: 'parallel',
     initial: 'actionFlow',
     context: {
+      name: '',
       meters: {
         thirst: 0,
         pee: 0,
@@ -148,11 +149,13 @@ export const personMachine = createMachine(
             },
           },
           Active: {
-            entry: sendTo('onTick', { delay: 500 }),
-            on: {
-              onTick: {
-                actions: 'updateNeeds',
-              },
+            after: {
+              '500': [
+                {
+                  actions: 'updateNeeds',
+                  target: '#Person.meterFlow.Active',
+                },
+              ],
             },
           },
         },
@@ -166,6 +169,7 @@ export const personMachine = createMachine(
           hype: number;
           pee: number;
         };
+        name: string;
       },
       events: {} as
         | { type: 'onDrag' }
