@@ -1,6 +1,6 @@
 import { type ActorRefFrom, assign, createMachine, spawn } from 'xstate';
 import { personMachine } from './person.machine';
-
+import { generateUUID } from 'three/src/math/MathUtils';
 export const gameMachine = createMachine(
   {
     id: 'Game',
@@ -20,7 +20,6 @@ export const gameMachine = createMachine(
         actions: ['removeLastPerson'],
       },
     },
-
     schema: {
       context: {} as {
         persons: ActorRefFrom<typeof personMachine>[];
@@ -39,10 +38,7 @@ export const gameMachine = createMachine(
       addPerson: assign((context) => {
         return {
           ...context,
-          persons: [
-            ...context.persons,
-            spawn(personMachine, context.persons.length.toString()),
-          ],
+          persons: [...context.persons, spawn(personMachine, generateUUID())],
         };
       }),
       removePerson: assign((context, event) => {

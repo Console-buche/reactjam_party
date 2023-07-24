@@ -1,6 +1,5 @@
 import { type ActorRefFrom, assign, createMachine } from 'xstate';
 import { personMachine } from './person.machine';
-
 export const hotspotMachine = createMachine(
   {
     /** @xstate-layout N4IgpgJg5mDOIC5QAkD2AXWAHDBiVAdgIIQQAKYATrIQNoAMAuoqDrAJbruEsgAeiALQAmAIwBWAHTCAHKOHiAzPRnCAbAHYtwgDQgAnolH0NkgJz01wsQBZFcs2dkBfZ3rSYc6fAQBKYAFtUADcwCmo6Jl42Tm4CXgEERXFhSWVxDUUNYXphDRszGQ09QwQNNTSzcTV6Gy1jezNXdwxsPEIAVSwIAEN0MKoaAgZmJBAYrh4xxNEbGXMxItFM4SdakqE1cWaQDzb0SS7ergIocKHYXD5YdD6wSR6AM37KAApjenoASlw9r0Pun12KdzoRYCNoqgOJN4tMjKpzCk5EplA1rBsEDZcpINDJFPIPmo7AVtjsCKgIHBeH8MJDoXEEogsZI1MtRGotvRCuJRHIMQpRNI8fINJZHLM1DsaQcjkCQYMwXTYlNQIkZPNWRp2ZzubzRBilBV8cI5iozKJ5IobK5XEA */
@@ -36,14 +35,13 @@ export const hotspotMachine = createMachine(
     },
     schema: {
       context: {} as {
-        persons: ActorRefFrom<typeof personMachine>[];
+        persons: Array<ActorRefFrom<typeof personMachine> | null>;
         maxPersons: number;
       },
       events: {} as
         | { type: 'onAddPerson'; person: ActorRefFrom<typeof personMachine> }
         | { type: 'onRemovePerson'; id: string }
         | { type: 'onUpdatePerson' },
-
       actions: {} as
         | { type: 'updatePersons' }
         | { type: 'addPerson' }
@@ -62,9 +60,12 @@ export const hotspotMachine = createMachine(
         };
       }),
       removePerson: assign((context, event) => {
+        const toRemoveIndex = context.persons.findIndex(
+          (p) => p?.id === event.id,
+        );
         return {
           ...context,
-          persons: context.persons.filter((machine) => machine.id !== event.id),
+          persons: context.persons.splice(toRemoveIndex, 1, null),
         };
       }),
     },
