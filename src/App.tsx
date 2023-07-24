@@ -3,15 +3,16 @@ import { button, useControls } from 'leva';
 import { Scene } from './components/gl/Scene';
 import { GameMachineProvider } from './hooks/use';
 import { gameMachine } from './machines/game.machine';
+
 import './style/App.css';
 
 function App() {
-  const [state, _, service] = useMachine(gameMachine);
+  const [state, , service] = useMachine(gameMachine);
   const leva = useControls({
     'Display machines JSON': false,
-    'Add Person': button(() => service.send({ type: 'onAddPerson' })),
-    'Remove Person': button(() =>
-      service.send({ type: 'onRemovePerson', id: '1' }),
+    'Invite Person': button(() => service.send({ type: 'onAddPerson' })),
+    'Remove Last Person': button(() =>
+      service.send({ type: 'onRemoveLastPerson' }),
     ),
   });
 

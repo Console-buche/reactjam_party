@@ -16,6 +16,9 @@ export const gameMachine = createMachine(
       onRemovePerson: {
         actions: ['removePerson'],
       },
+      onRemoveLastPerson: {
+        actions: ['removeLastPerson'],
+      },
     },
 
     schema: {
@@ -24,7 +27,8 @@ export const gameMachine = createMachine(
       },
       events: {} as
         | { type: 'onAddPerson' }
-        | { type: 'onRemovePerson'; id: string },
+        | { type: 'onRemovePerson'; id: string }
+        | { type: 'onRemoveLastPerson' },
     },
     predictableActionArguments: true,
     preserveActionOrder: true,
@@ -47,6 +51,12 @@ export const gameMachine = createMachine(
           persons: [
             ...context.persons.filter((machine) => machine.id !== event.id),
           ],
+        };
+      }),
+      removeLastPerson: assign((context) => {
+        return {
+          ...context,
+          persons: [...context.persons.slice(0, -1)],
         };
       }),
     },
