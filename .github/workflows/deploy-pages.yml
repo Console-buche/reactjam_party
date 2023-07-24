@@ -1,0 +1,47 @@
+name: deploy-pages
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    name: main - Build and deploy
+    runs-on: ubuntu-latest
+    permissions: read-all
+    steps:
+      - name: cloning repo 🛎
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Enable Node package managers
+        shell: bash
+        run: corepack enable
+
+      - name: Install dependencies
+        shell: bash
+        run: pnpm install
+
+      - name: Lint
+        shell: bash
+        run: pnpm lint
+
+      - name: Typecheck
+        shell: bash
+        run: pnpm typecheck
+
+      - name: Build
+        shell: bash
+        run: pnpm build
+
+      - name: deploy to github pages 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.3
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: dist # The folder the action should deploy.
