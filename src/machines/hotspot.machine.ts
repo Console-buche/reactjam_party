@@ -18,6 +18,7 @@ export const hotspotMachine = createMachine(
           '1000': [
             {
               actions: 'updatePersons',
+              target: 'UpdatingPersons',
             },
           ],
         },

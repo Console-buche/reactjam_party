@@ -10,7 +10,7 @@ const METERS_CONFIG = {
     clamp: (v: number) => MathUtils.clamp(v, 0, METERS_CONFIG.thirst.maxValue),
   },
   pee: {
-    initialValue: 0,
+    initialValue: 100,
     incrementValue: 10,
     decrementValue: 10,
     maxValue: 100,
@@ -37,9 +37,9 @@ export const personMachine = createMachine(
     context: {
       name: '',
       meters: {
-        thirst: 0,
-        pee: 0,
-        hype: 0,
+        thirst: METERS_CONFIG.thirst.initialValue,
+        pee: METERS_CONFIG.pee.initialValue,
+        hype: METERS_CONFIG.hype.initialValue,
       },
       action: 'none',
     },

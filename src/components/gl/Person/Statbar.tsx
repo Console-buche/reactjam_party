@@ -1,12 +1,6 @@
 import { MeshProps, useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import { BufferGeometry, MathUtils, Mesh } from 'three';
-import {
-  useGameMachineProvider,
-  usePersonMachineProvider,
-} from '../../../hooks/use';
-import { personMachine } from '../../../machines/person.machine';
-import { useMachine, useSelector } from '@xstate/react';
 
 const vertexShader = `
     varying vec2 vUv;
@@ -52,9 +46,6 @@ export const Statbar = ({ value, ...meshProps }: Statbar) => {
 
     ref.current.lookAt(camera.position);
 
-    if (value > 0) {
-      console.log(value);
-    }
     // update stat
 
     // TODO : add bounds + decrease on event only

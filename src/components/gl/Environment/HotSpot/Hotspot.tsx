@@ -79,6 +79,7 @@ export const Hotspot = ({
   const refHotSpotGeometry = useRef<CircleGeometry>(null);
   const refHotSpot = useRef<Mesh>(null);
   const [isHovered, setIsHovered] = useState(false);
+
   const { isDragging, draggingRef, draggingId } = useContext(DraggingContext);
   const uuid = useId();
 

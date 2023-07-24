@@ -35,6 +35,7 @@ export const Person = ({
   const {
     isDragging,
     setIsDragging,
+    setDraggingActorRef,
     draggingId,
     setDraggingId,
     setDraggingRef,
@@ -75,9 +76,10 @@ export const Person = ({
     if (ref.current && refGroup.current && !isExists.current) {
       ref.current.geometry.translate(0, PERSON_HEIGHT * 0.5, 0);
       refGroup.current.position.copy(pos || new Vector3(0, 0, 30));
+      setDraggingActorRef(actor);
       isExists.current = true;
     }
-  }, [isExists, pos]);
+  }, [isExists, pos, actor, setDraggingActorRef]);
 
   useFrame(({ raycaster, camera, clock }) => {
     if (!ref.current || !refGroup.current || !refFloor) {
@@ -120,7 +122,6 @@ export const Person = ({
   });
 
   const handleOnClick = () => {
-    console.log('clicked');
     if (!isDragging) {
       setIsDragging(true);
       setDraggingRef(refGroup.current);
