@@ -50,7 +50,5 @@ export const gameMachine = createMachine(
         };
       }),
     },
-    services: {},
-    delays: {},
   },
 );
