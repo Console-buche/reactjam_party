@@ -7,7 +7,7 @@ import { Hotspot } from './Hotspot';
 export const Bar = () => {
   const service = useInterpret(barMachine);
   const maxPersons = useSelector(service, (s) => s.context.maxPersons);
-  const { draggingActorRef } = useContext(DraggingContext); //TODO: degager ce contexte de mort
+  const { draggingActorRef } = useContext(DraggingContext); //TODO: degager ce contexte de mort XD
 
   return (
     <Hotspot

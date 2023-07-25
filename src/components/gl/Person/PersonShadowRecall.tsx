@@ -14,7 +14,7 @@ export const PersonShadowRecall = ({
   // setup easings
   const shadow = useSpring({
     opacity: isBeingDragged ? 0.9 : 0,
-    color: isBeingDragged ? '#FFA500' : 'grey', // orange to grey
+    color: isBeingDragged ? '#FFA500' : 'grey',
     scale: isBeingDragged
       ? ([1.25, 1.25, 1.25] as const)
       : ([0.75, 0.75, 0.75] as const),
@@ -25,7 +25,7 @@ export const PersonShadowRecall = ({
       refShadowRecall.current.position.set(
         beforeDragPosition.x,
         -0.9,
-        beforeDragPosition.z
+        beforeDragPosition.z,
       );
     }
   }, [beforeDragPosition, isBeingDragged]);

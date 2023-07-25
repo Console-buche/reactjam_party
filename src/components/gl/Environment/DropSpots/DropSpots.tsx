@@ -1,7 +1,7 @@
-import { useId, useRef } from "react";
-import { Mesh, Vector3 } from "three";
-import { DropSpot } from "./DropSpot";
-import { DROPSPOT_SIZE, RING_SIZE, RING_WIDTH } from "./dropSpots.constants";
+import { useId, useRef } from 'react';
+import { Mesh, Vector3 } from 'three';
+import { DropSpot } from './DropSpot';
+import { DROPSPOT_SIZE, RING_SIZE, RING_WIDTH } from './dropSpots.constants';
 
 export const DropSpots = ({
   positions,
@@ -11,8 +11,6 @@ export const DropSpots = ({
     uuid: string;
   }[];
 }) => {
-  // const { isDragging, setIsDragging } = useContext(DraggingContext);
-  // TODO : get tex from type
   const refDropSpot = useRef<Mesh>(null);
   const uuid = useId();
 

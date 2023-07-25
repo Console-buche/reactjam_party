@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber';
-import { World } from '../World';
+import { World } from '../World/World';
 
 export const Scene = () => {
   return (
@@ -8,8 +8,8 @@ export const Scene = () => {
       gl={{ alpha: true }}
       style={{ width: '100vw', height: '100vh' }}
     >
-      <color attach={'background'} args={['#ccc']} />
       <ambientLight />
+
       <World />
     </Canvas>
   );

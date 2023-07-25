@@ -46,9 +46,6 @@ export const Statbar = ({ value, ...meshProps }: Statbar) => {
 
     ref.current.lookAt(camera.position);
 
-    // update stat
-
-    // TODO : add bounds + decrease on event only
     ref.current.material.uniforms.percent.value = MathUtils.lerp(
       ref.current.material.uniforms.percent.value,
       value / 100,

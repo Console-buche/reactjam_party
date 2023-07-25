@@ -1,10 +1,10 @@
 import { useMachine } from '@xstate/react';
 import { button, useControls } from 'leva';
-import { Scene } from './components/gl/Scene';
 import { GameMachineProvider } from './hooks/use';
 import { gameMachine } from './machines/game.machine';
 
 import './style/App.css';
+import { Scene } from './components/gl/Scene/Scene';
 
 function App() {
   const [state, , service] = useMachine(gameMachine);

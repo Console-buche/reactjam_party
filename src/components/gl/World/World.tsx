@@ -11,7 +11,8 @@ import { Bar } from '../Environment/HotSpot/Bar';
 import { Toilet } from '../Environment/HotSpot/Toilet';
 
 // initialize a react context with two values : isDragging and setIsDragging
-// TODO/nice to have : dragging machine. But this works nice as is.
+// all state currently used to safe either ref of threejs object of actor ref
+// nit : make a state machine for dragging
 export const DraggingContext = createContext<{
   isDragging: boolean;
   draggingId: string | null;
@@ -61,8 +62,6 @@ export const World = () => {
         setDraggingRef,
       }}
     >
-      <ambientLight />
-      <directionalLight />
       <Cam isDragging={isDragging} />
 
       <HouseModel
@@ -74,16 +73,6 @@ export const World = () => {
           }
         }}
       />
-
-      {/* <Model
-        ref={refFloor}
-        onClick={() => {
-          if (isDragging) {
-            setIsDragging(false);
-            setDraggingId(null);
-          }
-        }}
-      /> */}
 
       <Suspense fallback={null}>
         {persons.map((actor) => (

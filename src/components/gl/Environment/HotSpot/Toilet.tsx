@@ -9,7 +9,6 @@ export const Toilet = () => {
   const { draggingActorRef } = useContext(DraggingContext);
   return (
     <Hotspot
-      type="battery"
       slotsAmount={5}
       position={[-6, 0, 7]}
       onDropHotspot={() =>
