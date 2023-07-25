@@ -12,13 +12,14 @@ export const Cam = () => {
       <CameraControls
         ref={cameraControlsRef}
         enabled={!isDragging}
-        maxDistance={30}
-        distance={30}
-        polarAngle={DEG2RAD * 55}
-        minPolarAngle={DEG2RAD * 55}
-        maxPolarAngle={DEG2RAD * 55}
+        maxDistance={22}
+        distance={22}
+        truckSpeed={4}
+        polarAngle={DEG2RAD * 80}
+        minPolarAngle={DEG2RAD * 80}
+        maxPolarAngle={DEG2RAD * 80}
         mouseButtons={{
-          left: 1,
+          left: 2,
           wheel: 0,
           middle: 0,
           right: 0,

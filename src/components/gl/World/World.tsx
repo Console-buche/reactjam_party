@@ -7,6 +7,7 @@ import { Toilet } from '../Environment/HotSpot/Toilet';
 import { HouseModel } from '../House/HouseModel';
 import { Person } from '../Person/Person';
 import { Cam } from './Cam';
+import { AppartmentModel } from '../House/Appartment_v1';
 
 export const World = () => {
   const refFloor = useRef<Mesh>(null);
@@ -17,7 +18,9 @@ export const World = () => {
     <>
       <Cam />
 
-      <HouseModel ref={refFloor} />
+      {/* <HouseModel ref={refFloor} /> */}
+
+      <AppartmentModel ref={refFloor} />
 
       <Suspense fallback={null}>
         {persons.map((actor) => (
