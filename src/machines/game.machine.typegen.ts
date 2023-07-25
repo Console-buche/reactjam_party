@@ -3,6 +3,9 @@
 export interface Typegen0 {
   '@@xstate/typegen': true;
   internalEvents: {
+    'xstate.after(500)#Game.playing': {
+      type: 'xstate.after(500)#Game.playing';
+    };
     'xstate.init': { type: 'xstate.init' };
   };
   invokeSrcNameMap: {};
@@ -14,12 +17,14 @@ export interface Typegen0 {
   };
   eventsCausingActions: {
     addPerson: 'onAddPerson';
+    endNight: 'triggerEndNight';
     removeLastPerson: 'onRemoveLastPerson';
     removePerson: 'onRemovePerson';
+    tick: 'xstate.after(500)#Game.playing';
   };
   eventsCausingDelays: {};
   eventsCausingGuards: {};
   eventsCausingServices: {};
-  matchesStates: undefined;
+  matchesStates: 'finished' | 'notStarted' | 'paused' | 'playing';
   tags: never;
 }
