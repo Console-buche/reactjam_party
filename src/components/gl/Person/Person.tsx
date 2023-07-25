@@ -47,7 +47,6 @@ export const Person = ({
   const tex = useTexture('assets/dudess.png');
   const serviceId = actor.id;
 
-  actor.send('triggerStart');
   const { hype, pee, thirst } = useSelector(
     actor,
     (state) => state.context.meters,
@@ -76,10 +75,10 @@ export const Person = ({
     if (ref.current && refGroup.current && !isExists.current) {
       ref.current.geometry.translate(0, PERSON_HEIGHT * 0.5, 0);
       refGroup.current.position.copy(pos || new Vector3(0, 0, 30));
-      setDraggingActorRef(actor);
       isExists.current = true;
+      actor.send('triggerStart');
     }
-  }, [isExists, pos, actor, setDraggingActorRef]);
+  }, [isExists, pos, actor]);
 
   useFrame(({ raycaster, camera, clock }) => {
     if (!ref.current || !refGroup.current || !refFloor) {
@@ -125,6 +124,8 @@ export const Person = ({
     if (!isDragging) {
       setIsDragging(true);
       setDraggingRef(refGroup.current);
+      setDraggingActorRef(actor);
+
       if (refGroup.current) {
         setDraggingId(serviceId);
         beforeDragPosition.current.copy(refGroup.current.position);
@@ -132,6 +133,7 @@ export const Person = ({
     } else {
       setIsDragging(false);
       setDraggingId(null);
+      setDraggingActorRef(null);
     }
   };
 
