@@ -54,7 +54,7 @@ export const Hotspot = ({
           slotsAmount,
           i,
         ),
-        uuid,
+        uuid: `${i}-${uuid}`,
       })),
     [],
   );
