@@ -1,8 +1,10 @@
 import { CameraControls } from '@react-three/drei';
 import { useRef } from 'react';
 import { DEG2RAD } from 'three/src/math/MathUtils';
+import { useStoreDragging } from '../../../stores/storeDragging';
 
-export const Cam = ({ isDragging }: { isDragging: boolean }) => {
+export const Cam = () => {
+  const isDragging = useStoreDragging((state) => state.isDragging);
   const cameraControlsRef = useRef<CameraControls>(null);
 
   return (

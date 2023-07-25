@@ -1,23 +1,16 @@
 import type { MeshProps } from '@react-three/fiber';
-import {
-  useContext,
-  useEffect,
-  useId,
-  useMemo,
-  useReducer,
-  useRef,
-  useState,
-} from 'react';
+import { useEffect, useId, useMemo, useReducer, useRef, useState } from 'react';
 import type { CircleGeometry, Mesh } from 'three';
+import { shallow } from 'zustand/shallow';
 import { getPositionsOnCircle } from '../../../../helpers/getPositionOnCircle';
+import { useStoreDragging } from '../../../../stores/storeDragging';
 import { DropSpots } from '../DropSpots/DropSpots';
 import { DROPSPOT_SIZE, RING_SIZE } from '../DropSpots/dropSpots.constants';
 import {
+  hopSpotReducer,
   type ReducerActionHotSpot,
   type ReducerStateHotSpot,
-  hopSpotReducer,
 } from './hotSpot.reducer';
-import { DraggingContext } from '../../World/World';
 
 type HotSpotProps = {
   slotsAmount: number;
@@ -33,7 +26,13 @@ export const Hotspot = ({
   const refHotSpot = useRef<Mesh>(null);
   const [isHovered, setIsHovered] = useState(false);
 
-  const { isDragging, draggingRef } = useContext(DraggingContext);
+  const { draggingRef, isDragging } = useStoreDragging(
+    (state) => ({
+      isDragging: state.isDragging,
+      draggingRef: state.draggingRef,
+    }),
+    shallow,
+  );
   const uuid = useId();
   const isExists = useRef(false);
 

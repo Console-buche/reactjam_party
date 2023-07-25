@@ -7,8 +7,10 @@ Files: HOUSE_LOW_POLY_WIP.gltf [797.6KB] > HOUSE_LOW_POLY_WIP-transformed.glb [9
 import { useGLTF } from '@react-three/drei';
 import { forwardRef } from 'react';
 import * as THREE from 'three';
-import { type GLTF } from 'three-stdlib';
 import { Mesh } from 'three';
+import { type GLTF } from 'three-stdlib';
+import { shallow } from 'zustand/shallow';
+import { useStoreDragging } from '../../../stores/storeDragging';
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -21,14 +23,34 @@ type GLTFResult = GLTF & {
   };
 };
 
-type HouseModel = {
-  onClick: () => void;
-} & JSX.IntrinsicElements['group'];
+type HouseModel = JSX.IntrinsicElements['group'];
 
 export const HouseModel = forwardRef<Mesh, HouseModel>((props, ref) => {
+  const { setIsDragging, isDragging, setDraggingId } = useStoreDragging(
+    (state) => ({
+      isDragging: state.isDragging,
+      setDraggingId: state.setDraggingId,
+      setIsDragging: state.setIsDragging,
+    }),
+    shallow,
+  );
+
+  const handleOnClick = () => {
+    if (isDragging) {
+      setIsDragging(false);
+      setDraggingId(null);
+    }
+  };
+
   const { nodes, materials } = useGLTF('assets/house_low.glb') as GLTFResult;
   return (
-    <group {...props} dispose={null} scale={2} position-y={-6}>
+    <group
+      {...props}
+      dispose={null}
+      scale={2}
+      position-y={-6}
+      onClick={handleOnClick}
+    >
       <group>
         <mesh
           ref={ref}

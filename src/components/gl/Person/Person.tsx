@@ -3,7 +3,7 @@ import { Html, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
 import { useControls } from 'leva';
-import { useContext, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   BufferGeometry,
   Group,
@@ -13,8 +13,9 @@ import {
   Vector3,
 } from 'three';
 import type { ActorRefFrom } from 'xstate';
+import { shallow } from 'zustand/shallow';
 import type { personMachine } from '../../../machines/person.machine';
-import { DraggingContext } from '../World/World';
+import { useStoreDragging } from '../../../stores/storeDragging';
 import { PersonShadowRecall } from './PersonShadowRecall';
 import { Statbar } from './Statbar';
 import { PERSON_HEIGHT } from './person.constants';
@@ -31,14 +32,25 @@ export const Person = ({
   const { showActionButtons } = useControls({ showActionButtons: false });
 
   const isExists = useRef(false);
+
   const {
     isDragging,
-    setIsDragging,
-    setDraggingActorRef,
     draggingId,
+    setDraggingActorRef,
     setDraggingId,
     setDraggingRef,
-  } = useContext(DraggingContext);
+    setIsDragging,
+  } = useStoreDragging(
+    (state) => ({
+      isDragging: state.isDragging,
+      setIsDragging: state.setIsDragging,
+      setDraggingActorRef: state.setDraggingActorRef,
+      draggingId: state.draggingId,
+      setDraggingId: state.setDraggingId,
+      setDraggingRef: state.setDraggingRef,
+    }),
+    shallow,
+  );
 
   const ref = useRef<Mesh>(null);
   const beforeDragPosition = useRef<Vector3>(new Vector3(0, 0, 0));
