@@ -1,0 +1,32 @@
+.clock__container {
+  pointer-events: none;
+  width: 400px;
+  height: 131px;
+
+  position: fixed;
+
+  margin: auto;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.clock__overlay {
+  position: absolute;
+  filter: grayscale(1);
+  inset: 0;
+  height: 100%;
+}
+
+.clock__image {
+  height: 100%;
+  clip-path: inset(0 100% 0 0);
+  transition: all 1.5s ease-in-out;
+}
+
+.backgroundImage {
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-image: url('./assets/hud/clock.png');
+  background-position: top;
+}
