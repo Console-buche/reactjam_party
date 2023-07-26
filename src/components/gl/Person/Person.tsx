@@ -1,9 +1,9 @@
 import { a, useSpring } from '@react-spring/three';
-import { Html, useTexture } from '@react-three/drei';
+import { Html, useCursor, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
 import { useControls } from 'leva';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   BufferGeometry,
   Group,
@@ -20,6 +20,19 @@ import { PersonShadowRecall } from './PersonShadowRecall';
 import { Statbar } from './Statbar';
 import { PERSON_HEIGHT } from './person.constants';
 
+const selectFeedbackIntensiry = (
+  isHovered: boolean,
+  isBeingDragged: boolean,
+) => {
+  if (isHovered) {
+    return 8;
+  }
+  if (isBeingDragged) {
+    return 4;
+  }
+  return 0;
+};
+
 export const Person = ({
   refFloor,
   pos,
@@ -30,6 +43,8 @@ export const Person = ({
   actor: ActorRefFrom<typeof personMachine>;
 }) => {
   const { showActionButtons } = useControls({ showActionButtons: false });
+  const [isHovered, setIsHovered] = useState(false);
+  useCursor(isHovered);
 
   const isExists = useRef(false);
 
@@ -64,6 +79,12 @@ export const Person = ({
   );
 
   const isBeingDragged = draggingId === serviceId;
+  // setup easings
+
+  const { glow, scale } = useSpring({
+    glow: selectFeedbackIntensiry(isHovered, isBeingDragged),
+    scale: isBeingDragged ? 0.75 : 0.9,
+  });
 
   // position tick for the drag back shadow
   useEffect(() => {
@@ -96,7 +117,8 @@ export const Person = ({
 
     // wobble
     ref.current.lookAt(new Vector3(camera.position.x, 0, camera.position.z));
-    ref.current.scale.y = Math.sin(clock.getElapsedTime() * 10) * 0.05 + 1;
+    ref.current.scale.y =
+      Math.sin(clock.getElapsedTime() * 10) * 0.01 + scale.get();
 
     // height
     if (!isBeingDragged) {
@@ -128,11 +150,29 @@ export const Person = ({
 
   return (
     <>
-      <group ref={refGroup}>
-        <mesh ref={ref} uuid={serviceId} onPointerDown={handleOnClick}>
+      <group
+        ref={refGroup}
+        onPointerOver={() => setIsHovered(true)}
+        onPointerLeave={() => setIsHovered(false)}
+      >
+        <a.mesh
+          ref={ref}
+          uuid={serviceId}
+          onPointerDown={handleOnClick}
+          scale={scale}
+        >
           <planeBufferGeometry args={[3, PERSON_HEIGHT]} />
-          <meshBasicMaterial map={tex} transparent alphaTest={0.1} />
-        </mesh>
+          {/* @ts-ignore */}
+          <a.meshStandardMaterial
+            map={tex}
+            transparent
+            alphaTest={0.1}
+            toneMapped={false}
+            emissive={'purple'}
+            emissiveIntensity={glow}
+            emissiveMap={tex}
+          />
+        </a.mesh>
         <Statbar position-y={6} value={thirst} />
         <Statbar position-y={6.25} value={pee} />
         <Statbar position-y={6.5} value={hype} />
