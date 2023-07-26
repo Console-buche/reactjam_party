@@ -70,7 +70,7 @@ export const hotspotMachine = createMachine(
         });
         return {
           ...context,
-          persons: [...context.persons, event.person],
+          persons: Array.from(new Set([...context.persons, event.person])),
         };
       }),
       removePerson: assign((context, event) => {

@@ -1,7 +1,7 @@
 import { a, easings, useSpring } from '@react-spring/three';
-import { useCursor } from '@react-three/drei';
+import { Text, useCursor } from '@react-three/drei';
 import { type MeshProps } from '@react-three/fiber';
-import { useInterpret } from '@xstate/react';
+import { useInterpret, useSelector } from '@xstate/react';
 import { useRef, useState } from 'react';
 import type { Mesh } from 'three';
 import { shallow } from 'zustand/shallow';
@@ -18,6 +18,8 @@ export const AppartmentHotspot = ({
   const [isHovered, setIsHovered] = useState(false);
   const service = useInterpret(hotSpotMachine);
   useCursor(isHovered);
+
+  const { persons } = useSelector(service, (s) => s.context);
 
   const {
     setIsDragging,
@@ -89,7 +91,11 @@ export const AppartmentHotspot = ({
         material-map={materials.map}
         material-emissiveMap={materials.map}
         name="hotspot"
-      />
+      >
+        <Text color="blue" position-y={6} fontSize={5}>
+          {persons.length}
+        </Text>
+      </a.mesh>
     </a.group>
   );
 };
