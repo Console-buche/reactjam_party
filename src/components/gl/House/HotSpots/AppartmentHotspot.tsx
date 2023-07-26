@@ -1,52 +1,40 @@
 import { a, easings, useSpring } from '@react-spring/three';
-import type { MeshProps } from '@react-three/fiber';
+import { useCursor } from '@react-three/drei';
+import { type MeshProps } from '@react-three/fiber';
 import { useInterpret } from '@xstate/react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import type { Mesh } from 'three';
 import { shallow } from 'zustand/shallow';
 import { useStoreDragging } from '../../../../stores/storeDragging';
 import type { AppartmentHotSpot } from './types';
-import { useCursor } from '@react-three/drei';
-
-const selectFeedbackIntensiry = (isHovered: boolean, isDragging: boolean) => {
-  if (isHovered) {
-    return 8;
-  }
-  if (isDragging) {
-    return 12;
-  }
-  return 0;
-};
 
 export const AppartmentHotspot = ({
   geometry,
-  materials,
   hotSpotMachine,
+  materials,
   ...props
 }: AppartmentHotSpot & MeshProps) => {
+  const refMesh = useRef<Mesh>(null);
   const [isHovered, setIsHovered] = useState(false);
   const service = useInterpret(hotSpotMachine);
   useCursor(isHovered);
 
-  // TODO : use below solution when availble ===> registers hotspot machine in game machine
-  // const gameMachine = useGameMachineProvider();
-
-  // useEffect(() => {
-  // gameMachine.send({ type: 'HOTSPOT_CREATED', service });
-  // return () => {
-  // gameMachine.send({ type: 'HOTSPOT_DESTROYED', service });
-  // };
-  // }, []);
-
-  const { setIsDragging, isDragging, setDraggingId, draggingActorRef } =
-    useStoreDragging(
-      (state) => ({
-        isDragging: state.isDragging,
-        setDraggingId: state.setDraggingId,
-        setIsDragging: state.setIsDragging,
-        draggingActorRef: state.draggingActorRef,
-      }),
-      shallow,
-    );
+  const {
+    setIsDragging,
+    isDragging,
+    setDraggingId,
+    draggingActorRef,
+    isHoveringPerson,
+  } = useStoreDragging(
+    (state) => ({
+      isDragging: state.isDragging,
+      setDraggingId: state.setDraggingId,
+      setIsDragging: state.setIsDragging,
+      draggingActorRef: state.draggingActorRef,
+      isHoveringPerson: state.isHoveringPerson,
+    }),
+    shallow,
+  );
 
   // setup easings
   const { glow, scale } = useSpring({
@@ -63,16 +51,25 @@ export const AppartmentHotspot = ({
   });
 
   const handleOnClick = () => {
-    if (isDragging) {
-      setIsDragging(false);
-      setDraggingId(null);
-
-      draggingActorRef &&
-        service.send({
-          type: 'onAddPerson',
-          person: draggingActorRef,
-        });
+    if (isHoveringPerson) {
+      return;
     }
+    setIsDragging(false);
+    setDraggingId(null);
+
+    draggingActorRef &&
+      service.send({
+        type: 'onAddPerson',
+        person: draggingActorRef,
+      });
+  };
+
+  const handleOnPointerEnter = () => {
+    setIsHovered(true);
+  };
+
+  const handleOnPointerLeave = () => {
+    setIsHovered(false);
   };
 
   return (
@@ -80,8 +77,9 @@ export const AppartmentHotspot = ({
     <a.group scale={scale} onClick={handleOnClick}>
       {/* @ts-ignore */}
       <a.mesh
-        onPointerEnter={() => setIsHovered(true)}
-        onPointerLeave={() => setIsHovered(false)}
+        ref={refMesh}
+        onPointerEnter={handleOnPointerEnter}
+        onPointerLeave={handleOnPointerLeave}
         geometry={geometry}
         material={materials}
         {...props}
@@ -90,6 +88,7 @@ export const AppartmentHotspot = ({
         material-emissiveIntensity={glow}
         material-map={materials.map}
         material-emissiveMap={materials.map}
+        name="hotspot"
       />
     </a.group>
   );

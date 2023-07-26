@@ -4,6 +4,7 @@ import { create } from 'zustand';
 import type { personMachine } from '../machines/person.machine';
 
 type InitialState = {
+  isHoveringPerson: boolean;
   isDragging: boolean;
   draggingId: string | null;
   draggingActorRef: ActorRefFrom<typeof personMachine> | null;
@@ -17,11 +18,13 @@ type Actions = {
   setDraggingActorRef: (
     draggingActorRef: ActorRefFrom<typeof personMachine> | null,
   ) => void;
+  setIsHoveringPerson: (isHoveringPerson: boolean) => void;
 };
 
 const InitialState = {
   isDragging: false,
   draggingId: null,
+  isHoveringPerson: false,
   draggingRef: null,
   draggingActorRef: null,
 };
@@ -36,4 +39,6 @@ export const useStoreDragging = create<InitialState & Actions>((set) => ({
   setDraggingRef: (draggingRef) => set({ draggingRef }),
 
   setDraggingActorRef: (draggingActorRef) => set({ draggingActorRef }),
+
+  setIsHoveringPerson: (isHoveringPerson) => set({ isHoveringPerson }),
 }));

@@ -33,6 +33,19 @@ const selectFeedbackIntensiry = (
   return 0;
 };
 
+const selectFeedbackScale = (
+  isBeingDragged: boolean,
+  currentHotSpotIt: string,
+) => {
+  if (currentHotSpotIt !== '') {
+    return 0.9;
+  }
+  if (isBeingDragged) {
+    return 0.65;
+  }
+  return 0.75;
+};
+
 export const Person = ({
   refFloor,
   pos,
@@ -55,6 +68,7 @@ export const Person = ({
     setDraggingId,
     setDraggingRef,
     setIsDragging,
+    setIsHoveringPerson,
   } = useStoreDragging(
     (state) => ({
       isDragging: state.isDragging,
@@ -63,6 +77,7 @@ export const Person = ({
       draggingId: state.draggingId,
       setDraggingId: state.setDraggingId,
       setDraggingRef: state.setDraggingRef,
+      setIsHoveringPerson: state.setIsHoveringPerson,
     }),
     shallow,
   );
@@ -79,11 +94,12 @@ export const Person = ({
   );
 
   const isBeingDragged = draggingId === serviceId;
-  // setup easings
 
+  // setup easings
+  const { hotspot } = useSelector(actor, (state) => state.context);
   const { glow, scale } = useSpring({
     glow: selectFeedbackIntensiry(isHovered, isBeingDragged),
-    scale: isBeingDragged ? 0.75 : 0.9,
+    scale: selectFeedbackScale(isBeingDragged, hotspot),
   });
 
   // position tick for the drag back shadow
@@ -97,7 +113,7 @@ export const Person = ({
   useEffect(() => {
     if (ref.current && refGroup.current && !isExists.current) {
       ref.current.geometry.translate(0, PERSON_HEIGHT * 0.5, 0);
-      refGroup.current.position.copy(pos || new Vector3(-31, 0, 11.5));
+      refGroup.current.position.copy(pos || new Vector3(-26, 0, 11));
       isExists.current = true;
       actor.send('triggerStart');
     }
@@ -148,18 +164,29 @@ export const Person = ({
     }
   };
 
+  const handleOnPointerEnter = () => {
+    setIsHovered(true);
+    setIsHoveringPerson(true);
+  };
+
+  const handleOnPointerLeave = () => {
+    setIsHovered(false);
+    setIsHoveringPerson(false);
+  };
+
   return (
     <>
       <group
         ref={refGroup}
-        onPointerOver={() => setIsHovered(true)}
-        onPointerLeave={() => setIsHovered(false)}
+        onPointerEnter={handleOnPointerEnter}
+        onPointerLeave={handleOnPointerLeave}
       >
         <a.mesh
           ref={ref}
           uuid={serviceId}
           onPointerDown={handleOnClick}
           scale={scale}
+          name="Person"
         >
           <planeBufferGeometry args={[3, PERSON_HEIGHT]} />
           {/* @ts-ignore */}
