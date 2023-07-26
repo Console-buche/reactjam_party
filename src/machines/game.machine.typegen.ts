@@ -16,9 +16,10 @@ export interface Typegen0 {
     services: never;
   };
   eventsCausingActions: {
+    addHotspot: 'onAddHotspot';
     addPerson: 'onAddPerson';
-    endNight: 'triggerEndNight';
-    removeLastPerson: 'onRemoveLastPerson';
+    endNight: 'onEndNight' | 'xstate.after(500)#Game.playing';
+    removeHotspot: 'onRemoveHotspot';
     removePerson: 'onRemovePerson';
     tick: 'xstate.after(500)#Game.playing';
   };

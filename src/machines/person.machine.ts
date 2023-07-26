@@ -42,6 +42,15 @@ export const personMachine = createMachine(
         hype: METERS_CONFIG.hype.initialValue,
       },
       action: 'none',
+      hotspot: '',
+    },
+    on: {
+      onRegisterHotspot: {
+        actions: 'registerHotspot',
+      },
+      onUnregisterHotspot: {
+        actions: 'unregisterHotspot',
+      },
     },
     states: {
       actionFlow: {
@@ -170,6 +179,7 @@ export const personMachine = createMachine(
           pee: number;
         };
         name: string;
+        hotspot: string;
       },
       events: {} as
         | { type: 'onDrag' }
@@ -177,13 +187,17 @@ export const personMachine = createMachine(
         | { type: 'triggerPee' }
         | { type: 'triggerDrink' }
         | { type: 'triggerStart' }
+        | { type: 'onRegisterHotspot'; hotspot: string }
+        | { type: 'onUnregisterHotspot' }
         | { type: 'onTick' },
       actions: {} as
         | { type: 'drink' }
         | { type: 'pee' }
         | { type: 'incrementHype' }
         | { type: 'decrementHype' }
-        | { type: 'updateNeeds' },
+        | { type: 'updateNeeds' }
+        | { type: 'registerHotspot' }
+        | { type: 'unregisterHotspot' },
     },
     predictableActionArguments: true,
     preserveActionOrder: true,
@@ -258,6 +272,11 @@ export const personMachine = createMachine(
           },
         };
       }),
+      registerHotspot: assign((context, event) => ({
+        ...context,
+        hotspot: event.hotspot,
+      })),
+      unregisterHotspot: assign((context) => ({ ...context, hotspot: '' })),
     },
     guards: {
       isPeeEmpty: (context) => context.meters.pee <= 0,

@@ -1,14 +1,22 @@
 import { type ActorRefFrom, assign, createMachine, spawn, send } from 'xstate';
 import { personMachine } from './person.machine';
 import { MathUtils } from 'three';
+import { hotspotMachine } from './hotspot.machine';
+import { barMachine } from './bar.machine';
+import { toiletMachine } from './toilet.machine';
 
 const METERS_CONFIG = {
   clock: {
     initialValue: 0,
-    incrementValue: 1,
+    incrementValue: 2,
     maxValue: 100,
     clamp: (v: number) => MathUtils.clamp(v, 0, METERS_CONFIG.clock.maxValue),
   },
+};
+
+const HOTSPOTS = {
+  bar: barMachine,
+  toilet: toiletMachine,
 };
 
 export const gameMachine = createMachine(
@@ -19,6 +27,7 @@ export const gameMachine = createMachine(
       'The game machine is the root machine of the game, it handles the game state.',
     context: {
       persons: [],
+      hotspots: [],
       clock: METERS_CONFIG.clock.initialValue,
     },
     on: {
@@ -28,10 +37,13 @@ export const gameMachine = createMachine(
       onRemovePerson: {
         actions: ['removePerson'],
       },
-      onRemoveLastPerson: {
-        actions: ['removeLastPerson'],
+      onAddHotspot: {
+        actions: ['addHotspot'],
       },
-      triggerGameOver: {
+      onRemoveHotspot: {
+        actions: ['removeHotspot'],
+      },
+      onGameOver: {
         target: 'finished',
       },
     },
@@ -39,23 +51,29 @@ export const gameMachine = createMachine(
     states: {
       notStarted: {
         on: {
-          triggerStart: {
+          onStart: {
             target: 'playing',
           },
         },
       },
       playing: {
         after: {
-          500: {
-            actions: 'tick',
-            target: 'playing',
-          },
+          500: [
+            {
+              actions: 'tick',
+              target: 'playing',
+            },
+            {
+              cond: (context) => context.clock >= METERS_CONFIG.clock.maxValue,
+              actions: 'endNight',
+            },
+          ],
         },
         on: {
-          triggerPause: {
+          onPause: {
             target: 'paused',
           },
-          triggerEndNight: {
+          onEndNight: {
             actions: 'endNight',
             target: 'paused',
           },
@@ -63,7 +81,7 @@ export const gameMachine = createMachine(
       },
       paused: {
         on: {
-          triggerStart: {
+          onStart: {
             target: 'playing',
           },
         },
@@ -73,16 +91,18 @@ export const gameMachine = createMachine(
     schema: {
       context: {} as {
         persons: ActorRefFrom<typeof personMachine>[];
+        hotspots: ActorRefFrom<typeof hotspotMachine>[];
         clock: number;
       },
       events: {} as
         | { type: 'onAddPerson' }
         | { type: 'onRemovePerson'; id: string }
-        | { type: 'onRemoveLastPerson' }
-        | { type: 'triggerStart' }
-        | { type: 'triggerPause' }
-        | { type: 'triggerEndNight' }
-        | { type: 'triggerGameOver' },
+        | { type: 'onAddHotspot'; hotspotType: 'bar' | 'toilet' }
+        | { type: 'onRemoveHotspot'; id: string }
+        | { type: 'onStart' }
+        | { type: 'onPause' }
+        | { type: 'onEndNight' }
+        | { type: 'onGameOver' },
     },
     predictableActionArguments: true,
     preserveActionOrder: true,
@@ -107,15 +127,24 @@ export const gameMachine = createMachine(
           ],
         };
       }),
-      removeLastPerson: assign((context) => {
+      addHotspot: assign((context, event) => ({
+        ...context,
+        hotspots: [
+          ...context.hotspots,
+          spawn(HOTSPOTS[event.hotspotType], MathUtils.generateUUID()),
+        ],
+      })),
+      removeHotspot: assign((context, event) => {
         return {
           ...context,
-          persons: [...context.persons.slice(0, -1)],
+          hotspots: [
+            ...context.hotspots.filter((machine) => machine.id !== event.id),
+          ],
         };
       }),
       tick: assign((context) => {
         const clock = context.clock + METERS_CONFIG.clock.incrementValue;
-        if (clock >= METERS_CONFIG.clock.maxValue) send('triggerEndNight');
+        if (clock >= METERS_CONFIG.clock.maxValue) send('EndNight');
         return {
           ...context,
           clock: METERS_CONFIG.clock.clamp(clock),
