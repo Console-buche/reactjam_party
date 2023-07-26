@@ -144,6 +144,7 @@ export const Person = ({
       setIsDragging(true);
       setDraggingRef(refGroup.current);
       setDraggingActorRef(actor);
+      actor.send({ type: 'onUnregisterHotspot' });
 
       if (refGroup.current) {
         setDraggingId(serviceId);
