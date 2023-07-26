@@ -1,4 +1,4 @@
-import { a, useSpring } from '@react-spring/three';
+import { a, easings, useSpring } from '@react-spring/three';
 import type { MeshProps } from '@react-three/fiber';
 import { useInterpret } from '@xstate/react';
 import { useState } from 'react';
@@ -6,6 +6,16 @@ import { shallow } from 'zustand/shallow';
 import { useStoreDragging } from '../../../../stores/storeDragging';
 import type { AppartmentHotSpot } from './types';
 import { useCursor } from '@react-three/drei';
+
+const selectFeedbackIntensiry = (isHovered: boolean, isDragging: boolean) => {
+  if (isHovered) {
+    return 8;
+  }
+  if (isDragging) {
+    return 12;
+  }
+  return 0;
+};
 
 export const AppartmentHotspot = ({
   geometry,
@@ -40,8 +50,16 @@ export const AppartmentHotspot = ({
 
   // setup easings
   const { glow, scale } = useSpring({
-    glow: isHovered ? 3 : 1,
-    scale: isHovered ? [1, 1.05, 1.05] : [1, 1, 1],
+    from: { glow: 0, scale: [1, 1, 1] },
+    to: [
+      { glow: 2, scale: [1, 1.025, 1.075] },
+      { glow: 0, scale: [1, 1, 1] },
+    ],
+    loop: isDragging || isHovered,
+    config: {
+      easing: easings.easeInOutSine,
+      duration: 350,
+    },
   });
 
   const handleOnClick = () => {
