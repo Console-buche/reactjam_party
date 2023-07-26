@@ -1,5 +1,5 @@
 import { a, useSpring } from '@react-spring/three';
-import { Html, useCursor, useTexture } from '@react-three/drei';
+import { Html, Text, useCursor, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
 import { useControls } from 'leva';
@@ -88,10 +88,10 @@ export const Person = ({
   const tex = useTexture('assets/dudess.png');
   const serviceId = actor.id;
 
-  const { hype, pee, thirst } = useSelector(
-    actor,
-    (state) => state.context.meters,
-  );
+  const {
+    meters: { hype, pee, thirst },
+    name,
+  } = useSelector(actor, (state) => state.context);
 
   const isBeingDragged = draggingId === serviceId;
 
@@ -200,9 +200,13 @@ export const Person = ({
             emissiveMap={tex}
           />
         </a.mesh>
-        <Statbar position-y={6} value={thirst} />
-        <Statbar position-y={6.25} value={pee} />
-        <Statbar position-y={6.5} value={hype} />
+        <Statbar position-y={4} value={thirst} />
+        <Statbar position-y={4.25} value={pee} />
+        <Statbar position-y={4.5} value={hype} />
+
+        <Text fontSize={0.5} position-y={3} color="yellow">
+          {name}
+        </Text>
 
         {/* Debug  */}
         {showActionButtons && (

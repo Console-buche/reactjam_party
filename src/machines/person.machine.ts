@@ -1,6 +1,6 @@
 import { MathUtils } from 'three';
-import { assign, createMachine, send } from 'xstate';
-import { sendTo } from 'xstate/lib/actions';
+import { assign, createMachine } from 'xstate';
+import { names } from './person.constants';
 
 const METERS_CONFIG = {
   thirst: {
@@ -35,6 +35,10 @@ export const personMachine = createMachine(
       'A person is a character in the game, with its needs and actions.',
     type: 'parallel',
     initial: 'actionFlow',
+    entry: assign((context) => ({
+      ...context,
+      name: names[Math.floor(Math.random() * names.length)],
+    })),
     context: {
       name: '',
       meters: {
