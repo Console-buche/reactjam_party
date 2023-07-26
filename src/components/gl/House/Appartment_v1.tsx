@@ -4,10 +4,13 @@ Command: npx gltfjsx@6.2.10 appartment_v1.gltf -t -K -T
 Files: appartment_v1.gltf [18.62MB] > appartment_v1-transformed.glb [1.69MB] (91%)
 */
 
-import * as THREE from 'three';
-import React, { forwardRef, useRef } from 'react';
 import { useGLTF } from '@react-three/drei';
+import { forwardRef } from 'react';
+import * as THREE from 'three';
 import { type GLTF } from 'three-stdlib';
+import { barMachine } from '../../../machines/bar.machine';
+import { toiletMachine } from '../../../machines/toilet.machine';
+import { AppartmentHotspot } from './HotSpots/AppartmentHotspot';
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -97,6 +100,7 @@ export const AppartmentModel = forwardRef<
   const { nodes, materials } = useGLTF(
     'assets/appartment_v1-transformed.glb',
   ) as GLTFResult;
+
   return (
     <group {...props} dispose={null}>
       <mesh ref={ref}>
@@ -204,13 +208,16 @@ export const AppartmentModel = forwardRef<
           rotation={[Math.PI / 2, 0, 0]}
           scale={4.673}
         />
-        <mesh
+
+        <AppartmentHotspot
           geometry={nodes.bar001.geometry}
-          material={materials.bar}
+          materials={materials.bar}
           position={[8.725, 1.23, 7.158]}
           rotation={[-Math.PI / 2, 0, -0.191]}
           scale={-5.408}
+          hotSpotMachine={barMachine}
         />
+
         <mesh
           geometry={nodes.graffitti_party.geometry}
           material={materials.graffitti_party}
@@ -319,12 +326,23 @@ export const AppartmentModel = forwardRef<
           position={[51.326, -0.712, 1.437]}
           scale={11.879}
         />
-        <mesh
+
+        <AppartmentHotspot
           geometry={nodes.cheloupee.geometry}
-          material={materials.cheloupee}
+          materials={materials.cheloupee}
+          position={[50.937, 3.299, -2.056]}
+          rotation={[Math.PI / 2, 0, 0]}
+          scale={4.715}
+          hotSpotMachine={toiletMachine}
+        />
+
+        <AppartmentHotspot
+          geometry={nodes.cheloupee.geometry}
+          materials={materials.cheloupee}
           position={[54.937, 3.299, -2.056]}
           rotation={[Math.PI / 2, 0, 0]}
           scale={4.715}
+          hotSpotMachine={toiletMachine}
         />
         <mesh
           geometry={nodes.sink.geometry}
@@ -359,14 +377,17 @@ export const AppartmentModel = forwardRef<
             materials.render_map_brick,
             8,
           ]}
+          // @ts-ignore
           instanceMatrix={nodes.render_map_brick.instanceMatrix}
         />
         <instancedMesh
           args={[nodes.window002.geometry, materials.window, 7]}
+          // @ts-ignore
           instanceMatrix={nodes.window002.instanceMatrix}
         />
         <instancedMesh
           args={[nodes.Cube001.geometry, nodes.Cube001.material, 8]}
+          // @ts-ignore
           instanceMatrix={nodes.Cube001.instanceMatrix}
         />
       </mesh>

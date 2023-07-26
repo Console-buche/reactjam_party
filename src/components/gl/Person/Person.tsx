@@ -1,5 +1,5 @@
 import { a, useSpring } from '@react-spring/three';
-import { Html, useTexture } from '@react-three/drei';
+import { Box, Html, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
 import { useControls } from 'leva';
@@ -86,7 +86,7 @@ export const Person = ({
   useEffect(() => {
     if (ref.current && refGroup.current && !isExists.current) {
       ref.current.geometry.translate(0, PERSON_HEIGHT * 0.5, 0);
-      refGroup.current.position.copy(pos || new Vector3(0, 0, 30));
+      refGroup.current.position.copy(pos || new Vector3(-31, 0, 9));
       isExists.current = true;
       actor.send('triggerStart');
     }
@@ -101,21 +101,28 @@ export const Person = ({
       refFloor.current && raycaster.intersectObject(refFloor.current);
 
     // drag
-    if (intersects && intersects.length > 0 && isBeingDragged) {
-      const [intersect] = intersects;
-      if (isDragging) {
-        const newGroupPos = new Vector3(
-          intersect.point.x,
-          0,
-          intersect.point.z,
-        );
-        refGroup.current.position.lerp(newGroupPos, 0.1);
-        ref.current.position.y = MathUtils.lerp(
-          ref.current.position.y,
-          PERSON_HEIGHT * 0.15,
-          0.2,
-        );
-      }
+    // if (intersects && intersects.length > 0 && isBeingDragged) {
+    //   const [intersect] = intersects;
+    //   if (isDragging) {
+    //     const newGroupPos = new Vector3(
+    //       intersect.point.x,
+    //       0,
+    //       intersect.point.z,
+    //     );
+    //     refGroup.current.position.lerp(newGroupPos, 0.1);
+    //     ref.current.position.y = MathUtils.lerp(
+    //       ref.current.position.y,
+    //       PERSON_HEIGHT * 0.15,
+    //       0.2,
+    //     );
+    //   }
+    // }
+
+    if (isDragging) {
+      refGroup.current.position.lerp(
+        new Vector3(camera.position.x, refGroup.current.position.y, 8),
+        0.75,
+      );
     }
 
     // wobble
@@ -152,13 +159,13 @@ export const Person = ({
   return (
     <>
       <group ref={refGroup}>
-        <mesh ref={ref} uuid={serviceId} onClick={handleOnClick}>
+        <mesh ref={ref} uuid={serviceId} onPointerDown={handleOnClick}>
           <planeBufferGeometry args={[3, PERSON_HEIGHT]} />
           <meshBasicMaterial map={tex} transparent alphaTest={0.1} />
         </mesh>
         <Statbar position-y={6} value={thirst} />
-        <Statbar position-y={8} value={pee} />
-        <Statbar position-y={10} value={hype} />
+        <Statbar position-y={6.25} value={pee} />
+        <Statbar position-y={6.5} value={hype} />
 
         <a.mesh
           ref={refShadow}
