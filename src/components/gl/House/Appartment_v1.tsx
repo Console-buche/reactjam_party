@@ -330,15 +330,6 @@ export const AppartmentModel = forwardRef<
         <AppartmentHotspot
           geometry={nodes.cheloupee.geometry}
           materials={materials.cheloupee}
-          position={[50.937, 3.299, -2.056]}
-          rotation={[Math.PI / 2, 0, 0]}
-          scale={4.715}
-          hotSpotMachine={toiletMachine}
-        />
-
-        <AppartmentHotspot
-          geometry={nodes.cheloupee.geometry}
-          materials={materials.cheloupee}
           position={[54.937, 3.299, -2.056]}
           rotation={[Math.PI / 2, 0, 0]}
           scale={4.715}

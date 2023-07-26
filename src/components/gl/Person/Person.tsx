@@ -1,5 +1,5 @@
 import { a, useSpring } from '@react-spring/three';
-import { Box, Html, useTexture } from '@react-three/drei';
+import { Html, useTexture } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
 import { useControls } from 'leva';
@@ -97,8 +97,8 @@ export const Person = ({
       return;
     }
 
-    const intersects =
-      refFloor.current && raycaster.intersectObject(refFloor.current);
+    // const intersects =
+    //   refFloor.current && raycaster.intersectObject(refFloor.current);
 
     // drag
     // if (intersects && intersects.length > 0 && isBeingDragged) {
@@ -118,7 +118,7 @@ export const Person = ({
     //   }
     // }
 
-    if (isDragging) {
+    if (isBeingDragged) {
       refGroup.current.position.lerp(
         new Vector3(camera.position.x, refGroup.current.position.y, 8),
         0.75,
@@ -170,7 +170,7 @@ export const Person = ({
         <a.mesh
           ref={refShadow}
           rotation-x={Math.PI * -0.5}
-          position-y={-0.9}
+          position-y={-1.1}
           scale={shadow.scale}
         >
           <circleBufferGeometry />
@@ -181,6 +181,9 @@ export const Person = ({
             opacity={shadow.opacity}
             depthWrite={false}
             color={shadow.color}
+            toneMapped={false}
+            emissive={0xf4f400}
+            emissiveIntensity={0.15}
           />
         </a.mesh>
 
