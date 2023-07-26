@@ -24,7 +24,7 @@ export const PersonShadowRecall = ({
     if (refShadowRecall.current) {
       refShadowRecall.current.position.set(
         beforeDragPosition.x,
-        -0.9,
+        -1.5,
         beforeDragPosition.z,
       );
     }
@@ -43,6 +43,9 @@ export const PersonShadowRecall = ({
         opacity={shadow.opacity}
         depthWrite={false}
         color={shadow.color}
+        toneMapped={false}
+        emissive={0xffffff}
+        emissiveIntensity={1.2}
       />
     </a.mesh>
   );

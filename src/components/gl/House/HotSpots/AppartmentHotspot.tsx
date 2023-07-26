@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { shallow } from 'zustand/shallow';
 import { useStoreDragging } from '../../../../stores/storeDragging';
 import type { AppartmentHotSpot } from './types';
+import { useCursor } from '@react-three/drei';
 
 export const AppartmentHotspot = ({
   geometry,
@@ -14,6 +15,7 @@ export const AppartmentHotspot = ({
 }: AppartmentHotSpot & MeshProps) => {
   const [isHovered, setIsHovered] = useState(false);
   const service = useInterpret(hotSpotMachine);
+  useCursor(isHovered);
 
   // TODO : use below solution when availble ===> registers hotspot machine in game machine
   // const gameMachine = useGameMachineProvider();
@@ -38,7 +40,7 @@ export const AppartmentHotspot = ({
 
   // setup easings
   const { glow, scale } = useSpring({
-    glow: isHovered ? 2 : 1,
+    glow: isHovered ? 3 : 1,
     scale: isHovered ? [1, 1.05, 1.05] : [1, 1, 1],
   });
 
@@ -48,31 +50,29 @@ export const AppartmentHotspot = ({
       setDraggingId(null);
 
       draggingActorRef &&
-        service.send({ type: 'onAddPerson', person: draggingActorRef });
+        service.send({
+          type: 'onAddPerson',
+          person: draggingActorRef,
+        });
     }
   };
 
   return (
     // @ts-ignore
     <a.group scale={scale} onClick={handleOnClick}>
-      <mesh
+      {/* @ts-ignore */}
+      <a.mesh
         onPointerEnter={() => setIsHovered(true)}
         onPointerLeave={() => setIsHovered(false)}
         geometry={geometry}
         material={materials}
         {...props}
-      >
-        {/* @ts-ignore */}
-        <a.meshLambertMaterial
-          map={materials.map} // TODO: render some button in a different RenderTexture, to control light pulsing diffrent rythm
-          alphaTest={0.1}
-          transparent
-          toneMapped={false}
-          emissive={0xffffff}
-          emissiveMap={materials.map}
-          emissiveIntensity={glow}
-        />
-      </mesh>
+        material-tonedMapped={false}
+        material-emissive={0xffffff}
+        material-emissiveIntensity={glow}
+        material-map={materials.map}
+        material-emissiveMap={materials.map}
+      />
     </a.group>
   );
 };

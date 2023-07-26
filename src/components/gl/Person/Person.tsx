@@ -55,7 +55,6 @@ export const Person = ({
   const ref = useRef<Mesh>(null);
   const beforeDragPosition = useRef<Vector3>(new Vector3(0, 0, 0));
   const refGroup = useRef<Group>(null);
-  const refShadow = useRef<Mesh>(null);
   const tex = useTexture('assets/dudess.png');
   const serviceId = actor.id;
 
@@ -65,15 +64,6 @@ export const Person = ({
   );
 
   const isBeingDragged = draggingId === serviceId;
-
-  // init easings
-  const shadow = useSpring({
-    opacity: isBeingDragged ? 0.9 : 0.1,
-    color: isBeingDragged ? '#FFA500' : 'grey',
-    scale: isBeingDragged
-      ? ([1.25, 1.25, 1.25] as const)
-      : ([0.75, 0.75, 0.75] as const),
-  });
 
   // position tick for the drag back shadow
   useEffect(() => {
@@ -86,41 +76,20 @@ export const Person = ({
   useEffect(() => {
     if (ref.current && refGroup.current && !isExists.current) {
       ref.current.geometry.translate(0, PERSON_HEIGHT * 0.5, 0);
-      refGroup.current.position.copy(pos || new Vector3(-31, 0, 9));
+      refGroup.current.position.copy(pos || new Vector3(-31, 0, 11.5));
       isExists.current = true;
       actor.send('triggerStart');
     }
   }, [isExists, pos, actor]);
 
-  useFrame(({ raycaster, camera, clock }) => {
+  useFrame(({ camera, clock }) => {
     if (!ref.current || !refGroup.current || !refFloor) {
       return;
     }
 
-    // const intersects =
-    //   refFloor.current && raycaster.intersectObject(refFloor.current);
-
-    // drag
-    // if (intersects && intersects.length > 0 && isBeingDragged) {
-    //   const [intersect] = intersects;
-    //   if (isDragging) {
-    //     const newGroupPos = new Vector3(
-    //       intersect.point.x,
-    //       0,
-    //       intersect.point.z,
-    //     );
-    //     refGroup.current.position.lerp(newGroupPos, 0.1);
-    //     ref.current.position.y = MathUtils.lerp(
-    //       ref.current.position.y,
-    //       PERSON_HEIGHT * 0.15,
-    //       0.2,
-    //     );
-    //   }
-    // }
-
     if (isBeingDragged) {
       refGroup.current.position.lerp(
-        new Vector3(camera.position.x, refGroup.current.position.y, 8),
+        new Vector3(camera.position.x, refGroup.current.position.y, 11),
         0.75,
       );
     }
@@ -167,26 +136,6 @@ export const Person = ({
         <Statbar position-y={6} value={thirst} />
         <Statbar position-y={6.25} value={pee} />
         <Statbar position-y={6.5} value={hype} />
-
-        <a.mesh
-          ref={refShadow}
-          rotation-x={Math.PI * -0.5}
-          position-y={-1.1}
-          scale={shadow.scale}
-        >
-          <circleBufferGeometry />
-
-          {/* @ts-ignore */}
-          <a.meshLambertMaterial
-            transparent
-            opacity={shadow.opacity}
-            depthWrite={false}
-            color={shadow.color}
-            toneMapped={false}
-            emissive={0xf4f400}
-            emissiveIntensity={0.15}
-          />
-        </a.mesh>
 
         {/* Debug  */}
         {showActionButtons && (

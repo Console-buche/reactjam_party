@@ -37,9 +37,9 @@ export const Cam = () => {
         distance={23}
         truckSpeed={4}
         // truckSpeed={isDragging ? -4 : 4}
-        polarAngle={DEG2RAD * 85}
-        minPolarAngle={DEG2RAD * 85}
-        maxPolarAngle={DEG2RAD * 85}
+        polarAngle={DEG2RAD * 87}
+        minPolarAngle={DEG2RAD * 87}
+        maxPolarAngle={DEG2RAD * 87}
         mouseButtons={{
           left: 2,
           wheel: 0,

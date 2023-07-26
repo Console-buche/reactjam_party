@@ -2,33 +2,10 @@ import { useSelector } from '@xstate/react';
 import { Suspense, useRef } from 'react';
 import type { Mesh } from 'three';
 import { useGameMachineProvider } from '../../../hooks/use';
-import { Bar } from '../Environment/HotSpot/Bar';
-import { Toilet } from '../Environment/HotSpot/Toilet';
-import { AppartmentModel } from '../House/Appartment_v1';
 import { Person } from '../Person/Person';
-import { Cam } from './Cam';
-import { useFrame } from '@react-three/fiber';
 import { PostProcess } from '../postProcess/PostProcess';
-
-function Debug() {
-  const ref = useRef<Mesh>(null);
-
-  useFrame(({ camera }) => {
-    if (!ref.current) {
-      return;
-    }
-
-    ref.current.position.copy(camera.position);
-    ref.current.position.z = 20;
-  });
-
-  return (
-    <mesh ref={ref}>
-      <boxBufferGeometry args={[1, 1, 1]} />
-      <meshBasicMaterial color="red" />
-    </mesh>
-  );
-}
+import { Cam } from './Cam';
+import { AppartmentV4 } from '../House/Appartment_v4';
 
 export const World = () => {
   const refFloor = useRef<Mesh>(null);
@@ -39,9 +16,9 @@ export const World = () => {
     <>
       <Cam />
 
-      {/* <HouseModel ref={refFloor} /> */}
+      {/* <AppartmentModelv3 ref={refFloor} position-y={-0.5} /> */}
 
-      <AppartmentModel ref={refFloor} />
+      <AppartmentV4 ref={refFloor} position-y={-0.5} />
 
       <Suspense fallback={null}>
         {persons.map((actor) => (
@@ -50,7 +27,6 @@ export const World = () => {
       </Suspense>
 
       <PostProcess />
-      {/* <Debug /> */}
     </>
   );
 };

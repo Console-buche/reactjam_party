@@ -1,5 +1,6 @@
 import { MathUtils } from 'three';
-import { assign, createMachine } from 'xstate';
+import { assign, createMachine, send } from 'xstate';
+import { sendTo } from 'xstate/lib/actions';
 
 const METERS_CONFIG = {
   thirst: {
@@ -276,7 +277,9 @@ export const personMachine = createMachine(
         ...context,
         hotspot: event.hotspot,
       })),
-      unregisterHotspot: assign((context) => ({ ...context, hotspot: '' })),
+      unregisterHotspot: assign((context) => {
+        return { ...context, hotspot: '' };
+      }),
     },
     guards: {
       isPeeEmpty: (context) => context.meters.pee <= 0,
