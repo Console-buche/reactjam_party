@@ -194,14 +194,27 @@ export const AppartmentV4 = forwardRef<
         <mesh
           geometry={nodes.graffitti_party.geometry}
           material={materials.graffitti_party}
+          material-toneMapped={false}
+          material-emissive={0x800080}
+          material-emissiveIntensity={40}
+          material-map={materials.graffitti_party.map}
+          material-emissiveMap={materials.graffitti_party.map}
         />
         <mesh
           geometry={nodes.graffitti_gamejam.geometry}
           material={materials.graffitti_gamejam}
+          material-toneMapped={false}
+          material-emissive={0x800080}
+          material-emissiveIntensity={40}
+          material-emissiveMap={materials.graffitti_gamejam.map}
         />
         <mesh
           geometry={nodes.graffitti_react.geometry}
           material={materials.graffitti_react}
+          material-toneMapped={false}
+          material-emissive={0x800080}
+          material-emissiveIntensity={40}
+          material-emissiveMap={materials.graffitti_react.map}
         />
         <mesh
           geometry={nodes.Cube004.geometry}
@@ -243,7 +256,14 @@ export const AppartmentV4 = forwardRef<
           geometry={nodes.gueridon001.geometry}
           material={materials.gueridon}
         />
-        <mesh geometry={nodes.lamp_1001.geometry} material={materials.lamp_1} />
+        <mesh
+          geometry={nodes.lamp_1001.geometry}
+          material={materials.lamp_1}
+          material-toneMapped={false}
+          material-emissive={0xfafa00}
+          material-emissiveIntensity={2}
+          material-emissiveMap={materials.lamp_1.map}
+        />
         <mesh geometry={nodes.window006.geometry} material={materials.window} />
         <mesh
           geometry={nodes.armchair001.geometry}
@@ -282,9 +302,31 @@ export const AppartmentV4 = forwardRef<
             ]
           }
         />
-        <mesh geometry={nodes.light_2.geometry} material={materials.light_2} />
-        <mesh geometry={nodes.light_.geometry} material={materials.light_} />
-        <mesh geometry={nodes.neon_2.geometry} material={materials.neon_2} />
+        <mesh
+          geometry={nodes.light_2.geometry}
+          material={materials.light_2}
+          material-toneMapped={false}
+          material-emissive={0xfafa00}
+          material-emissiveIntensity={2}
+          material-emissiveMap={materials.light_2.map}
+        />
+        <mesh
+          geometry={nodes.light_.geometry}
+          material={materials.light_}
+          material-toneMapped={false}
+          material-emissive={0xfafa00}
+          material-emissiveIntensity={2}
+          material-emissiveMap={materials.light_.map}
+        />
+        <mesh
+          geometry={nodes.neon_2.geometry}
+          material={materials.neon_2}
+          material-toneMapped={false}
+          material-emissive={0x800080}
+          material-emissiveIntensity={80}
+          material-map={materials.neon_2.map}
+          material-emissiveMap={materials.neon_2.map}
+        />
         <mesh
           geometry={nodes.Cylinder.geometry}
           material={materials['16_clean plaster texture-seamless.002']}
