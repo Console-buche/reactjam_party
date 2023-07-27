@@ -1,6 +1,7 @@
 import { useSelector } from '@xstate/react';
 import { useGameMachineProvider } from '../../hooks/use';
 import { Clock } from './clock/Clock';
+import { HotSpots } from './hotspots/HotSpots';
 
 export const Hud = () => {
   const gameService = useGameMachineProvider();
@@ -9,6 +10,7 @@ export const Hud = () => {
 
   return (
     <>
+      <HotSpots />
       <Clock percent={timerPercent} />
     </>
   );

@@ -1,5 +1,4 @@
 import { CameraControls } from '@react-three/drei';
-import { useControls } from 'leva';
 import { useEffect, useRef } from 'react';
 import { Box3, Vector3 } from 'three';
 import { DEG2RAD } from 'three/src/math/MathUtils';

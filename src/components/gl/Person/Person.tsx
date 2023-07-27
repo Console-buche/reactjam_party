@@ -124,23 +124,22 @@ export const Person = ({
       return;
     }
 
-    if (isBeingDragged) {
-      refGroup.current.position.lerp(
-        new Vector3(camera.position.x, refGroup.current.position.y, 11),
-        0.75,
-      );
-    }
-
     // wobble
     ref.current.lookAt(new Vector3(camera.position.x, 0, camera.position.z));
     ref.current.scale.y =
       Math.sin(clock.getElapsedTime() * 10) * 0.01 + scale.get();
 
+    if (isBeingDragged) {
+      refGroup.current.position.lerp(
+        new Vector3(camera.position.x, 3, 11),
+        0.75,
+      );
+    }
     // height
     if (!isBeingDragged) {
-      ref.current.position.y = MathUtils.lerp(
+      refGroup.current.position.y = MathUtils.lerp(
         ref.current.position.y,
-        PERSON_HEIGHT * -0.25,
+        -3,
         0.2,
       );
     }

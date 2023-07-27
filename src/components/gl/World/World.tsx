@@ -2,10 +2,10 @@ import { useSelector } from '@xstate/react';
 import { Suspense, useRef } from 'react';
 import type { Mesh } from 'three';
 import { useGameMachineProvider } from '../../../hooks/use';
+import { AppartmentV5 } from '../House/Appartment_v5';
 import { Person } from '../Person/Person';
 import { PostProcess } from '../postProcess/PostProcess';
 import { Cam } from './Cam';
-import { AppartmentV4 } from '../House/Appartment_v4';
 
 export const World = () => {
   const refFloor = useRef<Mesh>(null);
@@ -16,7 +16,7 @@ export const World = () => {
     <>
       <Cam />
 
-      <AppartmentV4 ref={refFloor} position-y={-0.5} />
+      <AppartmentV5 ref={refFloor} position-y={-0.5} />
 
       <Suspense fallback={null}>
         {persons.map((actor) => (

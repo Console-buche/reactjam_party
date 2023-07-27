@@ -1,13 +1,13 @@
 import { a, easings, useSpring } from '@react-spring/three';
-import { Text, useCursor } from '@react-three/drei';
+import { useCursor } from '@react-three/drei';
 import { type MeshProps } from '@react-three/fiber';
-import { useInterpret, useSelector } from '@xstate/react';
+import { useInterpret } from '@xstate/react';
 import { useRef, useState } from 'react';
-import { Vector3, type Mesh } from 'three';
+import { type Mesh } from 'three';
 import { shallow } from 'zustand/shallow';
 import { useStoreDragging } from '../../../../stores/storeDragging';
-import type { AppartmentHotSpot } from './types';
 import { AppartmentHotspotStats } from './AppartmentHotspotStats';
+import type { AppartmentHotSpot } from './types';
 
 export const AppartmentHotspot = ({
   geometry,
