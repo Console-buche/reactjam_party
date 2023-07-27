@@ -18,7 +18,9 @@ export interface Typegen0 {
   eventsCausingActions: {
     addHotspot: 'onAddHotspot';
     addPerson: 'onAddPerson';
+    decrementHype: 'onDecrementHype';
     endNight: 'onEndNight' | 'xstate.after(500)#Game.playing';
+    incrementHype: 'onIncrementHype';
     removeHotspot: 'onRemoveHotspot';
     removePerson: 'onRemovePerson';
     tick: 'xstate.after(500)#Game.playing';

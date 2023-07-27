@@ -29,8 +29,17 @@ export const gameMachine = createMachine(
       persons: [],
       hotspots: [],
       clock: METERS_CONFIG.clock.initialValue,
+      meters: {
+        hype: 0,
+      },
     },
     on: {
+      onIncrementHype: {
+        actions: ['incrementHype'],
+      },
+      onDecrementHype: {
+        actions: ['decrementHype'],
+      },
       onAddPerson: {
         actions: ['addPerson'],
       },
@@ -93,8 +102,13 @@ export const gameMachine = createMachine(
         persons: ActorRefFrom<typeof personMachine>[];
         hotspots: ActorRefFrom<typeof hotspotMachine>[];
         clock: number;
+        meters: {
+          hype: number;
+        };
       },
       events: {} as
+        | { type: 'onIncrementHype'; hype: number }
+        | { type: 'onDecrementHype'; hype: number }
         | { type: 'onAddPerson' }
         | { type: 'onRemovePerson'; id: string }
         | { type: 'onAddHotspot'; hotspotType: 'bar' | 'toilet' }
@@ -110,6 +124,24 @@ export const gameMachine = createMachine(
   },
   {
     actions: {
+      incrementHype: assign((context, event) => {
+        return {
+          ...context,
+          meters: {
+            ...context.meters,
+            hype: context.meters.hype + event.hype,
+          },
+        };
+      }),
+      decrementHype: assign((context, event) => {
+        return {
+          ...context,
+          meters: {
+            ...context.meters,
+            hype: context.meters.hype - event.hype,
+          },
+        };
+      }),
       addPerson: assign((context) => {
         return {
           ...context,
