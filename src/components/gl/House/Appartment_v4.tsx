@@ -153,11 +153,13 @@ export const AppartmentV4 = forwardRef<
           geometry={nodes.Cube002.geometry}
           material={materials['16_clean plaster texture-seamless.001']}
         />
-        <mesh
+        {/* TODO : THIS IS AN EXAMPLE, WE NEED REMAINING HOTSPOTS : A REST MACHINE, A FOOD MACHINE, AND A SOCIALISE MACHINE  */}
+        <AppartmentHotspot
           geometry={nodes.sofa_2001.geometry}
-          material={materials.sofa_2}
+          materials={materials.sofa_2}
           position={[-16.512, 0.613, 4.434]}
           scale={1.182}
+          hotSpotMachine={barMachine}
         />
         <mesh
           geometry={nodes.closet_without_chair001.geometry}
@@ -183,14 +185,12 @@ export const AppartmentV4 = forwardRef<
           geometry={nodes.plant_1001.geometry}
           material={materials['plant_1.001']}
         />
-
         <AppartmentHotspot
           geometry={nodes.bar001.geometry}
           materials={materials.bar}
           position={[8.725, 1.23, 7.158]}
           hotSpotMachine={barMachine}
         />
-
         <mesh
           geometry={nodes.graffitti_party.geometry}
           material={materials.graffitti_party}
@@ -279,7 +279,6 @@ export const AppartmentV4 = forwardRef<
             materials['38_black and white marble tile texture-seamless']
           }
         />
-
         <AppartmentHotspot
           geometry={nodes.cheloupee.geometry}
           materials={materials.cheloupee}

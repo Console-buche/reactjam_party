@@ -16,8 +16,6 @@ export const World = () => {
     <>
       <Cam />
 
-      {/* <AppartmentModelv3 ref={refFloor} position-y={-0.5} /> */}
-
       <AppartmentV4 ref={refFloor} position-y={-0.5} />
 
       <Suspense fallback={null}>

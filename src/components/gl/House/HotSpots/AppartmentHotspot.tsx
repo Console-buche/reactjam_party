@@ -3,10 +3,11 @@ import { Text, useCursor } from '@react-three/drei';
 import { type MeshProps } from '@react-three/fiber';
 import { useInterpret, useSelector } from '@xstate/react';
 import { useRef, useState } from 'react';
-import type { Mesh } from 'three';
+import { Vector3, type Mesh } from 'three';
 import { shallow } from 'zustand/shallow';
 import { useStoreDragging } from '../../../../stores/storeDragging';
 import type { AppartmentHotSpot } from './types';
+import { AppartmentHotspotStats } from './AppartmentHotspotStats';
 
 export const AppartmentHotspot = ({
   geometry,
@@ -18,8 +19,6 @@ export const AppartmentHotspot = ({
   const [isHovered, setIsHovered] = useState(false);
   const service = useInterpret(hotSpotMachine);
   useCursor(isHovered);
-
-  const { persons } = useSelector(service, (s) => s.context);
 
   const {
     setIsDragging,
@@ -92,9 +91,10 @@ export const AppartmentHotspot = ({
         material-emissiveMap={materials.map}
         name="hotspot"
       >
-        <Text color="blue" position-y={6} fontSize={5}>
-          {persons.length}
-        </Text>
+        <AppartmentHotspotStats
+          service={service}
+          textPosition={[1.25, -2, 1]}
+        />
       </a.mesh>
     </a.group>
   );
