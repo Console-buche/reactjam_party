@@ -139,7 +139,7 @@ export const Person = ({
     if (!isBeingDragged) {
       refGroup.current.position.y = MathUtils.lerp(
         ref.current.position.y,
-        -3,
+        -9,
         0.2,
       );
     }
