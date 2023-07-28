@@ -8,7 +8,7 @@ export const toiletMachine = hotspotMachine
   .withConfig({
     actions: {
       updatePersons: (context) => {
-        context.persons.forEach((p) => p?.send('triggerPee'));
+        context.persons.forEach((p) => p.send('triggerPee'));
         return context;
       },
     },
