@@ -1,6 +1,5 @@
 import { type ActorRefFrom, assign, createMachine, sendParent } from 'xstate';
 import { personMachine } from './person.machine';
-import { MathUtils } from 'three';
 
 export const hotspotMachine = createMachine(
   {
@@ -13,10 +12,6 @@ export const hotspotMachine = createMachine(
       persons: [],
     },
     initial: 'Ticking',
-    entry: assign((context) => ({
-      ...context,
-      id: MathUtils.generateUUID(),
-    })),
     states: {
       Ticking: {
         after: {
