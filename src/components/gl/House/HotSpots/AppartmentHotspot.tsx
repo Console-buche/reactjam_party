@@ -21,7 +21,7 @@ export const AppartmentHotspot = ({
   const gameService = useGameMachineProvider();
   const hotspotService = useSelector(
     gameService,
-    (state) => state.context.hotspots.bar,
+    (state) => state.context.hotspots[type],
   );
 
   useCursor(isHovered);
@@ -65,7 +65,7 @@ export const AppartmentHotspot = ({
     setDraggingId(null);
 
     if (draggingActorRef) {
-      console.log(draggingActorRef);
+      console.log('person has been dropped on a hotspot', hotspotService);
       hotspotService.send({
         type: 'onRegisterPerson',
         person: draggingActorRef,

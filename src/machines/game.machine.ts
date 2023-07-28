@@ -1,4 +1,10 @@
-import { type ActorRefFrom, assign, createMachine, spawn } from 'xstate';
+import {
+  type ActorRefFrom,
+  assign,
+  createMachine,
+  spawn,
+  interpret,
+} from 'xstate';
 import { MathUtils } from 'three';
 
 import { personMachine } from './person.machine';
@@ -41,10 +47,14 @@ export const gameMachine = createMachine(
     description:
       'The game machine is the root machine of the game, it handles the game state.',
     context: {
-      persons: [spawn(personMachine, MathUtils.generateUUID())],
+      persons: [
+        interpret(personMachine, { id: MathUtils.generateUUID() }).start(),
+      ],
       hotspots: {
-        bar: spawn(barMachine, MathUtils.generateUUID()),
-        toilet: spawn(toiletMachine, MathUtils.generateUUID()),
+        bar: interpret(barMachine, { id: MathUtils.generateUUID() }).start(),
+        toilet: interpret(toiletMachine, {
+          id: MathUtils.generateUUID(),
+        }).start(),
       },
       clock: METERS_CONFIG.clock.initialValue,
       currentNight: 0,

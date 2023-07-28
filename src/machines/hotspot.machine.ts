@@ -10,6 +10,7 @@ export const hotspotMachine = createMachine(
     context: {
       maxPersons: 3,
       persons: [],
+      name: 'GenericHotspot',
     },
     initial: 'Ticking',
     states: {
@@ -49,6 +50,7 @@ export const hotspotMachine = createMachine(
             persons: [...context.persons, event.person],
           };
         }),
+        // actions: 'test',
       },
       onUnregisterPerson: {
         // cond: (context, event) => {
@@ -75,6 +77,7 @@ export const hotspotMachine = createMachine(
       context: {} as {
         persons: ActorRefFrom<typeof personMachine>[];
         maxPersons: number;
+        name: string;
       },
       events: {} as
         | { type: 'onUpdatePerson' }
@@ -94,6 +97,15 @@ export const hotspotMachine = createMachine(
   },
   {
     actions: {
+      // test: assign((context, event) => {
+      //   console.log(
+      //     'hotspot.onRegisterPerson - adding the person to the hotspot context',
+      //   );
+      //   return {
+      //     ...context,
+      //     persons: [...context.persons, event.person],
+      //   };
+      // }),
       updateHype: (context) => {
         if (context.persons.length < 1) return context;
         sendParent({

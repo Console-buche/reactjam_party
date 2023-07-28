@@ -4,6 +4,7 @@ export const barMachine = hotspotMachine
   .withContext({
     ...hotspotMachine.context,
     maxPersons: 6,
+    name: 'Bar',
   })
   .withConfig({
     actions: {
