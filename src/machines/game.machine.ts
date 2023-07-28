@@ -55,6 +55,7 @@ export const gameMachine = createMachine(
     },
     entry: assign((context) => {
       const disasterForTheNight = generateRandomDisasters(context.currentNight);
+      console.log('game is starting');
       return {
         ...context,
         disasterForTheNight,
@@ -75,6 +76,7 @@ export const gameMachine = createMachine(
             {
               // game tick
               actions: assign((context) => {
+                console.log('game tick');
                 const clock =
                   context.clock + METERS_CONFIG.clock.incrementValue;
 
@@ -152,6 +154,7 @@ export const gameMachine = createMachine(
       },
       onRemovePersonFromAllHotspots: {
         actions: (context, event) => {
+          console.log('Game.onRemovePersonFromAllHotspots');
           const { bar, toilet } = context.hotspots;
           bar.send({
             type: 'onUnregisterPerson',

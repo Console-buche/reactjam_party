@@ -42,7 +42,7 @@ export const hotspotMachine = createMachine(
         // },
         actions: assign((context, event) => {
           console.log(
-            'hotspot.onRegisterPerson - checking if the person is in the hotspot',
+            'hotspot.onRegisterPerson - adding the person to the hotspot context',
           );
           return {
             ...context,
@@ -51,16 +51,19 @@ export const hotspotMachine = createMachine(
         }),
       },
       onUnregisterPerson: {
-        cond: (context, event) => {
-          console.log(
-            'hotspot.onUnregisterPerson - checking if the person is in the hotspot',
-          );
-          const isAlreadyInHotspot = Boolean(
-            context.persons.find((p) => p.id === event.person.id),
-          );
-          return isAlreadyInHotspot;
-        },
+        // cond: (context, event) => {
+        //   console.log(
+        //     'hotspot.onUnregisterPerson - checking if the person is in the hotspot',
+        //   );
+        //   const isAlreadyInHotspot = Boolean(
+        //     context.persons.find((p) => p.id === event.person.id),
+        //   );
+        //   return isAlreadyInHotspot;
+        // },
         actions: assign((context, event) => {
+          console.log(
+            'hotspot.onUnregisterPerson - removing the person to the hotspot context',
+          );
           return {
             ...context,
             persons: context.persons.filter((p) => p.id !== event.person.id),

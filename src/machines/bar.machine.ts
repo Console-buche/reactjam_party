@@ -8,6 +8,9 @@ export const barMachine = hotspotMachine
   .withConfig({
     actions: {
       updatePersons: (context) => {
+        console.log(
+          'bar.updatePersons - updating persons by sending triggerDrink',
+        );
         context.persons.forEach((p) => p.send('triggerDrink'));
         return context;
       },

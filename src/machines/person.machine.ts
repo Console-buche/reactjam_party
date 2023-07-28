@@ -51,6 +51,7 @@ export const personMachine = createMachine(
     on: {
       onUnregisterFromAllHotspot: {
         actions: assign((context, _, meta) => {
+          console.log('Person.onUnregisterFromAllHotspot');
           sendParent({
             type: 'onRemovePersonFromAllHotspots',
             personID: meta._event.origin,
@@ -209,6 +210,7 @@ export const personMachine = createMachine(
   {
     actions: {
       drink: assign((context) => {
+        console.log('person is drinking');
         return {
           ...context,
           meters: {
