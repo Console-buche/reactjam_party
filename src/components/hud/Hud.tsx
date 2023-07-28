@@ -1,9 +1,9 @@
 import { useSelector } from '@xstate/react';
+import { useState } from 'react';
 import { useGameMachineProvider } from '../../hooks/use';
+import { Advisor } from './Advisor/Advisor';
 import { Clock } from './clock/Clock';
 import { HotSpots } from './hotspots/HotSpots';
-import { Advisor } from './Advisor/Advisor';
-import { useState } from 'react';
 
 export const Hud = () => {
   const gameService = useGameMachineProvider();

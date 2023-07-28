@@ -2,9 +2,18 @@ import { CameraControls } from '@react-three/drei';
 import { useEffect, useRef } from 'react';
 import { Box3, Vector3 } from 'three';
 import { DEG2RAD } from 'three/src/math/MathUtils';
+import { useStoreCam } from '../../../stores/storeCam';
 
 export const Cam = () => {
   const cameraControlsRef = useRef<CameraControls>(null);
+  const registerControls = useStoreCam((state) => state.registerControls);
+
+  // register controls
+  useEffect(() => {
+    if (cameraControlsRef.current) {
+      registerControls(cameraControlsRef.current);
+    }
+  }, [cameraControlsRef, registerControls]);
 
   useEffect(() => {
     cameraControlsRef.current?.setBoundary(

@@ -7,6 +7,7 @@ import { type Mesh } from 'three';
 import { shallow } from 'zustand/shallow';
 import { useGameMachineProvider } from '../../../../hooks/use';
 import { useStoreDragging } from '../../../../stores/storeDragging';
+import { AppartmentHotspotStats } from './AppartmentHotspotStats';
 import type { AppartmentHotSpot } from './types';
 
 export const AppartmentHotspot = ({
@@ -24,21 +25,41 @@ export const AppartmentHotspot = ({
     (state) => state.context.hotspots[type],
   );
 
-  useCursor(isHovered);
-
   const {
-    setIsDragging,
-    isDragging,
-    setDraggingId,
     draggingActorRef,
-    isHoveringPerson,
+    setDraggingActorRef,
+    setDraggingId,
+    setIsDragging,
   } = useStoreDragging(
     (state) => ({
       isDragging: state.isDragging,
-      setDraggingId: state.setDraggingId,
       setIsDragging: state.setIsDragging,
+      setDraggingActorRef: state.setDraggingActorRef,
+      draggingId: state.draggingId,
+      setDraggingId: state.setDraggingId,
       draggingActorRef: state.draggingActorRef,
-      isHoveringPerson: state.isHoveringPerson,
+    }),
+    shallow,
+  );
+
+  const handleOnClick = () => {
+    // on dropping a person on a hotspot
+    if (isDragging && draggingActorRef) {
+      hotspotService.send({
+        type: 'onRegisterPerson',
+        person: draggingActorRef,
+      });
+      setDraggingId(null);
+      setIsDragging(false);
+      setDraggingActorRef(null);
+    }
+  };
+
+  useCursor(isHovered);
+
+  const { isDragging } = useStoreDragging(
+    (state) => ({
+      isDragging: state.isDragging,
     }),
     shallow,
   );
@@ -50,35 +71,23 @@ export const AppartmentHotspot = ({
       { glow: 2, scale: [1, 1.025, 1.075] },
       { glow: 0, scale: [1, 1, 1] },
     ],
-    loop: isDragging || isHovered,
+    loop: isDragging,
     config: {
       easing: easings.easeInOutSine,
       duration: 350,
     },
   });
 
-  const handleOnClick = () => {
-    if (isHoveringPerson) {
-      return;
-    }
-    setIsDragging(false);
-    setDraggingId(null);
-
-    if (draggingActorRef) {
-      console.log('person has been dropped on a hotspot', hotspotService);
-      hotspotService.send({
-        type: 'onRegisterPerson',
-        person: draggingActorRef,
-      });
-    }
-  };
-
   const handleOnPointerEnter = () => {
-    setIsHovered(true);
+    if (isDragging) {
+      setIsHovered(true);
+    }
   };
 
   const handleOnPointerLeave = () => {
-    setIsHovered(false);
+    if (isDragging) {
+      setIsHovered(false);
+    }
   };
 
   return (
@@ -97,12 +106,13 @@ export const AppartmentHotspot = ({
         material-emissiveIntensity={glow}
         material-map={materials.map}
         material-emissiveMap={materials.map}
-        name="hotspot"
+        name="Hotspot"
+        userData={{ service: hotspotService }}
       >
-        {/* <AppartmentHotspotStats
+        <AppartmentHotspotStats
           service={hotspotService}
           textPosition={[1.25, -2, 1]}
-        /> */}
+        />
       </a.mesh>
     </a.group>
   );

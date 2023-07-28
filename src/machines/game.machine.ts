@@ -42,14 +42,12 @@ const disasterNames = ['onBlackout', 'onPolice', 'onFire'];
 
 export const gameMachine = createMachine(
   {
-    /** @xstate-layout N4IgpgJg5mDOIC5QHECGBbMBiA9gOwEEIIAFMAJ1nwG0AGAXUVAAcdYBLAF3fyZAA9EAJgBsADgB0tAMwBGIQFZZtcQHYALLNnqANCACeiaQE5VE2UtVjjY9VbHSRAXyd60mXHgBKYdDgBuYGSUNAx8rBzcvEgCwupSIrRCxtIKiUJC0qo2eoYIJmYWstlW0kJiIsbGLm4Y2Pg+foEAMqiwnMFUeHSMMRFcPHh8ggjqxvHaKurSco5jDrmIALTyshJK6mJimWIKe5mqNSDu2Jzk7FAw5CcA8oHkPeFsA9GgI4rxQrJiqgr2qbRVKlFggVgopL8tlUHLRYQpqq5jnUJHgcJwAMqcVDkTiQLBnC5XTHYziPPrPKJDGIjdTgpLyZLGBSw4wiCwiEHMiTqRSVdTTVTJBQ8o4nCTMAA2qH07DwUHx50uFBIqAArrAwGSWBTBsNEOpaBJjLQDXYhLSLTyQUIZOs9hZpICfntpGJRcjJdLZfL+O1ULiJKgAGa48gACmZtAAlFgxZ6ZXKtSB+pS9aDlCIJCJszncznjCDtEIs3nS9n3ZhxWqNRAFYSKMScUmU7rqcJbbQ0vJjcYMmyUtbbXslApHVZfsKXIjURA4HwTk9Iq23ssLPEy6WCwZV9n1pDrDZHbDnIixaiMVicZBFy8qSuEFzNlVsq7HGJOwoQWCIQooYfYZ2FQVmA4pSgmUA3qmbYPoUqgaEC5QGr+qgqIWmTctmZQaLsv4GtIwFVuq17kkuryxDB5hweoIgKIygLmp+24IOUxZCChuwiAanG2OoBFBrK7CwAAFsR2qkXe5HlJmuwpJU2Y2L8JqcoaPJ-EkPIZGIxRCFOThAA */
+    /** @xstate-layout N4IgpgJg5mDOIC5QHECGBbMBiA9gOwEk8BjAJzEzwBcAJATwAcwBtABgF1FQGdYBLKn3xcQAD0QBmABxSAdABYATAE4AbAFZlAdi2sAjHsUSANCDqI9rLbOXqJeiSt2KZirQF93ptJlx4AImBkFGDU9ExsnEggPPyCwtHiCNLqsnpSWvJq8qpSrI5WpuYIhp7eGNj4AIIQEAAKYKSw+JEisQJCeCJJ8qzyaVrp6npaRoqqeupFiMoSqrJShuqDElbyEsplID6VeABKFDgAbmANTS0cbbwdCaBJ0soLUm5S9hLqqlof0wiZ-cqsVQuDLyUasIxbHZ+A7oY6nRrNPAAMVIOHQVQANhiaDgqLAeHjWtF2vEuolJC4bIp0qptKxho4Rj8pL0Fpp1q8JIN1KwpJCKn4dgB5E6kInca6k7qIHQ-TQSNIfFT2OxqDb8zCyPC4gDKVFQpCokD8eoNVHFMUlnWlCCMrFkG3pMmUeXSYx+oMUCkBLlYynklg08g1YFkDAxqDofDwUD8dVQAFdYCxLsSrbcxIg7Q6Aepna7no4fly9N6gRpHBllA4JCGwxGozGsKJYPqjbJUAAzI2kAAUPNYAEosDt65Ho1ALSTreTkhNZH1cioAwGdFJi6NZKp8pMMnplMpFPI+V5thUx43Yy226Guz3+6whyPz+HxzHmHoohK4jO7ohhl6folhs+4HhsHqDLI6hKiy4wSHMqhzHWDCJsmEAmvqhpTumZJ-raqw5k6UguvohaKB61I2D6GzER8vL0p4p7ahAcAiDsVw-hmSQqD8QxUeW7L0loFZ1tqVCmoakAcTcuGZggswLpMyy5Fo-p2HYEFegCQLaHRozQbWp6jq+l7SVKs5cqkyzgrk8hZIoj4mGYiCgva0HluCei5Jo6jIahUlppxslJJYCqOnmijqHZAYGE5xQrg6ijLr0KV5v6dadtGfCwAAFgF34yTawmpAeB5ZPZOSqKocpSPMvRAq8UX2AYjHuEAA */
     id: 'Game',
     description:
       'The game machine is the root machine of the game, it handles the game state.',
     context: {
-      persons: [
-        interpret(personMachine, { id: MathUtils.generateUUID() }).start(),
-      ],
+      persons: [],
       hotspots: {
         bar: interpret(barMachine, { id: MathUtils.generateUUID() }).start(),
         toilet: interpret(toiletMachine, {

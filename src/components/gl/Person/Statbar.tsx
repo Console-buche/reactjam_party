@@ -1,6 +1,7 @@
 import { type MeshProps, useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import { BufferGeometry, MathUtils, Mesh } from 'three';
+import { DEG2RAD } from 'three/src/math/MathUtils';
 
 const vertexShader = `
     varying vec2 vUv;

@@ -35,6 +35,9 @@ export const hotspotMachine = createMachine(
           console.log(
             'hotspot.onRegisterPerson - adding the person to the hotspot context',
           );
+          if (context.persons.find((e) => e.id === event.person.id)) {
+            return context;
+          }
           return {
             ...context,
             persons: [...context.persons, event.person],

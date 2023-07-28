@@ -1,4 +1,4 @@
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useThree } from '@react-three/fiber';
 import { World } from '../World/World';
 import { Stars } from '@react-three/drei';
 

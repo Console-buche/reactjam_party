@@ -2,9 +2,10 @@
 
 .advisor__container {
     position: absolute;
+    right: 0;
     bottom: 0;
-    width: 100%;
     display: flex;
+    width: 500px;
     height: 500px;
     z-index: 2;
     transition: 0.2s opacity;
@@ -14,15 +15,19 @@
 
 
 .advisor__face {
-    width: 30%;
-    height: 100%;
+    position: absolute;
+    bottom:0;
+    right:0;
     object-fit: contain;
 }
 
 .advisor__speech {
-    position: relative;
+    position: absolute;
+    left:-150px;
     display: flex;
-    width:400px;
+    width:300px;
+    transform: translateY(100px);
+    height: fit-content;
 }
 
 .advisor__speech__bubble {

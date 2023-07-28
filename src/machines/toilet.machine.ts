@@ -4,6 +4,7 @@ export const toiletMachine = hotspotMachine
   .withContext({
     ...hotspotMachine.context,
     maxPersons: 3,
+    name: 'toilet',
   })
   .withConfig({
     actions: {

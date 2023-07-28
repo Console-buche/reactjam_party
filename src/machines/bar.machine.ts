@@ -4,13 +4,13 @@ export const barMachine = hotspotMachine
   .withContext({
     ...hotspotMachine.context,
     maxPersons: 6,
-    name: 'Bar',
+    name: 'bar',
   })
   .withConfig({
     actions: {
       updatePersons: (context) => {
         console.log(
-          'bar.updatePersons - updating persons by sending triggerDrink to',
+          'bar.updatePersons - updating persons by sending triggerDrink',
           context.persons,
         );
         context.persons.forEach((p) => p.send('triggerDrink'));
