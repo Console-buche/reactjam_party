@@ -10,19 +10,13 @@ export interface Typegen0 {
   };
   invokeSrcNameMap: {};
   missingImplementations: {
-    actions: never;
+    actions: 'endNight';
     delays: never;
     guards: never;
     services: never;
   };
   eventsCausingActions: {
-    addHotspot: 'onAddHotspot';
-    addPerson: 'onAddPerson';
-    decrementHype: 'onDecrementHype';
-    endNight: 'onEndNight' | 'xstate.after(500)#Game.playing';
-    incrementHype: 'onIncrementHype';
-    removeHotspot: 'onRemoveHotspot';
-    removePerson: 'onRemovePerson';
+    endNight: 'xstate.after(500)#Game.playing';
     tick: 'xstate.after(500)#Game.playing';
   };
   eventsCausingDelays: {};

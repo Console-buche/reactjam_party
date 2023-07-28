@@ -1,5 +1,5 @@
 import { MathUtils } from 'three';
-import { assign, createMachine } from 'xstate';
+import { assign, createMachine, type ActorRefFrom, sendParent } from 'xstate';
 import { names } from './person.constants';
 
 const METERS_CONFIG = {
@@ -37,7 +37,7 @@ export const personMachine = createMachine(
     initial: 'actionFlow',
     entry: assign((context) => ({
       ...context,
-      name: names[Math.floor(Math.random() * names.length)],
+      name: names[MathUtils.randInt(0, names.length - 1)],
     })),
     context: {
       name: '',
@@ -47,14 +47,16 @@ export const personMachine = createMachine(
         hype: METERS_CONFIG.hype.initialValue,
       },
       action: 'none',
-      hotspot: '',
     },
     on: {
-      onRegisterHotspot: {
-        actions: 'registerHotspot',
-      },
-      onUnregisterHotspot: {
-        actions: 'unregisterHotspot',
+      onUnregisterFromAllHotspot: {
+        actions: assign((context, _, meta) => {
+          sendParent({
+            type: 'onRemovePersonFromAllHotspots',
+            personID: meta._event.origin,
+          });
+          return context;
+        }),
       },
     },
     states: {
@@ -184,7 +186,6 @@ export const personMachine = createMachine(
           pee: number;
         };
         name: string;
-        hotspot: string;
       },
       events: {} as
         | { type: 'onDrag' }
@@ -192,17 +193,14 @@ export const personMachine = createMachine(
         | { type: 'triggerPee' }
         | { type: 'triggerDrink' }
         | { type: 'triggerStart' }
-        | { type: 'onRegisterHotspot'; hotspot: string }
-        | { type: 'onUnregisterHotspot' }
+        | { type: 'onUnregisterFromAllHotspot' }
         | { type: 'onTick' },
       actions: {} as
         | { type: 'drink' }
         | { type: 'pee' }
         | { type: 'incrementHype' }
         | { type: 'decrementHype' }
-        | { type: 'updateNeeds' }
-        | { type: 'registerHotspot' }
-        | { type: 'unregisterHotspot' },
+        | { type: 'updateNeeds' },
     },
     predictableActionArguments: true,
     preserveActionOrder: true,
@@ -276,13 +274,6 @@ export const personMachine = createMachine(
             ),
           },
         };
-      }),
-      registerHotspot: assign((context, event) => ({
-        ...context,
-        hotspot: event.hotspot,
-      })),
-      unregisterHotspot: assign((context) => {
-        return { ...context, hotspot: '' };
       }),
     },
     guards: {

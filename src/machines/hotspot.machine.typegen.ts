@@ -3,8 +3,8 @@
 export interface Typegen0 {
   '@@xstate/typegen': true;
   internalEvents: {
-    'xstate.after(1000)#Hotspot.UpdatingPersons': {
-      type: 'xstate.after(1000)#Hotspot.UpdatingPersons';
+    'xstate.after(500)#Hotspot.Ticking': {
+      type: 'xstate.after(500)#Hotspot.Ticking';
     };
     'xstate.init': { type: 'xstate.init' };
   };
@@ -16,16 +16,12 @@ export interface Typegen0 {
     services: never;
   };
   eventsCausingActions: {
-    addPerson: 'onAddPerson';
-    removePerson: 'onRemovePerson';
-    updatePersons: 'xstate.after(1000)#Hotspot.UpdatingPersons';
+    updateHype: 'xstate.after(500)#Hotspot.Ticking';
+    updatePersons: 'xstate.after(500)#Hotspot.Ticking';
   };
   eventsCausingDelays: {};
-  eventsCausingGuards: {
-    canAddPerson: 'onAddPerson';
-    canRemovePerson: 'onRemovePerson';
-  };
+  eventsCausingGuards: {};
   eventsCausingServices: {};
-  matchesStates: 'UpdatingPersons';
+  matchesStates: 'Ticking';
   tags: never;
 }

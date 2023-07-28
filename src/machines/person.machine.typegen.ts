@@ -33,8 +33,6 @@ export interface Typegen0 {
     emptyPee: 'xstate.after(1000)#Person.actionFlow.Doing.Drinking';
     increaseHype: 'xstate.after(1000)#Person.actionFlow.Doing.Drinking';
     pee: 'xstate.after(1000)#Person.actionFlow.Doing.Pissing';
-    registerHotspot: 'onRegisterHotspot';
-    unregisterHotspot: 'onUnregisterHotspot';
     updateNeeds: 'xstate.after(500)#Person.meterFlow.Active';
   };
   eventsCausingDelays: {};
