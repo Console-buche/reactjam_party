@@ -1,11 +1,13 @@
 import { Text } from '@react-three/drei';
 import { useSelector } from '@xstate/react';
-import type { InterpreterFrom } from 'xstate';
+import type { ActorRefFrom, InterpreterFrom } from 'xstate';
 import type { hotspotMachine } from '../../../../machines/hotspot.machine';
 import type { MeshProps } from '@react-three/fiber';
+import type { barMachine } from '../../../../machines/bar.machine';
+import type { toiletMachine } from '../../../../machines/toilet.machine';
 
 type AppartmentHotspotStats = {
-  service: InterpreterFrom<typeof hotspotMachine>;
+  service: ActorRefFrom<typeof barMachine> | ActorRefFrom<typeof toiletMachine>;
   textPosition: MeshProps['position'];
 };
 

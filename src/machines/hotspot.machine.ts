@@ -30,17 +30,20 @@ export const hotspotMachine = createMachine(
     },
     on: {
       onRegisterPerson: {
-        cond: (context, event) => {
+        // cond: (context, event) => {
+        //   console.log(
+        //     'hotspot.onRegisterPerson - checking if the person is in the hotspot',
+        //   );
+        //   const hostpotIsFull = context.persons.length >= context.maxPersons;
+        //   const isAlreadyInHotspot = Boolean(
+        //     context.persons.find((p) => p.id === event.person.id),
+        //   );
+        //   return !isAlreadyInHotspot && !hostpotIsFull;
+        // },
+        actions: assign((context, event) => {
           console.log(
             'hotspot.onRegisterPerson - checking if the person is in the hotspot',
           );
-          const hostpotIsFull = context.persons.length >= context.maxPersons;
-          const isAlreadyInHotspot = Boolean(
-            context.persons.find((p) => p.id === event.person.id),
-          );
-          return !isAlreadyInHotspot && !hostpotIsFull;
-        },
-        actions: assign((context, event) => {
           return {
             ...context,
             persons: [...context.persons, event.person],

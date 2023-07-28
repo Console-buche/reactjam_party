@@ -1,23 +1,29 @@
 import { a, easings, useSpring } from '@react-spring/three';
 import { useCursor } from '@react-three/drei';
 import { type MeshProps } from '@react-three/fiber';
-import { useInterpret } from '@xstate/react';
+import { useSelector } from '@xstate/react';
 import { useRef, useState } from 'react';
 import { type Mesh } from 'three';
 import { shallow } from 'zustand/shallow';
+import { useGameMachineProvider } from '../../../../hooks/use';
 import { useStoreDragging } from '../../../../stores/storeDragging';
-import { AppartmentHotspotStats } from './AppartmentHotspotStats';
 import type { AppartmentHotSpot } from './types';
 
 export const AppartmentHotspot = ({
+  type,
   geometry,
-  hotSpotMachine,
   materials,
   ...props
 }: AppartmentHotSpot & MeshProps) => {
   const refMesh = useRef<Mesh>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const service = useInterpret(hotSpotMachine);
+
+  const gameService = useGameMachineProvider();
+  const hotspotService = useSelector(
+    gameService,
+    (state) => state.context.hotspots.bar,
+  );
+
   useCursor(isHovered);
 
   const {
@@ -58,11 +64,13 @@ export const AppartmentHotspot = ({
     setIsDragging(false);
     setDraggingId(null);
 
-    draggingActorRef &&
-      service.send({
-        type: 'onAddPerson',
+    if (draggingActorRef) {
+      console.log(draggingActorRef);
+      hotspotService.send({
+        type: 'onRegisterPerson',
         person: draggingActorRef,
       });
+    }
   };
 
   const handleOnPointerEnter = () => {
@@ -91,10 +99,10 @@ export const AppartmentHotspot = ({
         material-emissiveMap={materials.map}
         name="hotspot"
       >
-        <AppartmentHotspotStats
-          service={service}
+        {/* <AppartmentHotspotStats
+          service={hotspotService}
           textPosition={[1.25, -2, 1]}
-        />
+        /> */}
       </a.mesh>
     </a.group>
   );

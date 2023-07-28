@@ -170,13 +170,13 @@ export const AppartmentV5 = forwardRef<
           material={materials['16_clean plaster texture-seamless.001']}
         />
 
-        <AppartmentHotspot
+        {/* <AppartmentHotspot
           geometry={nodes.sofa_2001.geometry}
           materials={materials.sofa_2}
           position={[-16.512, 0.613, 4.434]}
           scale={1.182}
           hotSpotMachine={barMachine}
-        />
+        /> */}
 
         <mesh
           geometry={nodes.closet_without_chair001.geometry}
@@ -205,10 +205,10 @@ export const AppartmentV5 = forwardRef<
         />
 
         <AppartmentHotspot
+          type="bar"
           geometry={nodes.bar001.geometry}
           materials={materials.bar}
           position={[8.725, 1.23, 7.158]}
-          hotSpotMachine={barMachine}
         />
 
         <mesh
@@ -305,7 +305,7 @@ export const AppartmentV5 = forwardRef<
           geometry={nodes.cheloupee.geometry}
           materials={materials.cheloupee}
           position={[54.192, 3.299, -2.056]}
-          hotSpotMachine={toiletMachine}
+          type="toilet"
         />
         <mesh geometry={nodes.sink.geometry} material={materials.sink} />
         <mesh

@@ -33,6 +33,11 @@ const METERS_CONFIG = {
   },
 };
 
+export type HotSpots = {
+  bar: ActorRefFrom<typeof barMachine>;
+  toilet: ActorRefFrom<typeof toiletMachine>;
+};
+
 const disasterNames = ['onBlackout', 'onPolice', 'onFire'];
 
 export const gameMachine = createMachine(
@@ -164,10 +169,7 @@ export const gameMachine = createMachine(
     schema: {
       context: {} as {
         persons: ActorRefFrom<typeof personMachine>[];
-        hotspots: {
-          bar: ActorRefFrom<typeof barMachine>;
-          toilet: ActorRefFrom<typeof toiletMachine>;
-        };
+        hotspots: HotSpots;
         clock: number;
         currentNight: number;
         meters: {

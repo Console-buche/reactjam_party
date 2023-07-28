@@ -96,10 +96,10 @@ export const Person = ({
   const isBeingDragged = draggingId === serviceId;
 
   // setup easings
-  const { hotspot } = useSelector(actor, (state) => state.context);
   const { glow, scale } = useSpring({
     glow: selectFeedbackIntensiry(isHovered, isBeingDragged),
-    scale: selectFeedbackScale(isBeingDragged, hotspot),
+    scale: 1,
+    // scale: selectFeedbackScale(isBeingDragged, hotspot),
   });
 
   // position tick for the drag back shadow
@@ -150,7 +150,6 @@ export const Person = ({
       setIsDragging(true);
       setDraggingRef(refGroup.current);
       setDraggingActorRef(actor);
-      actor.send({ type: 'onUnregisterHotspot' });
 
       if (refGroup.current) {
         setDraggingId(serviceId);
