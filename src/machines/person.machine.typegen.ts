@@ -3,16 +3,6 @@
 export interface Typegen0 {
   '@@xstate/typegen': true;
   internalEvents: {
-    '': { type: '' };
-    'xstate.after(1000)#Person.actionFlow.Doing.Drinking': {
-      type: 'xstate.after(1000)#Person.actionFlow.Doing.Drinking';
-    };
-    'xstate.after(1000)#Person.actionFlow.Doing.Pissing': {
-      type: 'xstate.after(1000)#Person.actionFlow.Doing.Pissing';
-    };
-    'xstate.after(1000)#Person.actionFlow.Resting.Idle': {
-      type: 'xstate.after(1000)#Person.actionFlow.Resting.Idle';
-    };
     'xstate.after(500)#Person.meterFlow.Active': {
       type: 'xstate.after(500)#Person.meterFlow.Active';
     };
@@ -26,48 +16,21 @@ export interface Typegen0 {
     services: never;
   };
   eventsCausingActions: {
-    decreaseHype:
-      | 'xstate.after(1000)#Person.actionFlow.Doing.Drinking'
-      | 'xstate.after(1000)#Person.actionFlow.Resting.Idle';
-    drink: 'xstate.after(1000)#Person.actionFlow.Doing.Drinking';
-    emptyPee: 'xstate.after(1000)#Person.actionFlow.Doing.Drinking';
-    increaseHype: 'xstate.after(1000)#Person.actionFlow.Doing.Drinking';
-    pee: 'xstate.after(1000)#Person.actionFlow.Doing.Pissing';
     updateNeeds: 'xstate.after(500)#Person.meterFlow.Active';
   };
   eventsCausingDelays: {};
-  eventsCausingGuards: {
-    canPee: 'xstate.after(1000)#Person.actionFlow.Doing.Pissing';
-    isActionDrink: 'onDrop';
-    isActionPiss: 'onDrop';
-    isPeeEmpty: 'xstate.after(1000)#Person.actionFlow.Doing.Pissing';
-    isPeeFull: 'xstate.after(1000)#Person.actionFlow.Doing.Drinking';
-    isThirsty: 'xstate.after(1000)#Person.actionFlow.Doing.Drinking';
-  };
+  eventsCausingGuards: {};
   eventsCausingServices: {};
   matchesStates:
     | 'actionFlow'
-    | 'actionFlow.Blocking'
-    | 'actionFlow.Blocking.PissingHimself'
-    | 'actionFlow.Doing'
-    | 'actionFlow.Doing.Drinking'
-    | 'actionFlow.Doing.Pissing'
-    | 'actionFlow.Resting'
-    | 'actionFlow.Resting.Dragging'
-    | 'actionFlow.Resting.Idle'
+    | 'actionFlow.Drinking'
+    | 'actionFlow.Idle'
+    | 'actionFlow.Pissing'
     | 'meterFlow'
     | 'meterFlow.Active'
     | 'meterFlow.Inactive'
     | {
-        actionFlow?:
-          | 'Blocking'
-          | 'Doing'
-          | 'Resting'
-          | {
-              Blocking?: 'PissingHimself';
-              Doing?: 'Drinking' | 'Pissing';
-              Resting?: 'Dragging' | 'Idle';
-            };
+        actionFlow?: 'Drinking' | 'Idle' | 'Pissing';
         meterFlow?: 'Active' | 'Inactive';
       };
   tags: never;

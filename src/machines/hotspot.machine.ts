@@ -31,16 +31,6 @@ export const hotspotMachine = createMachine(
     },
     on: {
       onRegisterPerson: {
-        // cond: (context, event) => {
-        //   console.log(
-        //     'hotspot.onRegisterPerson - checking if the person is in the hotspot',
-        //   );
-        //   const hostpotIsFull = context.persons.length >= context.maxPersons;
-        //   const isAlreadyInHotspot = Boolean(
-        //     context.persons.find((p) => p.id === event.person.id),
-        //   );
-        //   return !isAlreadyInHotspot && !hostpotIsFull;
-        // },
         actions: assign((context, event) => {
           console.log(
             'hotspot.onRegisterPerson - adding the person to the hotspot context',
@@ -97,15 +87,6 @@ export const hotspotMachine = createMachine(
   },
   {
     actions: {
-      // test: assign((context, event) => {
-      //   console.log(
-      //     'hotspot.onRegisterPerson - adding the person to the hotspot context',
-      //   );
-      //   return {
-      //     ...context,
-      //     persons: [...context.persons, event.person],
-      //   };
-      // }),
       updateHype: (context) => {
         if (context.persons.length < 1) return context;
         sendParent({

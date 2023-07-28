@@ -17,13 +17,6 @@ const METERS_CONFIG = {
     maxValue: 100,
     clamp: (v: number) => MathUtils.clamp(v, 0, METERS_CONFIG.pee.maxValue),
   },
-  hype: {
-    initialValue: 50,
-    incrementValue: 10,
-    decrementValue: 10,
-    maxValue: 100,
-    clamp: (v: number) => MathUtils.clamp(v, 0, METERS_CONFIG.hype.maxValue),
-  },
 };
 
 // -----------------------------------------------------------------
@@ -44,12 +37,11 @@ export const personMachine = createMachine(
       meters: {
         thirst: METERS_CONFIG.thirst.initialValue,
         pee: METERS_CONFIG.pee.initialValue,
-        hype: METERS_CONFIG.hype.initialValue,
       },
-      action: 'none',
     },
     on: {
       onUnregisterFromAllHotspot: {
+        target: 'actionFlow.Idle',
         actions: assign((context, _, meta) => {
           console.log('Person.onUnregisterFromAllHotspot');
           sendParent({
@@ -64,97 +56,43 @@ export const personMachine = createMachine(
       actionFlow: {
         on: {
           triggerPee: {
-            target: '#Person.actionFlow.Doing.Pissing',
+            target: '#Person.actionFlow.Pissing',
+            actions: assign((context) => {
+              return {
+                ...context,
+                meters: {
+                  ...context.meters,
+                  pee: METERS_CONFIG.pee.clamp(
+                    context.meters.pee - METERS_CONFIG.pee.decrementValue,
+                  ),
+                },
+              };
+            }),
           },
           triggerDrink: {
-            target: '#Person.actionFlow.Doing.Drinking',
+            target: '#Person.actionFlow.Drinking',
+            actions: assign((context) => {
+              console.log('person is drinking');
+              return {
+                ...context,
+                meters: {
+                  ...context.meters,
+                  thirst: METERS_CONFIG.thirst.clamp(
+                    context.meters.thirst - METERS_CONFIG.thirst.decrementValue,
+                  ),
+                  pee: METERS_CONFIG.pee.clamp(
+                    context.meters.pee + METERS_CONFIG.pee.incrementValue,
+                  ),
+                },
+              };
+            }),
           },
         },
+        initial: 'Idle',
         states: {
-          Resting: {
-            initial: 'Idle',
-            states: {
-              Idle: {
-                after: {
-                  '1000': [
-                    {
-                      target: '#Person.actionFlow.Resting.Idle',
-                      actions: 'decreaseHype',
-                    },
-                  ],
-                },
-                on: {
-                  onDrag: {
-                    target: 'Dragging',
-                  },
-                },
-              },
-              Dragging: {
-                on: {
-                  onDrop: [
-                    {
-                      target: '#Person.actionFlow.Doing.Drinking',
-                      cond: 'isActionDrink',
-                    },
-                    {
-                      target: '#Person.actionFlow.Doing.Pissing',
-                      cond: 'isActionPiss',
-                    },
-                    'Idle',
-                  ],
-                },
-              },
-            },
-          },
-          Doing: {
-            states: {
-              Drinking: {
-                after: {
-                  '1000': [
-                    {
-                      target: '#Person.actionFlow.Doing.Drinking',
-                      cond: 'isThirsty',
-                      actions: ['drink', 'increaseHype'],
-                    },
-                    {
-                      target: '#Person.actionFlow.Blocking',
-                      cond: 'isPeeFull',
-                      actions: ['decreaseHype', 'emptyPee'],
-                    },
-                  ],
-                },
-              },
-              Pissing: {
-                after: {
-                  '1000': [
-                    {
-                      cond: 'canPee',
-                      actions: 'pee',
-                    },
-                    {
-                      target: '#Person.actionFlow.Resting',
-                      cond: 'isPeeEmpty',
-                    },
-                  ],
-                },
-              },
-            },
-            on: {
-              onDrag: {
-                target: '#Person.actionFlow.Resting.Dragging',
-              },
-            },
-          },
-          Blocking: {
-            initial: 'PissingHimself',
-            states: {
-              PissingHimself: {
-                always: {
-                  target: '#Person.actionFlow.Resting',
-                },
-              },
-            },
-          },
+          Idle: {},
+          Pissing: {},
+          Drinking: {},
         },
       },
       meterFlow: {
@@ -180,28 +118,19 @@ export const personMachine = createMachine(
     },
     schema: {
       context: {} as {
-        action: 'none' | 'drink' | 'piss';
+        name: string;
         meters: {
           thirst: number;
-          hype: number;
           pee: number;
         };
-        name: string;
       },
       events: {} as
-        | { type: 'onDrag' }
-        | { type: 'onDrop'; action: 'drink' | 'piss' | 'none' }
         | { type: 'triggerPee' }
         | { type: 'triggerDrink' }
         | { type: 'triggerStart' }
         | { type: 'onUnregisterFromAllHotspot' }
         | { type: 'onTick' },
-      actions: {} as
-        | { type: 'drink' }
-        | { type: 'pee' }
-        | { type: 'incrementHype' }
-        | { type: 'decrementHype' }
-        | { type: 'updateNeeds' },
+      actions: {} as { type: 'updateNeeds' },
     },
     predictableActionArguments: true,
     preserveActionOrder: true,
@@ -209,63 +138,6 @@ export const personMachine = createMachine(
   },
   {
     actions: {
-      drink: assign((context) => {
-        console.log('person is drinking');
-        return {
-          ...context,
-          meters: {
-            ...context.meters,
-            thirst: METERS_CONFIG.thirst.clamp(
-              context.meters.thirst - METERS_CONFIG.thirst.decrementValue,
-            ),
-            pee: METERS_CONFIG.pee.clamp(
-              context.meters.pee + METERS_CONFIG.pee.incrementValue,
-            ),
-          },
-        };
-      }),
-      pee: assign((context) => {
-        return {
-          ...context,
-          meters: {
-            ...context.meters,
-            pee: METERS_CONFIG.pee.clamp(
-              context.meters.pee - METERS_CONFIG.pee.decrementValue,
-            ),
-          },
-        };
-      }),
-      emptyPee: assign((context) => {
-        return {
-          ...context,
-          meters: {
-            ...context.meters,
-            pee: 0,
-          },
-        };
-      }),
-      increaseHype: assign((context) => {
-        return {
-          ...context,
-          meters: {
-            ...context.meters,
-            hype: METERS_CONFIG.hype.clamp(
-              context.meters.hype + METERS_CONFIG.hype.incrementValue,
-            ),
-          },
-        };
-      }),
-      decreaseHype: assign((context) => {
-        return {
-          ...context,
-          meters: {
-            ...context.meters,
-            hype: METERS_CONFIG.hype.clamp(
-              context.meters.hype - METERS_CONFIG.hype.decrementValue,
-            ),
-          },
-        };
-      }),
       updateNeeds: assign((context) => {
         return {
           ...context,
@@ -277,14 +149,6 @@ export const personMachine = createMachine(
           },
         };
       }),
-    },
-    guards: {
-      isPeeEmpty: (context) => context.meters.pee <= 0,
-      isPeeFull: (context) => context.meters.pee >= 100,
-      isActionDrink: (_, event) => event.action === 'drink',
-      isActionPiss: (_, event) => event.action === 'piss',
-      canPee: (context) => context.meters.pee > 0,
-      isThirsty: (context) => context.meters.thirst > 0,
     },
   },
 );
