@@ -141,6 +141,7 @@ export const AppartmentV6 = forwardRef<
           geometry={nodes.wooden_floor3001.geometry}
           material={materials.wooden_floor3}
         />
+
         <mesh
           geometry={nodes.bookshelf001.geometry}
           material={materials.bookshelf}

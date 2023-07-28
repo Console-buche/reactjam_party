@@ -147,6 +147,14 @@ export const Person = ({
   };
 
   const handleOnClick = () => {
+    if (isBeingDragged) {
+      setIsDragging(false);
+      setDraggingId(null);
+      setDraggingActorRef(null);
+      setDraggingRef(null);
+      return;
+    }
+
     // find intersects on the sene
     setDraggingRef(refGroup.current);
 
