@@ -8,8 +8,6 @@ import { useGLTF } from '@react-three/drei';
 import { forwardRef } from 'react';
 import * as THREE from 'three';
 import { type GLTF } from 'three-stdlib';
-import { barMachine } from '../../../machines/bar.machine';
-import { toiletMachine } from '../../../machines/toilet.machine';
 import { AppartmentHotspot } from './HotSpots/AppartmentHotspot';
 
 type GLTFResult = GLTF & {
@@ -122,7 +120,7 @@ type GLTFResult = GLTF & {
 export const AppartmentV5 = forwardRef<
   THREE.Mesh,
   JSX.IntrinsicElements['group']
->((props, ref) => {
+>((props) => {
   const { nodes, materials } = useGLTF(
     'assets/appartment_v5-transformed.glb',
   ) as GLTFResult;

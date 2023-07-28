@@ -33,18 +33,18 @@ const selectFeedbackIntensiry = (
   return 0;
 };
 
-const selectFeedbackScale = (
-  isBeingDragged: boolean,
-  currentHotSpotIt: string,
-) => {
-  if (currentHotSpotIt !== '') {
-    return 0.9;
-  }
-  if (isBeingDragged) {
-    return 0.65;
-  }
-  return 0.75;
-};
+// const selectFeedbackScale = (
+//   isBeingDragged: boolean,
+//   currentHotSpotIt: string,
+// ) => {
+//   if (currentHotSpotIt !== '') {
+//     return 0.9;
+//   }
+//   if (isBeingDragged) {
+//     return 0.65;
+//   }
+//   return 0.75;
+// };
 
 export const Person = ({
   refFloor,

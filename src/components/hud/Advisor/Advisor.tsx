@@ -2,7 +2,7 @@ import { animated, easings, useSpring } from 'react-spring';
 import './advisor.css';
 
 export const Advisor = ({ isClicked }: { isClicked: boolean }) => {
-  const { slideIn, opacity, faceSlideIn } = useSpring({
+  const { slideIn, opacity } = useSpring({
     slideIn: isClicked ? 0 : 30,
     faceSlideIn: isClicked ? 0 : 60,
     opacity: isClicked ? 1 : 0,

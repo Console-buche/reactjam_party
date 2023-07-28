@@ -1,7 +1,6 @@
 import { Text } from '@react-three/drei';
 import { useSelector } from '@xstate/react';
-import type { ActorRefFrom, InterpreterFrom } from 'xstate';
-import type { hotspotMachine } from '../../../../machines/hotspot.machine';
+import type { ActorRefFrom } from 'xstate';
 import type { MeshProps } from '@react-three/fiber';
 import type { barMachine } from '../../../../machines/bar.machine';
 import type { toiletMachine } from '../../../../machines/toilet.machine';

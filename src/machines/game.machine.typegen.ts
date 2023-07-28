@@ -10,15 +10,12 @@ export interface Typegen0 {
   };
   invokeSrcNameMap: {};
   missingImplementations: {
-    actions: 'endNight';
+    actions: never;
     delays: never;
     guards: never;
     services: never;
   };
-  eventsCausingActions: {
-    endNight: 'xstate.after(500)#Game.playing';
-    tick: 'xstate.after(500)#Game.playing';
-  };
+  eventsCausingActions: {};
   eventsCausingDelays: {};
   eventsCausingGuards: {};
   eventsCausingServices: {};

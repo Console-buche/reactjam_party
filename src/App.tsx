@@ -14,7 +14,6 @@ function App() {
     'Invite Person': button(() => service.send({ type: 'onAddPerson' })),
     Start: button(() => service.send({ type: 'onStart' })),
     Pause: button(() => service.send({ type: 'onPause' })),
-    'End Night': button(() => service.send({ type: 'onEndNight' })),
     'End Game': button(() => service.send({ type: 'onGameOver' })),
   });
 

@@ -1,10 +1,4 @@
-import {
-  type ActorRefFrom,
-  assign,
-  createMachine,
-  spawn,
-  sendTo,
-} from 'xstate';
+import { type ActorRefFrom, assign, createMachine, spawn } from 'xstate';
 import { MathUtils } from 'three';
 
 import { personMachine } from './person.machine';
@@ -79,12 +73,21 @@ export const gameMachine = createMachine(
         after: {
           500: [
             {
-              actions: 'tick',
+              // game tick
+              actions: assign((context) => {
+                const clock =
+                  context.clock + METERS_CONFIG.clock.incrementValue;
+
+                return {
+                  ...context,
+                  clock: METERS_CONFIG.clock.clamp(clock),
+                };
+              }),
               target: 'playing',
             },
             {
               cond: (context) => context.clock >= METERS_CONFIG.clock.maxValue,
-              actions: 'endNight',
+              target: 'finished',
             },
           ],
         },
@@ -197,17 +200,5 @@ export const gameMachine = createMachine(
     preserveActionOrder: true,
     tsTypes: {} as import('./game.machine.typegen').Typegen0,
   },
-  {
-    actions: {
-      tick: assign((context) => {
-        const clock = context.clock + METERS_CONFIG.clock.incrementValue;
-        if (clock >= METERS_CONFIG.clock.maxValue) sendTo('Game', 'EndNight');
-
-        return {
-          ...context,
-          clock: METERS_CONFIG.clock.clamp(clock),
-        };
-      }),
-    },
-  },
+  {},
 );

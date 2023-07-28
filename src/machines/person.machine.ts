@@ -1,5 +1,5 @@
 import { MathUtils } from 'three';
-import { assign, createMachine, type ActorRefFrom, sendParent } from 'xstate';
+import { assign, createMachine, sendParent } from 'xstate';
 import { names } from './person.constants';
 
 const METERS_CONFIG = {
