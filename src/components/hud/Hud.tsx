@@ -8,7 +8,6 @@ import { useState } from 'react';
 export const Hud = () => {
   const gameService = useGameMachineProvider();
   const timerPercent = useSelector(gameService, (state) => state.context.clock);
-  console.log('timerPercent', timerPercent, Math.random());
 
   const [isClicked, setIsClicked] = useState(false);
 
