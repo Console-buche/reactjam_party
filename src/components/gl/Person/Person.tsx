@@ -179,9 +179,8 @@ export const Person = ({
     setIsDragging(true);
     setDraggingId(actor.id);
     setDraggingActorRef(actor);
-    gameService.send({
-      type: 'onRemovePersonFromAllHotspots',
-      person: actor,
+    actor.send({
+      type: 'onUnregisterFromAllHotspot',
     });
 
     if (
