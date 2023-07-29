@@ -72,7 +72,8 @@ export const personMachine = createMachine(
     states: {
       actionFlow: {
         on: {
-          triggerPee: {
+          // on hotspot toilet
+          onToilet: {
             target: '#Person.actionFlow.Pissing',
             actions: assign((context) => {
               return {
@@ -86,7 +87,7 @@ export const personMachine = createMachine(
               };
             }),
           },
-          triggerDrink: {
+          onBar: {
             target: '#Person.actionFlow.Drinking',
             actions: assign((context) => {
               console.log('person is drinking');
@@ -152,11 +153,11 @@ export const personMachine = createMachine(
         | { type: 'triggerStart' } // enable the meterFlow (needs etc.)
         | { type: 'onUnregisterFromAllHotspot' } // when the person is removed from an hotspot
         // actions
-        | { type: 'triggerEat' }
-        | { type: 'triggerPee' }
-        | { type: 'triggerSeat' }
-        | { type: 'triggerDance' }
-        | { type: 'triggerDrink' },
+        | { type: 'onBuffet' }
+        | { type: 'onToilet' }
+        | { type: 'onSofa' }
+        | { type: 'onDancefloor' }
+        | { type: 'onBar' },
       actions: {} as { type: 'tickNeeds' },
     },
     predictableActionArguments: true,

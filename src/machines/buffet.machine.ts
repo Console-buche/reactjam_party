@@ -9,11 +9,8 @@ export const buffet = hotspotMachine
   .withConfig({
     actions: {
       updatePersons: (context) => {
-        console.log(
-          'buffet.updatePersons - updating persons by sending triggerEat',
-          context.persons,
-        );
-        context.persons.forEach((p) => p.send('triggerEat'));
+        console.log('buffet.updatePersonst', context.persons);
+        context.persons.forEach((p) => p.send('onBuffet'));
         return context;
       },
     },

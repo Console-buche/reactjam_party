@@ -9,11 +9,8 @@ export const sofaMachine = hotspotMachine
   .withConfig({
     actions: {
       updatePersons: (context) => {
-        console.log(
-          'sofa.updatePersons - updating persons by sending triggerSeat',
-          context.persons,
-        );
-        context.persons.forEach((p) => p.send('triggerSeat'));
+        console.log('sofa.updatePersons', context.persons);
+        context.persons.forEach((p) => p.send('onSofa'));
         return context;
       },
     },
