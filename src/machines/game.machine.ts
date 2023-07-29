@@ -6,7 +6,6 @@ import {
   type ActorRefFrom,
   send,
 } from 'xstate';
-
 import { barMachine } from './bar.machine';
 import { buffetMachine } from './buffet.machine';
 import { dancefloorMachine } from './dancefloor.machine';
@@ -14,19 +13,7 @@ import { lobbyMachine } from './lobby.machine';
 import { personMachine } from './person.machine';
 import { sofaMachine } from './sofa.machine';
 import { toiletMachine } from './toilet.machine';
-
-const generateRandomDisasters = (night: number) => {
-  const getRandomDisasterName = () =>
-    disasterNames[MathUtils.randInt(1, disasterNames.length)];
-
-  const disasters = Array.from({ length: night + 1 }, () => ({
-    time: MathUtils.randInt(3, length),
-    disasterName: getRandomDisasterName(),
-  }));
-
-  disasters.sort((a, b) => a.time - b.time);
-  return disasters;
-};
+import { disasterNames, generateRandomDisasters } from '../helpers/getRandomDisasters';
 
 const METERS_CONFIG = {
   clock: {
@@ -36,17 +23,6 @@ const METERS_CONFIG = {
     clamp: (v: number) => MathUtils.clamp(v, 0, METERS_CONFIG.clock.maxValue),
   },
 };
-
-export type HotSpots = {
-  bar: ActorRefFrom<typeof barMachine>;
-  toilet: ActorRefFrom<typeof toiletMachine>;
-  dancefloor: ActorRefFrom<typeof dancefloorMachine>;
-  sofa: ActorRefFrom<typeof sofaMachine>;
-  lobby: ActorRefFrom<typeof lobbyMachine>;
-  buffet: ActorRefFrom<typeof buffetMachine>;
-};
-
-const disasterNames = ['onBlackout', 'onPolice', 'onFire'];
 
 export const gameMachine = createMachine({
   /** @xstate-layout N4IgpgJg5mDOIC5QHECGBbMBiA9gOwEk8BjAJzEzwBcAJATwAcwBtABgF1FQGdYBLKn3xcQAD0QBmABxSAdABYATAE4AbAFZlAdi2sAjHsUSANCDqI9rLbOXqJeiSt2KZirQF93ptJlx4AImBkFGDU9ExsnEggPPyCwtHiCNLqsnpSWvJq8qpSrI5WpuYIhp7eGNj4AIIQEAAKYKSw+JEisQJCeCJJ8qzyaVrp6npaRoqqeupFiMoSqrJShuqDElbyEsplID6VeABKFDgAbmANTS0cbbwdCaBJ0soLUm5S9hLqqlof0wiZ-cqsVQuDLyUasIxbHZ+A7oY6nRrNPAAMVIOHQVQANhiaDgqLAeHjWtF2vEuolJC4bIp0qptKxho4Rj8pL0Fpp1q8JIN1KwpJCKn4dgB5E6kInca6k7qIHQ-TQSNIfFT2OxqDb8zCyPC4gDKVFQpCokD8eoNVHFMUlnWlCCMrFkG3pMmUeXSYx+oMUCkBLlYynklg08g1YFkDAxqDofDwUD8dVQAFdYCxLsSrbcxIg7Q6Aepna7no4fly9N6gRpHBllA4JCGwxGozGsKJYPqjbJUAAzI2kAAUPNYAEosDt65Ho1ALSTreTkhNZH1cioAwGdFJi6NZKp8pMMnplMpFPI+V5thUx43Yy226Guz3+6whyPz+HxzHmHoohK4jO7ohhl6folhs+4HhsHqDLI6hKiy4wSHMqhzHWDCJsmEAmvqhpTumZJ-raqw5k6UguvohaKB61I2D6GzER8vL0p4p7ahAcAiDsVw-hmSQqD8QxUeW7L0loFZ1tqVCmoakAcTcuGZggswLpMyy5Fo-p2HYEFegCQLaHRozQbWp6jq+l7SVKs5cqkyzgrk8hZIoj4mGYiCgva0HluCei5Jo6jIahUlppxslJJYCqOnmijqHZAYGE5xQrg6ijLr0KV5v6dadtGfCwAAFgF34yTawmpAeB5ZPZOSqKocpSPMvRAq8UX2AYjHuEAA */
@@ -70,6 +46,7 @@ export const gameMachine = createMachine({
       hype: 0,
     },
     disasterForTheNight: [],
+    guideText: '',
   },
   entry: assign((context) => {
     console.log('game is starting');
@@ -199,13 +176,21 @@ export const gameMachine = createMachine({
   schema: {
     context: {} as {
       persons: ActorRefFrom<typeof personMachine>[];
-      hotspots: HotSpots;
+      hotspots: {
+        bar: ActorRefFrom<typeof barMachine>;
+        toilet: ActorRefFrom<typeof toiletMachine>;
+        dancefloor: ActorRefFrom<typeof dancefloorMachine>;
+        sofa: ActorRefFrom<typeof sofaMachine>;
+        lobby: ActorRefFrom<typeof lobbyMachine>;
+        buffet: ActorRefFrom<typeof buffetMachine>;
+      };
       clock: number;
       currentNight: number;
       meters: {
         hype: number;
       };
       disasterForTheNight: Record<number, (typeof disasterNames)[number]>[];
+      guideText: string;
     },
     events: {} as
       | { type: 'onIncrementHype'; hype: number }
