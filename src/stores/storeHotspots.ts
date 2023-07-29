@@ -11,6 +11,7 @@ export const hotspots = [
 
 import { Vector3 } from 'three';
 import { create } from 'zustand';
+import type { HotSpots } from '../machines/game.machine';
 
 type Dropzone = {
   position: Vector3;
@@ -34,6 +35,7 @@ type Actions = {
   getAvailableDropZone: (
     hotspot: (typeof hotspots)[number],
   ) => Dropzone | undefined;
+  clearHotSpotsDropZonesForActor: (actorRefId: string) => void;
   updateDropZoneOccupied: (
     hotspot: (typeof hotspots)[number],
     index: number,
@@ -235,12 +237,43 @@ export const useStoreHotspot = create<InitialState & Actions>((set, get) => ({
   ...InitialState,
 
   getAvailableDropZone(hotspot) {
-    return get().hotspots[hotspot].dropzones.find((d) => !d.personActorId);
+    console.log(hotspot);
+    console.log(get().hotspots[hotspot].dropzones);
+    return get().hotspots[hotspot].dropzones.find(
+      (d) => d.personActorId === null,
+    );
+  },
+
+  clearHotSpotsDropZonesForActor(actorRefId) {
+    set((state) => {
+      const hotspots = { ...state.hotspots };
+      Object.keys(hotspots).forEach((hotspotKey) => {
+        const key = hotspotKey as keyof Hotspots;
+        const dropzones = [...hotspots[key].dropzones];
+        const dropzone = dropzones.find((d) => d.personActorId === actorRefId);
+        if (dropzone) {
+          dropzone.personActorId = null;
+        }
+        hotspots[key].dropzones = dropzones;
+      });
+      return {
+        hotspots,
+      };
+    });
   },
 
   updateDropZoneOccupied(hotspotType, index, actorRefId) {
     return set((state) => {
       const dropzones = [...state.hotspots[hotspotType].dropzones];
+      // find actorRefId in dropzones and remove of it if it exists
+
+      const alreadyOccupiedByActor = dropzones.find(
+        (d) => d.personActorId === actorRefId,
+      );
+      if (alreadyOccupiedByActor) {
+        alreadyOccupiedByActor.personActorId = null;
+      }
+
       dropzones[index].personActorId = actorRefId;
 
       return {

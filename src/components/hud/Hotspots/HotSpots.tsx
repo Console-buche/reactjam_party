@@ -13,6 +13,12 @@ export const HotSpots = () => {
   );
   const bar = useSelector(hotspotsServices.bar, (state) => state.context);
   const toilet = useSelector(hotspotsServices.toilet, (state) => state.context);
+  const buffet = useSelector(hotspotsServices.buffet, (state) => state.context);
+  const dancefloor = useSelector(
+    hotspotsServices.dancefloor,
+    (state) => state.context,
+  );
+  const sofa = useSelector(hotspotsServices.sofa, (state) => state.context);
   const cameraControls = useStoreCam((state) => state.controls);
   const hotspotWithPositions = useStoreHotspot((state) => state.hotspots);
 
@@ -22,6 +28,12 @@ export const HotSpots = () => {
         return bar.persons.length;
       case 'toilet':
         return toilet.persons.length;
+      case 'buffet':
+        return buffet.persons.length;
+      case 'dancefloor':
+        return dancefloor.persons.length;
+      case 'sofa':
+        return sofa.persons.length;
       default:
         return 0;
     }
@@ -43,7 +55,7 @@ export const HotSpots = () => {
                 .toArray(),
               true,
             );
-          }} // TODO :
+          }}
         >
           <img
             src={`./assets/hud/button_${hotspot}.png`}

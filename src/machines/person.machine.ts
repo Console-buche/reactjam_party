@@ -2,7 +2,7 @@ import { MathUtils } from 'three';
 import { assign, createMachine, sendParent } from 'xstate';
 import { getRandomName } from '../helpers/getRandomNames';
 
-const METERS_CONFIG = {
+export const METERS_CONFIG = {
   hydration: {
     initialValue: 75,
     step: 1,
@@ -28,7 +28,7 @@ const METERS_CONFIG = {
     maxValue: 100,
     clamp: (v: number) => MathUtils.clamp(v, 0, METERS_CONFIG.urine.maxValue),
   },
-};
+} as const;
 
 // -----------------------------------------------------------------
 export const personMachine = createMachine(
@@ -59,7 +59,7 @@ export const personMachine = createMachine(
         actions: sendParent((context) => ({
           type: 'onRemovePersonFromAllHotspots',
           person: context.self,
-        }))
+        })),
       },
     },
     states: {
@@ -76,7 +76,7 @@ export const personMachine = createMachine(
                   ...context.meters,
                   urine: METERS_CONFIG.urine.clamp(
                     context.meters.urine - METERS_CONFIG.urine.step * 4,
-                  )
+                  ),
                 },
               };
             }),
@@ -220,7 +220,7 @@ export const personMachine = createMachine(
                   actions: sendParent((context) => ({
                     type: 'onRemovePerson',
                     person: context.self,
-                  }))
+                  })),
                 },
               ],
             },
@@ -264,8 +264,7 @@ export const personMachine = createMachine(
           context.meters.urine >= 100;
 
         const fun = shouldLoseFunFaster
-          ?
-          context.meters.fun - METERS_CONFIG.fun.step * 5
+          ? context.meters.fun - METERS_CONFIG.fun.step * 5
           : context.meters.fun;
 
         return {
@@ -281,7 +280,7 @@ export const personMachine = createMachine(
             fun,
           },
         };
-      })
+      }),
     },
-  }
+  },
 );

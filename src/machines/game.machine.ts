@@ -1,11 +1,10 @@
 import { MathUtils } from 'three';
+import { assign, createMachine, send, spawn, type ActorRefFrom } from 'xstate';
+
 import {
-  assign,
-  createMachine,
-  spawn,
-  type ActorRefFrom,
-  send,
-} from 'xstate';
+  disasterNames,
+  generateRandomDisasters,
+} from '../helpers/getRandomDisasters';
 import { barMachine } from './bar.machine';
 import { buffetMachine } from './buffet.machine';
 import { dancefloorMachine } from './dancefloor.machine';
@@ -13,7 +12,6 @@ import { lobbyMachine } from './lobby.machine';
 import { personMachine } from './person.machine';
 import { sofaMachine } from './sofa.machine';
 import { toiletMachine } from './toilet.machine';
-import { disasterNames, generateRandomDisasters } from '../helpers/getRandomDisasters';
 
 const METERS_CONFIG = {
   clock: {
@@ -150,7 +148,9 @@ export const gameMachine = createMachine({
           actions: (context, event) => {
             console.log('Game.onRemovePersonFromAllHotspots');
             Object.keys(context.hotspots).forEach((hotspotName) => {
-              context.hotspots[hotspotName as keyof typeof context.hotspots].send({
+              context.hotspots[
+                hotspotName as keyof typeof context.hotspots
+              ].send({
                 type: 'onUnregisterPerson',
                 person: event.person,
               });
@@ -170,7 +170,7 @@ export const gameMachine = createMachine({
     },
   },
   on: {
-    onGameOver: 'finished'
+    onGameOver: 'finished',
   },
   // ------------------------------------------
   schema: {
@@ -198,9 +198,9 @@ export const gameMachine = createMachine({
       | { type: 'onAddPerson' }
       | { type: 'onRemovePerson'; person: ActorRefFrom<typeof personMachine> }
       | {
-        type: 'onRemovePersonFromAllHotspots';
-        person: ActorRefFrom<typeof personMachine>;
-      }
+          type: 'onRemovePersonFromAllHotspots';
+          person: ActorRefFrom<typeof personMachine>;
+        }
       | { type: 'onStart' }
       | { type: 'onPause' }
       | { type: 'onGameOver' }

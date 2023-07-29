@@ -1,8 +1,9 @@
-import { Text } from '@react-three/drei';
+import { Text, useTexture } from '@react-three/drei';
 import { type MeshProps, useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import { BufferGeometry, MathUtils, Mesh } from 'three';
 import { DEG2RAD } from 'three/src/math/MathUtils';
+import type { METERS_CONFIG } from '../../../machines/person.machine';
 
 const vertexShader = `
     varying vec2 vUv;
@@ -14,32 +15,50 @@ const vertexShader = `
 
 const fragmentShader = `
     uniform float percent;
+    uniform sampler2D iconTexture;
     varying vec2 vUv;
+
+
     void main() {
 
-        if (vUv.x > percent && vUv.y > 0.05 && vUv.y < 0.95 && vUv.x < 0.99 && vUv.x > 0.01) {
+      vec4 iconTexture = texture2D(iconTexture, vUv);
 
-            discard;
+      if (vUv.y > percent) {
+        iconTexture *= 0.8;
+      } else {
+        iconTexture *= 1.4;
+      }
 
-        }
+      
 
-        gl_FragColor = vec4(1.0, 1.0, 0.0, 1.0);
+        // if (vUv.x > percent && vUv.y > 0.05 && vUv.y < 0.95 && vUv.x < 0.99 && vUv.x > 0.01) {
+
+        //     discard;
+
+        // }
+
+        // float dangerFactor = percent / 
+
+        gl_FragColor = iconTexture;
     }
 `;
 
 type Statbar = {
   value: number;
-  label: string;
+  statName: keyof typeof METERS_CONFIG;
 } & MeshProps;
 
-export const Statbar = ({ value, label, ...meshProps }: Statbar) => {
+export const Statbar = ({ value, statName, ...meshProps }: Statbar) => {
   const ref = useRef<Mesh<BufferGeometry, THREE.ShaderMaterial>>(null);
+
+  const tex = useTexture(`assets/icons/${statName}.png`);
 
   const uniforms = useMemo(
     () => ({
       percent: { value: 0.01 },
+      iconTexture: { value: tex },
     }),
-    [],
+    [tex],
   );
 
   useFrame(({ camera }) => {
@@ -60,15 +79,16 @@ export const Statbar = ({ value, label, ...meshProps }: Statbar) => {
 
   return (
     <mesh ref={ref} {...meshProps}>
-      <planeBufferGeometry args={[1.5, 0.2]} />
+      <planeBufferGeometry args={[1, 1]} />
       <shaderMaterial
         uniforms={uniforms}
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
+        transparent
       />
-      <Text fontSize={0.35} position-x={1.2} color="black">
-        {label}
-      </Text>
+      {/* <Text fontSize={0.35} position-x={1.2} color="black">
+        {statName}
+      </Text> */}
     </mesh>
   );
 };

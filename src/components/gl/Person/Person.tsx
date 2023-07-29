@@ -1,6 +1,6 @@
 import { a, useSpring } from '@react-spring/three';
 import { Text, useCursor, useTexture } from '@react-three/drei';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -13,13 +13,13 @@ import {
 } from 'three';
 import type { ActorRefFrom } from 'xstate';
 import { shallow } from 'zustand/shallow';
-import { useGameMachineProvider } from '../../../hooks/use';
 import { personMachine } from '../../../machines/person.machine';
 import { useStoreDragging } from '../../../stores/storeDragging';
 import { useStoreHotspot } from '../../../stores/storeHotspots';
 import { PersonShadowRecall } from './PersonShadowRecall';
 import { Statbar } from './Statbar';
 import { PERSON_HEIGHT } from './person.constants';
+import { Statbars } from './Statbars';
 
 const selectFeedbackIntensiry = (
   isHovered: boolean,
@@ -47,12 +47,14 @@ export const Person = ({
 
   useCursor(isHovered);
 
-  const updateDropZoneOccupied = useStoreHotspot(
-    (state) => state.updateDropZoneOccupied,
-  );
+  const { updateDropZoneOccupied, clearHotSpotsDropZonesForActor } =
+    useStoreHotspot((state) => ({
+      updateDropZoneOccupied: state.updateDropZoneOccupied,
+      clearHotSpotsDropZonesForActor: state.clearHotSpotsDropZonesForActor,
+      getAvailableDropZone: state.getAvailableDropZone,
+    }));
 
   const isExists = useRef(false);
-  const gameService = useGameMachineProvider();
 
   const {
     setDraggingActorRef,
@@ -164,12 +166,17 @@ export const Person = ({
     setIsHoveringPerson(false);
   };
 
-  const handleOnClick = () => {
-    if (isBeingDragged) {
+  const handleOnClick = (e: ThreeEvent<MouseEvent>) => {
+    e.stopPropagation();
+
+    clearHotSpotsDropZonesForActor(actor.id);
+    if (isBeingDragged && draggingRef) {
       setIsDragging(false);
       setDraggingId(null);
       setDraggingActorRef(null);
       setDraggingRef(null);
+      draggingRef.userData.isIdle = true;
+      draggingRef.userData.dropZone = null;
       return;
     }
 
@@ -226,19 +233,39 @@ export const Person = ({
             emissiveMap={tex}
           />
         </a.mesh>
-        <Statbar label="fun" position-y={4} value={fun} />
-        <Statbar label="hydration" position-y={4.25} value={hydration} />
-        <Statbar label="satiety" position-y={4.5} value={satiety} />
-        <Statbar label="urine" position-y={4.75} value={urine} />
 
-        <Text fontSize={0.3} position-y={5.75} color="white">
+        <Statbars
+          values={{
+            fun: {
+              value: fun,
+
+              offsetX: -0.75,
+            },
+            urine: {
+              value: urine,
+              offsetX: 0.25,
+            },
+            satiety: {
+              value: satiety,
+              offsetX: -0.75,
+              offsetY: 1,
+            },
+            hydration: {
+              offsetX: 0.25,
+              offsetY: 1,
+              value: hydration,
+            },
+          }}
+        />
+
+        {/* <Text fontSize={0.3} position-y={5.75} color="white">
           {name}
           <meshStandardMaterial
             toneMapped={false}
             emissive={'#ffffff'}
             emissiveIntensity={1.2}
           />
-        </Text>
+        </Text> */}
       </group>
       <PersonShadowRecall
         beforeDragPosition={beforeDragPosition.current}

@@ -2,7 +2,7 @@ import { useSelector } from '@xstate/react';
 import { Suspense, useRef } from 'react';
 import { type Mesh } from 'three';
 import { useGameMachineProvider } from '../../../hooks/use';
-import { AppartmentV6 } from '../House/Appartment_v6';
+import { AppartmentV8 } from '../House/Appartment_v8';
 import { Person } from '../Person/Person';
 import { PostProcess } from '../postProcess/PostProcess';
 import { Cam } from './Cam';
@@ -23,12 +23,12 @@ export const World = () => {
     <group>
       <Cam />
 
-      {/* Debug dropzones
-      {zones.map((pos, i) => (
+      {/* Debug dropzones */}
+      {/* {zones.map((pos, i) => (
         <Box position={pos} key={i} />
       ))} */}
 
-      <AppartmentV6 ref={refFloor} position-y={-0.5} />
+      <AppartmentV8 position-y={-0.5} />
       <Suspense fallback={null}>
         {persons.map((actor) => (
           <Person key={actor.id} refFloor={refFloor} actor={actor} />

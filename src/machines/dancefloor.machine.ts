@@ -9,7 +9,7 @@ export const dancefloorMachine = hotspotMachine
   .withConfig({
     actions: {
       updatePersons: (context) => {
-        // console.log('dancefloor.updatePersons', context.persons);
+        console.log('dancefloor.updatePersons', context.persons);
         context.persons.forEach((p) => p.send('onDancefloor'));
         return context;
       },

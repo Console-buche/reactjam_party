@@ -1,30 +1,47 @@
+import { useSpring, a } from '@react-spring/three';
 import { Text } from '@react-three/drei';
-import { useSelector } from '@xstate/react';
-import type { ActorRefFrom } from 'xstate';
 import type { MeshProps } from '@react-three/fiber';
-import type { barMachine } from '../../../../machines/bar.machine';
-import type { toiletMachine } from '../../../../machines/toilet.machine';
+import { Particles } from '../../Particles/Particles';
 
 type AppartmentHotspotStats = {
-  service: ActorRefFrom<typeof barMachine> | ActorRefFrom<typeof toiletMachine>;
   textPosition: MeshProps['position'];
+  personsCount: number;
+  maxPersonsCount: number;
 };
 
 export const AppartmentHotspotStats = ({
-  service,
-  textPosition,
+  maxPersonsCount,
+  personsCount,
 }: AppartmentHotspotStats) => {
-  const { persons, maxPersons } = useSelector(service, (s) => s.context);
+  const fillRatio = personsCount / maxPersonsCount;
+  const scaleFromFillRatio = fillRatio * 0.5 + 1;
+
+  const { scale, emissiveIntensiry } = useSpring({
+    emissiveIntensiry: scaleFromFillRatio * 4,
+    scale: [
+      scaleFromFillRatio,
+      scaleFromFillRatio,
+      scaleFromFillRatio,
+    ] as const,
+  });
 
   return (
-    <Text position={textPosition} fontSize={0.7}>
-      {persons.length}/{maxPersons}
-      <meshStandardMaterial
-        color="white"
-        emissive={0xffffff}
-        emissiveIntensity={2}
-        toneMapped={false}
-      />
-    </Text>
+    <a.group scale={scale}>
+      <Text fontSize={0.7} renderOrder={1}>
+        {personsCount}/{maxPersonsCount}
+        {/* @ts-ignore */}
+        <a.meshStandardMaterial
+          color="white"
+          emissive={0xffffff}
+          emissiveIntensity={emissiveIntensiry}
+          toneMapped={false}
+          depthTest={false} // do we want to keep this style ? Better UX, but style to discuss as always visible
+          depthWrite={false}
+        />
+      </Text>
+      {/* <group position-y={5}>
+        <Particles count={3} animate />
+      </group> */}
+    </a.group>
   );
 };
