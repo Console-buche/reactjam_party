@@ -170,6 +170,10 @@ export const personMachine = createMachine(
                 type: 'onRemovePersonFromAllHotspots',
                 personID: meta._event.origin,
               });
+              sendParent({
+                type: 'onRemovePerson',
+                personID: meta._event.origin,
+              });
             },
           },
         },
