@@ -5,6 +5,7 @@ import {
   interpret,
   spawn,
   type ActorRefFrom,
+  send,
 } from 'xstate';
 
 import { barMachine } from './bar.machine';
@@ -56,6 +57,7 @@ export const gameMachine = createMachine({
   context: {
     persons: [],
     hotspots: {
+      // Cannot transform this in array because we need to access it by name in r3f to map it to the right mesh
       buffet: interpret(buffetMachine, {
         id: MathUtils.generateUUID(),
       }).start(),
@@ -166,11 +168,17 @@ export const gameMachine = createMachine({
     },
     onRemovePerson: {
       actions: assign((context, event) => {
+        console.log('Game.onRemovePerson');
+        //FIXME: maybe this doesn't work
+        send({
+          type: 'onRemovePersonFromAllHotspots',
+          person: event.person,
+        });
         return {
           ...context,
-          persons: [
-            ...context.persons.filter((machine) => machine.id !== event.id),
-          ],
+          persons: context.persons.filter(
+            (actor) => actor.id !== event.person.id,
+          ),
         };
       }),
     },
@@ -226,7 +234,7 @@ export const gameMachine = createMachine({
       | { type: 'onIncrementHype'; hype: number }
       | { type: 'onDecrementHype'; hype: number }
       | { type: 'onAddPerson' }
-      | { type: 'onRemovePerson'; id: string }
+      | { type: 'onRemovePerson'; person: ActorRefFrom<typeof personMachine> }
       | {
           type: 'onRemovePersonFromAllHotspots';
           person: ActorRefFrom<typeof personMachine>;

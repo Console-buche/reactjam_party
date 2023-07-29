@@ -106,7 +106,8 @@ export const Person = ({
       ref.current.geometry.translate(0, PERSON_HEIGHT * 0.5, 0);
       refGroup.current.position.copy(pos || new Vector3(-26, 0, 11));
       isExists.current = true;
-      actor.send('triggerStart');
+      // send the person actor to the machine to use context.self
+      actor.send({ type: 'triggerStart', person: actor });
     }
   }, [isExists, pos, actor]);
 

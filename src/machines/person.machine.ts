@@ -5,26 +5,26 @@ import { getRandomName } from '../helpers/getRandomNames';
 const METERS_CONFIG = {
   hydration: {
     initialValue: 75,
-    step: 10,
+    step: 1,
     maxValue: 100,
     clamp: (v: number) =>
       MathUtils.clamp(v, 0, METERS_CONFIG.hydration.maxValue),
   },
   fun: {
     initialValue: 75,
-    step: 10,
+    step: 1,
     maxValue: 100,
     clamp: (v: number) => MathUtils.clamp(v, 0, METERS_CONFIG.fun.maxValue),
   },
   satiety: {
     initialValue: 75,
-    step: 10,
+    step: 1,
     maxValue: 100,
     clamp: (v: number) => MathUtils.clamp(v, 0, METERS_CONFIG.satiety.maxValue),
   },
   urine: {
     initialValue: 25,
-    step: 10,
+    step: 1,
     maxValue: 100,
     clamp: (v: number) => MathUtils.clamp(v, 0, METERS_CONFIG.urine.maxValue),
   },
@@ -45,6 +45,7 @@ export const personMachine = createMachine(
     })),
     context: {
       name: '',
+      self: null as unknown,
       meters: {
         fun: METERS_CONFIG.fun.initialValue,
         satiety: METERS_CONFIG.satiety.initialValue,
@@ -54,15 +55,16 @@ export const personMachine = createMachine(
     },
     on: {
       onUnregisterFromAllHotspot: {
-        target: 'actionFlow.Idle',
-        actions: assign((context, _, meta) => {
+        target: '#Person.actionFlow.Idle',
+        actions: (context) => {
           console.log('Person.onUnregisterFromAllHotspot');
+          //FIXME: this is probably not working
           sendParent({
             type: 'onRemovePersonFromAllHotspots',
-            personID: meta._event.origin,
+            person: context.self,
           });
           return context;
-        }),
+        },
       },
     },
     states: {
@@ -78,7 +80,10 @@ export const personMachine = createMachine(
                 meters: {
                   ...context.meters,
                   urine: METERS_CONFIG.urine.clamp(
-                    context.meters.urine - METERS_CONFIG.urine.step,
+                    context.meters.urine - METERS_CONFIG.urine.step * 4,
+                  ),
+                  fun: METERS_CONFIG.fun.clamp(
+                    context.meters.fun + METERS_CONFIG.fun.step,
                   ),
                 },
               };
@@ -94,10 +99,13 @@ export const personMachine = createMachine(
                 meters: {
                   ...context.meters,
                   hydration: METERS_CONFIG.hydration.clamp(
-                    context.meters.hydration + METERS_CONFIG.hydration.step,
+                    context.meters.hydration + METERS_CONFIG.hydration.step * 3,
                   ),
                   urine: METERS_CONFIG.urine.clamp(
-                    context.meters.urine + METERS_CONFIG.urine.step * 2,
+                    context.meters.urine + METERS_CONFIG.urine.step,
+                  ),
+                  fun: METERS_CONFIG.fun.clamp(
+                    context.meters.fun + METERS_CONFIG.fun.step,
                   ),
                 },
               };
@@ -113,7 +121,7 @@ export const personMachine = createMachine(
                 meters: {
                   ...context.meters,
                   fun: METERS_CONFIG.fun.clamp(
-                    context.meters.fun + METERS_CONFIG.fun.step * 2,
+                    context.meters.fun + METERS_CONFIG.fun.step * 3,
                   ),
                   satiety: METERS_CONFIG.satiety.clamp(
                     context.meters.satiety - METERS_CONFIG.satiety.step,
@@ -132,7 +140,7 @@ export const personMachine = createMachine(
                 meters: {
                   ...context.meters,
                   fun: METERS_CONFIG.fun.clamp(
-                    context.meters.fun + METERS_CONFIG.fun.step * 0.5,
+                    context.meters.fun + METERS_CONFIG.fun.step * 1.5,
                   ),
                   hydration: METERS_CONFIG.hydration.clamp(
                     context.meters.hydration - METERS_CONFIG.hydration.step,
@@ -151,10 +159,13 @@ export const personMachine = createMachine(
                 meters: {
                   ...context.meters,
                   satiety: METERS_CONFIG.satiety.clamp(
-                    context.meters.satiety + METERS_CONFIG.satiety.step,
+                    context.meters.satiety + METERS_CONFIG.satiety.step * 3,
                   ),
                   urine: METERS_CONFIG.urine.clamp(
-                    context.meters.urine + METERS_CONFIG.urine.step * 0.5,
+                    context.meters.urine + METERS_CONFIG.urine.step,
+                  ),
+                  fun: METERS_CONFIG.fun.clamp(
+                    context.meters.fun + METERS_CONFIG.fun.step,
                   ),
                 },
               };
@@ -163,29 +174,51 @@ export const personMachine = createMachine(
           // on leave
           onLeave: {
             target: '#Person.actionFlow.Leaving',
-            actions: (_, __, meta) => {
-              console.log('Leaving, removing person from all hotspots');
-              //FIXME: this is not working
-              sendParent({
-                type: 'onRemovePersonFromAllHotspots',
-                personID: meta._event.origin,
-              });
+            actions: (context) => {
+              console.log('Leaving, removing person from gameService');
+              //FIXME: this is probably not working
               sendParent({
                 type: 'onRemovePerson',
-                personID: meta._event.origin,
+                person: context.self,
               });
+              // sendParent({
+              //   type: 'onRemovePersonFromAllHotspots',
+              //   person: context.self,
+              // });
+              return context;
             },
           },
         },
         initial: 'Idle',
         states: {
-          Idle: {},
+          Idle: {
+            after: {
+              '500': [
+                {
+                  actions: assign((context) => {
+                    return {
+                      ...context,
+                      meters: {
+                        ...context.meters,
+                        fun: METERS_CONFIG.fun.clamp(
+                          context.meters.fun - METERS_CONFIG.fun.step * 2,
+                        ),
+                      },
+                    };
+                  }),
+                  target: '#Person.actionFlow.Idle',
+                },
+              ],
+            },
+          },
           Eating: {},
           Pissing: {},
           Sitting: {},
           Dancing: {},
           Drinking: {},
-          Leaving: {},
+          Leaving: {
+            type: 'final',
+          },
         },
       },
       meterFlow: {
@@ -193,7 +226,15 @@ export const personMachine = createMachine(
         states: {
           Inactive: {
             on: {
-              triggerStart: 'Active',
+              triggerStart: {
+                target: '#Person.meterFlow.Active',
+                actions: assign((context, event) => {
+                  return {
+                    ...context,
+                    self: event.person,
+                  };
+                }),
+              },
             },
           },
           Active: {
@@ -212,6 +253,7 @@ export const personMachine = createMachine(
     schema: {
       context: {} as {
         name: string;
+        self: unknown;
         meters: {
           fun: number; // more is good
           hydration: number; // more is good
@@ -220,7 +262,7 @@ export const personMachine = createMachine(
         };
       },
       events: {} as
-        | { type: 'triggerStart' } // enable the meterFlow (needs etc.)
+        | { type: 'triggerStart'; person: unknown } // enable the meterFlow (needs etc.)
         | { type: 'onUnregisterFromAllHotspot' } // when the person is removed from an hotspot
         | { type: 'onLeave' } // when the person is leaving the party (fun <= 0)
         // actions
@@ -239,32 +281,33 @@ export const personMachine = createMachine(
     actions: {
       tickNeeds: assign((context) => {
         if (context.meters.fun <= 0) {
-          console.log('Person is leaving');
-          send('onLeave');
-          //FIXME: maybe this doesn't work
+          //@ts-ignore send('onLeave') doesn't work
+          context.self.send('onLeave');
           return context;
         }
 
-        const isLosingFunFast =
+        const shouldLoseFunFaster =
           context.meters.hydration <= 0 ||
           context.meters.satiety <= 0 ||
           context.meters.urine >= 100;
 
-        const losingFunSpeed = isLosingFunFast ? 2 : 1;
+        const fun = shouldLoseFunFaster
+          ? METERS_CONFIG.fun.clamp(
+              context.meters.fun - METERS_CONFIG.fun.step * 2,
+            )
+          : context.meters.fun;
 
         return {
           ...context,
           meters: {
             ...context.meters,
             hydration: METERS_CONFIG.hydration.clamp(
-              context.meters.hydration - METERS_CONFIG.hydration.step,
+              context.meters.hydration - METERS_CONFIG.hydration.step * 0.5,
             ),
             satiety: METERS_CONFIG.satiety.clamp(
-              context.meters.satiety - METERS_CONFIG.satiety.step,
+              context.meters.satiety - METERS_CONFIG.satiety.step * 0.5,
             ),
-            fun: METERS_CONFIG.fun.clamp(
-              context.meters.fun - METERS_CONFIG.fun.step * losingFunSpeed,
-            ),
+            fun,
           },
         };
       }),
