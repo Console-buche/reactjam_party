@@ -216,9 +216,9 @@ export const gameMachine = createMachine({
       | { type: 'onAddPerson' }
       | { type: 'onRemovePerson'; person: ActorRefFrom<typeof personMachine> }
       | {
-          type: 'onRemovePersonFromAllHotspots';
-          person: ActorRefFrom<typeof personMachine>;
-        }
+        type: 'onRemovePersonFromAllHotspots';
+        person: ActorRefFrom<typeof personMachine>;
+      }
       | { type: 'onStart' }
       | { type: 'onPause' }
       | { type: 'onGameOver' }

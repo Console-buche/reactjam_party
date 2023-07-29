@@ -75,13 +75,13 @@ export const hotspotMachine = createMachine(
       events: {} as
         | { type: 'onUpdatePerson' }
         | {
-            type: 'onRegisterPerson';
-            person: ActorRefFrom<typeof personMachine>;
-          }
+          type: 'onRegisterPerson';
+          person: ActorRefFrom<typeof personMachine>;
+        }
         | {
-            type: 'onUnregisterPerson';
-            person: ActorRefFrom<typeof personMachine>;
-          },
+          type: 'onUnregisterPerson';
+          person: ActorRefFrom<typeof personMachine>;
+        },
       actions: {} as { type: 'updatePersons' } | { type: 'updateHype' },
     },
     predictableActionArguments: true,
@@ -90,14 +90,10 @@ export const hotspotMachine = createMachine(
   },
   {
     actions: {
-      updateHype: (context) => {
-        if (context.persons.length < 1) return context;
-        sendParent({
-          type: 'onIncrementHype',
-          hype: context.persons.length * 0.2,
-        });
-        return context;
-      },
+      updateHype: sendParent((context) => ({
+        type: 'onIncrementHype',
+        hype: context.persons.length < 1 ? 0 : context.persons.length * 0.2,
+      }))
     },
   },
 );

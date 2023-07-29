@@ -56,15 +56,10 @@ export const personMachine = createMachine(
     on: {
       onUnregisterFromAllHotspot: {
         target: '#Person.actionFlow.Idle',
-        actions: (context) => {
-          console.log('Person.onUnregisterFromAllHotspot');
-          //FIXME: this is probably not working
-          sendParent({
-            type: 'onRemovePersonFromAllHotspots',
-            person: context.self,
-          });
-          return context;
-        },
+        actions: sendParent((context) => ({
+          type: 'onRemovePersonFromAllHotspots',
+          person: context.self,
+        }))
       },
     },
     states: {
@@ -173,28 +168,11 @@ export const personMachine = createMachine(
           },
           // on leave
           onLeave: {
-            // target: '#Person.actionFlow.Leaving',
-            actions: (context) => {
-              console.log('onLeave');
-              //FIXME: FUCK THIS, how do I do
-              //TODO: FUCK THIS, how do I do
-              const sp = sendParent({
-                type: 'onRemovePerson',
-                person: context.self,
-              });
-              const st = sendTo('GameService', {
-                type: 'onRemovePerson',
-                person: context.self,
-              });
-              const s = send('onRemovePerson', { to: 'GameService' });
-
-              // I can return any of the three value it doesnt change shit
-              // I tried replacing `GameService` by `Game`, it also doesn't do shit
-              // the id of the machine is defined inside useMachine() in App.tsx
-              // I also tried to put machine id instead of service id (Game vs GameService)
-              // I don't know how to solve this mess.
-              return st;
-            },
+            target: '#Person.actionFlow.Leaving',
+            actions: sendParent((context) => ({
+              type: 'onRemovePerson',
+              person: context.self,
+            }))
           },
         },
         initial: 'Idle',
@@ -302,8 +280,8 @@ export const personMachine = createMachine(
 
         const fun = shouldLoseFunFaster
           ? METERS_CONFIG.fun.clamp(
-              context.meters.fun - METERS_CONFIG.fun.step * 2,
-            )
+            context.meters.fun - METERS_CONFIG.fun.step * 2,
+          )
           : context.meters.fun;
 
         return {
