@@ -3,7 +3,7 @@ import { hotspotMachine } from './hotspot.machine';
 export const dancefloorMachine = hotspotMachine
   .withContext({
     ...hotspotMachine.context,
-    maxPersons: 6,
+    maxPersons: 4,
     name: 'dancefloor',
   })
   .withConfig({
