@@ -167,20 +167,22 @@ export const gameMachine = createMachine({
       }),
     },
     onRemovePerson: {
-      actions: assign((context, event) => {
-        console.log('Game.onRemovePerson');
-        //FIXME: maybe this doesn't work
-        send({
+      actions: [
+        send((_, { person }) => ({
           type: 'onRemovePersonFromAllHotspots',
-          person: event.person,
-        });
-        return {
-          ...context,
-          persons: context.persons.filter(
-            (actor) => actor.id !== event.person.id,
-          ),
-        };
-      }),
+          person: person,
+        })),
+        assign((context, { person }) => {
+          console.log('Game.onRemovePerson');
+          person.stop ? person.stop() : null;
+          return {
+            ...context,
+            persons: context.persons.filter(
+              (actor) => actor.id !== person.id,
+            ),
+          };
+        }),
+      ],
     },
     onRemovePersonFromAllHotspots: {
       actions: (context, event) => {
