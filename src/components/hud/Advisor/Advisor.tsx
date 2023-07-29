@@ -1,16 +1,22 @@
 import { animated, easings, useSpring } from 'react-spring';
 import './advisor.css';
 
-export const Advisor = ({ isClicked }: { isClicked: boolean }) => {
+type Props = {
+  text: string;
+  onSkipText: () => void;
+};
+export const Advisor = ({ text, onSkipText }: Props) => {
+  const isOpen = text.length > 0;
+
   const { slideIn, opacity } = useSpring({
-    slideIn: isClicked ? 0 : -30,
-    faceSlideIn: isClicked ? 0 : 60,
-    opacity: isClicked ? 0.9 : 0,
+    slideIn: isOpen ? 0 : -30,
+    faceSlideIn: isOpen ? 0 : 60,
+    opacity: isOpen ? 0.9 : 0,
     easing: easings.easeInOutSine,
   });
 
   return (
-    <div className="advisor__container">
+    <div className="advisor__container" onClick={onSkipText}>
       <div
         style={{ position: 'relative', width: '500px', objectFit: 'contain' }}
       >
@@ -36,8 +42,7 @@ export const Advisor = ({ isClicked }: { isClicked: boolean }) => {
             }}
           />
           <animated.div className="advisor__speech__text" style={{ opacity }}>
-            Hi ! Welcome to ... Hi ! Welcome to ...Hi ! Welcome to ...Hi !
-            Welcome to ...Hi ! Welcome to ...
+            {text}
           </animated.div>
         </div>
       </div>

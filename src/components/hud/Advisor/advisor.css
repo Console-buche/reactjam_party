@@ -1,48 +1,43 @@
-
-
 .advisor__container {
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    width: 500px;
-    height: 500px;
-    z-index: 2;
-    transition: 0.2s opacity;
-    flex-direction: row-reverse;
-    pointer-events: none;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  width: 500px;
+  height: 500px;
+  z-index: 2;
+  transition: 0.2s opacity;
+  flex-direction: row-reverse;
+  pointer-events: none;
 }
 
-
 .advisor__face {
-    position: absolute;
-    bottom:0;
-    right:0;
-    object-fit: contain;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  object-fit: contain;
 }
 
 .advisor__speech {
-    position: absolute;
-    left:-150px;
-    display: flex;
-    width:300px;
-    transform: translateY(100px);
-    height: fit-content;
+  position: absolute;
+  left: -150px;
+  display: flex;
+  width: 300px;
+  transform: translateY(100px);
+  height: fit-content;
 }
 
 .advisor__speech__bubble {
-    position:absolute;
-    width: 100%;
-    top:100px;
-    object-fit: contain;
-    transform: rotateY(180deg);
-    
+  position: absolute;
+  width: 100%;
+  top: 100px;
+  object-fit: contain;
+  transform: rotateY(180deg);
 }
 
 .advisor__speech__text {
-    width: 100%;
-    font-size: 16px;
-    padding: 50px;
-    z-index: 1;
+  width: 100%;
+  font-size: 16px;
+  padding: 50px;
+  z-index: 1;
 }
-
