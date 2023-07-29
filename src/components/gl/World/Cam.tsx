@@ -25,12 +25,12 @@ export const Cam = () => {
     <>
       <CameraControls
         ref={cameraControlsRef}
-        maxDistance={23}
-        distance={23}
+        maxDistance={26}
+        distance={26}
         truckSpeed={4}
-        polarAngle={DEG2RAD * 87}
-        minPolarAngle={DEG2RAD * 87}
-        maxPolarAngle={DEG2RAD * 87}
+        polarAngle={DEG2RAD * 83}
+        minPolarAngle={DEG2RAD * 83}
+        maxPolarAngle={DEG2RAD * 83}
         mouseButtons={{
           left: 2,
           wheel: 0,
