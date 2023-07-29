@@ -40,176 +40,172 @@ export type HotSpots = {
 
 const disasterNames = ['onBlackout', 'onPolice', 'onFire'];
 
-export const gameMachine = createMachine(
-  {
-    /** @xstate-layout N4IgpgJg5mDOIC5QHECGBbMBiA9gOwEk8BjAJzEzwBcAJATwAcwBtABgF1FQGdYBLKn3xcQAD0QBmABxSAdABYATAE4AbAFZlAdi2sAjHsUSANCDqI9rLbOXqJeiSt2KZirQF93ptJlx4AImBkFGDU9ExsnEggPPyCwtHiCNLqsnpSWvJq8qpSrI5WpuYIhp7eGNj4AIIQEAAKYKSw+JEisQJCeCJJ8qzyaVrp6npaRoqqeupFiMoSqrJShuqDElbyEsplID6VeABKFDgAbmANTS0cbbwdCaBJ0soLUm5S9hLqqlof0wiZ-cqsVQuDLyUasIxbHZ+A7oY6nRrNPAAMVIOHQVQANhiaDgqLAeHjWtF2vEuolJC4bIp0qptKxho4Rj8pL0Fpp1q8JIN1KwpJCKn4dgB5E6kInca6k7qIHQ-TQSNIfFT2OxqDb8zCyPC4gDKVFQpCokD8eoNVHFMUlnWlCCMrFkG3pMmUeXSYx+oMUCkBLlYynklg08g1YFkDAxqDofDwUD8dVQAFdYCxLsSrbcxIg7Q6Aepna7no4fly9N6gRpHBllA4JCGwxGozGsKJYPqjbJUAAzI2kAAUPNYAEosDt65Ho1ALSTreTkhNZH1cioAwGdFJi6NZKp8pMMnplMpFPI+V5thUx43Yy226Guz3+6whyPz+HxzHmHoohK4jO7ohhl6folhs+4HhsHqDLI6hKiy4wSHMqhzHWDCJsmEAmvqhpTumZJ-raqw5k6UguvohaKB61I2D6GzER8vL0p4p7ahAcAiDsVw-hmSQqD8QxUeW7L0loFZ1tqVCmoakAcTcuGZggswLpMyy5Fo-p2HYEFegCQLaHRozQbWp6jq+l7SVKs5cqkyzgrk8hZIoj4mGYiCgva0HluCei5Jo6jIahUlppxslJJYCqOnmijqHZAYGE5xQrg6ijLr0KV5v6dadtGfCwAAFgF34yTawmpAeB5ZPZOSqKocpSPMvRAq8UX2AYjHuEAA */
-    id: 'Game',
-    description:
-      'The game machine is the root machine of the game, it handles the game state.',
-    context: {
-      persons: [],
-      hotspots: {
-        bar: interpret(barMachine, { id: MathUtils.generateUUID() }).start(),
-        toilet: interpret(toiletMachine, {
-          id: MathUtils.generateUUID(),
-        }).start(),
-      },
-      clock: METERS_CONFIG.clock.initialValue,
-      currentNight: 0,
-      meters: {
-        hype: 0,
-      },
-      disasterForTheNight: [],
+export const gameMachine = createMachine({
+  /** @xstate-layout N4IgpgJg5mDOIC5QHECGBbMBiA9gOwEk8BjAJzEzwBcAJATwAcwBtABgF1FQGdYBLKn3xcQAD0QBmABxSAdABYATAE4AbAFZlAdi2sAjHsUSANCDqI9rLbOXqJeiSt2KZirQF93ptJlx4AImBkFGDU9ExsnEggPPyCwtHiCNLqsnpSWvJq8qpSrI5WpuYIhp7eGNj4AIIQEAAKYKSw+JEisQJCeCJJ8qzyaVrp6npaRoqqeupFiMoSqrJShuqDElbyEsplID6VeABKFDgAbmANTS0cbbwdCaBJ0soLUm5S9hLqqlof0wiZ-cqsVQuDLyUasIxbHZ+A7oY6nRrNPAAMVIOHQVQANhiaDgqLAeHjWtF2vEuolJC4bIp0qptKxho4Rj8pL0Fpp1q8JIN1KwpJCKn4dgB5E6kInca6k7qIHQ-TQSNIfFT2OxqDb8zCyPC4gDKVFQpCokD8eoNVHFMUlnWlCCMrFkG3pMmUeXSYx+oMUCkBLlYynklg08g1YFkDAxqDofDwUD8dVQAFdYCxLsSrbcxIg7Q6Aepna7no4fly9N6gRpHBllA4JCGwxGozGsKJYPqjbJUAAzI2kAAUPNYAEosDt65Ho1ALSTreTkhNZH1cioAwGdFJi6NZKp8pMMnplMpFPI+V5thUx43Yy226Guz3+6whyPz+HxzHmHoohK4jO7ohhl6folhs+4HhsHqDLI6hKiy4wSHMqhzHWDCJsmEAmvqhpTumZJ-raqw5k6UguvohaKB61I2D6GzER8vL0p4p7ahAcAiDsVw-hmSQqD8QxUeW7L0loFZ1tqVCmoakAcTcuGZggswLpMyy5Fo-p2HYEFegCQLaHRozQbWp6jq+l7SVKs5cqkyzgrk8hZIoj4mGYiCgva0HluCei5Jo6jIahUlppxslJJYCqOnmijqHZAYGE5xQrg6ijLr0KV5v6dadtGfCwAAFgF34yTawmpAeB5ZPZOSqKocpSPMvRAq8UX2AYjHuEAA */
+  id: 'Game',
+  description:
+    'The game machine is the root machine of the game, it handles the game state.',
+  context: {
+    persons: [],
+    hotspots: {
+      bar: interpret(barMachine, { id: MathUtils.generateUUID() }).start(),
+      toilet: interpret(toiletMachine, {
+        id: MathUtils.generateUUID(),
+      }).start(),
     },
-    entry: assign((context) => {
-      const disasterForTheNight = generateRandomDisasters(context.currentNight);
-      console.log('game is starting');
-      return {
-        ...context,
-        disasterForTheNight,
-      };
-    }),
-    initial: 'notStarted',
-    states: {
-      notStarted: {
-        on: {
-          onStart: {
-            target: 'playing',
-          },
-        },
-      },
-      playing: {
-        after: {
-          500: [
-            {
-              // game tick
-              actions: assign((context) => {
-                console.log('game tick');
-                const clock =
-                  context.clock + METERS_CONFIG.clock.incrementValue;
-
-                return {
-                  ...context,
-                  clock: METERS_CONFIG.clock.clamp(clock),
-                };
-              }),
-              target: 'playing',
-            },
-            {
-              cond: (context) => context.clock >= METERS_CONFIG.clock.maxValue,
-              target: 'finished',
-            },
-          ],
-        },
-        on: {
-          onPause: {
-            target: 'paused',
-          },
-        },
-      },
-      paused: {
-        on: {
-          onStart: {
-            target: 'playing',
-          },
-        },
-      },
-      finished: {},
+    clock: METERS_CONFIG.clock.initialValue,
+    currentNight: 0,
+    meters: {
+      hype: 0,
     },
-    on: {
-      onIncrementHype: {
-        actions: assign((context, event) => {
-          return {
-            ...context,
-            meters: {
-              ...context.meters,
-              hype: context.meters.hype + event.hype,
-            },
-          };
-        }),
-      },
-      onDecrementHype: {
-        actions: assign((context, event) => {
-          return {
-            ...context,
-            meters: {
-              ...context.meters,
-              hype: context.meters.hype - event.hype,
-            },
-          };
-        }),
-      },
-      onAddPerson: {
-        actions: assign((context) => {
-          return {
-            ...context,
-            persons: [
-              ...context.persons,
-              spawn(personMachine, MathUtils.generateUUID()),
-            ],
-          };
-        }),
-      },
-      onRemovePerson: {
-        actions: assign((context, event) => {
-          return {
-            ...context,
-            persons: [
-              ...context.persons.filter((machine) => machine.id !== event.id),
-            ],
-          };
-        }),
-      },
-      onRemovePersonFromAllHotspots: {
-        actions: (context, event) => {
-          console.log('Game.onRemovePersonFromAllHotspots');
-          const { bar, toilet } = context.hotspots;
-          bar.send({
-            type: 'onUnregisterPerson',
-            person: event.person,
-          });
-          toilet.send({
-            type: 'onUnregisterPerson',
-            person: event.person,
-          });
-          return context;
-        },
-      },
-      onGameOver: {
-        target: 'finished',
-      },
-    },
-    // ------------------------------------------
-    schema: {
-      context: {} as {
-        persons: ActorRefFrom<typeof personMachine>[];
-        hotspots: HotSpots;
-        clock: number;
-        currentNight: number;
-        meters: {
-          hype: number;
-        };
-        disasterForTheNight: Record<number, (typeof disasterNames)[number]>[];
-      },
-      events: {} as
-        | { type: 'onIncrementHype'; hype: number }
-        | { type: 'onDecrementHype'; hype: number }
-        | { type: 'onAddPerson' }
-        | { type: 'onRemovePerson'; id: string }
-        | {
-            type: 'onRemovePersonFromAllHotspots';
-            person: ActorRefFrom<typeof personMachine>;
-          }
-        | { type: 'onStart' }
-        | { type: 'onPause' }
-        | { type: 'onGameOver' }
-        | { type: 'onBlackout' }
-        | { type: 'onPolice' }
-        | { type: 'onFire' },
-    },
-    predictableActionArguments: true,
-    preserveActionOrder: true,
-    tsTypes: {} as import('./game.machine.typegen').Typegen0,
+    disasterForTheNight: [],
   },
-  {},
-);
+  entry: assign((context) => {
+    const disasterForTheNight = generateRandomDisasters(context.currentNight);
+    console.log('game is starting');
+    return {
+      ...context,
+      disasterForTheNight,
+    };
+  }),
+  initial: 'notStarted',
+  states: {
+    notStarted: {
+      on: {
+        onStart: {
+          target: 'playing',
+        },
+      },
+    },
+    playing: {
+      after: {
+        500: [
+          {
+            // game tick
+            actions: assign((context) => {
+              console.log('game tick');
+              const clock = context.clock + METERS_CONFIG.clock.incrementValue;
+
+              return {
+                ...context,
+                clock: METERS_CONFIG.clock.clamp(clock),
+              };
+            }),
+            target: 'playing',
+          },
+          {
+            cond: (context) => context.clock >= METERS_CONFIG.clock.maxValue,
+            target: 'finished',
+          },
+        ],
+      },
+      on: {
+        onPause: {
+          target: 'paused',
+        },
+      },
+    },
+    paused: {
+      on: {
+        onStart: {
+          target: 'playing',
+        },
+      },
+    },
+    finished: {},
+  },
+  on: {
+    onIncrementHype: {
+      actions: assign((context, event) => {
+        return {
+          ...context,
+          meters: {
+            ...context.meters,
+            hype: context.meters.hype + event.hype,
+          },
+        };
+      }),
+    },
+    onDecrementHype: {
+      actions: assign((context, event) => {
+        return {
+          ...context,
+          meters: {
+            ...context.meters,
+            hype: context.meters.hype - event.hype,
+          },
+        };
+      }),
+    },
+    onAddPerson: {
+      actions: assign((context) => {
+        return {
+          ...context,
+          persons: [
+            ...context.persons,
+            spawn(personMachine, MathUtils.generateUUID()),
+          ],
+        };
+      }),
+    },
+    onRemovePerson: {
+      actions: assign((context, event) => {
+        return {
+          ...context,
+          persons: [
+            ...context.persons.filter((machine) => machine.id !== event.id),
+          ],
+        };
+      }),
+    },
+    onRemovePersonFromAllHotspots: {
+      actions: (context, event) => {
+        console.log('Game.onRemovePersonFromAllHotspots');
+        const { bar, toilet } = context.hotspots;
+        bar.send({
+          type: 'onUnregisterPerson',
+          person: event.person,
+        });
+        toilet.send({
+          type: 'onUnregisterPerson',
+          person: event.person,
+        });
+        return context;
+      },
+    },
+    onGameOver: {
+      target: 'finished',
+    },
+  },
+  // ------------------------------------------
+  schema: {
+    context: {} as {
+      persons: ActorRefFrom<typeof personMachine>[];
+      hotspots: HotSpots;
+      clock: number;
+      currentNight: number;
+      meters: {
+        hype: number;
+      };
+      disasterForTheNight: Record<number, (typeof disasterNames)[number]>[];
+    },
+    events: {} as
+      | { type: 'onIncrementHype'; hype: number }
+      | { type: 'onDecrementHype'; hype: number }
+      | { type: 'onAddPerson' }
+      | { type: 'onRemovePerson'; id: string }
+      | {
+          type: 'onRemovePersonFromAllHotspots';
+          person: ActorRefFrom<typeof personMachine>;
+        }
+      | { type: 'onStart' }
+      | { type: 'onPause' }
+      | { type: 'onGameOver' }
+      | { type: 'onBlackout' }
+      | { type: 'onPolice' }
+      | { type: 'onFire' },
+  },
+  predictableActionArguments: true,
+  preserveActionOrder: true,
+  tsTypes: {} as import('./game.machine.typegen').Typegen0,
+});

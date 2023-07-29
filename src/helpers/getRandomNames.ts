@@ -1,4 +1,6 @@
-export const names = [
+import { MathUtils } from 'three';
+
+const names = [
   'Simbala',
   'Plumbob',
   'Llamanade',
@@ -20,3 +22,6 @@ export const names = [
   'Blahort',
   'Graaable',
 ];
+
+export const getRandomName = () =>
+  names[MathUtils.randInt(0, names.length - 1)];

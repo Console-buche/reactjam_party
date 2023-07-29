@@ -16,21 +16,32 @@ export interface Typegen0 {
     services: never;
   };
   eventsCausingActions: {
-    updateNeeds: 'xstate.after(500)#Person.meterFlow.Active';
+    tickNeeds: 'xstate.after(500)#Person.meterFlow.Active';
   };
   eventsCausingDelays: {};
   eventsCausingGuards: {};
   eventsCausingServices: {};
   matchesStates:
     | 'actionFlow'
+    | 'actionFlow.Dancing'
     | 'actionFlow.Drinking'
+    | 'actionFlow.Eating'
     | 'actionFlow.Idle'
+    | 'actionFlow.Leaving'
     | 'actionFlow.Pissing'
+    | 'actionFlow.Sitting'
     | 'meterFlow'
     | 'meterFlow.Active'
     | 'meterFlow.Inactive'
     | {
-        actionFlow?: 'Drinking' | 'Idle' | 'Pissing';
+        actionFlow?:
+          | 'Dancing'
+          | 'Drinking'
+          | 'Eating'
+          | 'Idle'
+          | 'Leaving'
+          | 'Pissing'
+          | 'Sitting';
         meterFlow?: 'Active' | 'Inactive';
       };
   tags: never;
