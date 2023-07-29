@@ -1,53 +1,53 @@
 .hotspots__container {
-    position: absolute;
-    top: 0;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    z-index: 2;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  z-index: 2;
 }
 
 .hotspots__card {
-    position:relative;
-    color: black;
-    font-weight: bold;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    width: 136px;
-    transition: opacity 0.3s ease-in-out;
-    filter: grayscale(0.7);
-    transform: scale(0.9);
-    transition: 0.2s filter, 0.15s transform
-    
+  position: relative;
+  color: black;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 136px;
+  transition: opacity 0.3s ease-in-out;
+  filter: grayscale(0.7);
+  transform: scale(0.9);
+  transition:
+    0.2s filter,
+    0.15s transform;
 }
 
 .hotspots__card:hover {
-    filter: grayscale(0);
-    transform: scale(1);
-    cursor: pointer;
+  filter: grayscale(0);
+  transform: scale(1);
+  cursor: pointer;
 }
 
 .hotspots__card__metric {
-    width:100%;
-    text-align: left;
-} 
+  width: 100%;
+  text-align: left;
+}
 
 .hotspots__card__stats {
-    font-weight: black;
-    font-size: 30px;
-    width:30px;
-    height:30px;
-    color: teal;
-    padding:10px;
-    background: rgba(255,255,255,0.8);
-    border-radius:100px;
-    position: absolute;
-    bottom: 9px;
-    right:0;
-    text-align: center;
-    z-index: 2;
-
+  font-weight: black;
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
+  color: teal;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 100px;
+  position: absolute;
+  bottom: 9px;
+  right: 0;
+  text-align: center;
+  z-index: 2;
 }

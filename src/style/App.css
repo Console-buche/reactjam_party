@@ -5,14 +5,14 @@
 }
 
 @font-face {
-  font-family: "Poppins";
-  src: url("./assets/fonts/Poppins-Regular.ttf") format("truetype");
+  font-family: 'Poppins';
+  src: url('./assets/fonts/Poppins-Regular.ttf') format('truetype');
   font-weight: 400; /* Regular weight */
 }
 
 @font-face {
-  font-family: "Poppins";
-  src: url("./assets/fonts/Poppins-Black.ttf") format("truetype");
+  font-family: 'Poppins';
+  src: url('./assets/fonts/Poppins-Black.ttf') format('truetype');
   font-weight: 900; /* Black weight */
 }
 
