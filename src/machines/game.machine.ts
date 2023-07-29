@@ -185,31 +185,11 @@ export const gameMachine = createMachine({
     onRemovePersonFromAllHotspots: {
       actions: (context, event) => {
         console.log('Game.onRemovePersonFromAllHotspots');
-        const { bar, toilet, buffet, dancefloor, lobby, sofa } =
-          context.hotspots;
-        bar.send({
-          type: 'onUnregisterPerson',
-          person: event.person,
-        });
-        toilet.send({
-          type: 'onUnregisterPerson',
-          person: event.person,
-        });
-        buffet.send({
-          type: 'onUnregisterPerson',
-          person: event.person,
-        });
-        dancefloor.send({
-          type: 'onUnregisterPerson',
-          person: event.person,
-        });
-        lobby.send({
-          type: 'onUnregisterPerson',
-          person: event.person,
-        });
-        sofa.send({
-          type: 'onUnregisterPerson',
-          person: event.person,
+        Object.keys(context.hotspots).forEach((hotspotName) => {
+          context.hotspots[hotspotName as keyof typeof context.hotspots].send({
+            type: 'onUnregisterPerson',
+            person: event.person,
+          });
         });
         return context;
       },
