@@ -14,12 +14,12 @@ import {
 import type { ActorRefFrom } from 'xstate';
 import { shallow } from 'zustand/shallow';
 import { useGameMachineProvider } from '../../../hooks/use';
-import type { personMachine } from '../../../machines/person.machine';
+import { personMachine } from '../../../machines/person.machine';
 import { useStoreDragging } from '../../../stores/storeDragging';
+import { useStoreHotspot } from '../../../stores/storeHotspots';
 import { PersonShadowRecall } from './PersonShadowRecall';
 import { Statbar } from './Statbar';
 import { PERSON_HEIGHT } from './person.constants';
-import { useStoreHotspot } from '../../../stores/storeHotspots';
 
 const selectFeedbackIntensiry = (
   isHovered: boolean,
@@ -47,6 +47,10 @@ export const Person = ({
 
   useCursor(isHovered);
 
+  const updateDropZoneOccupied = useStoreHotspot(
+    (state) => state.updateDropZoneOccupied,
+  );
+
   const isExists = useRef(false);
   const gameService = useGameMachineProvider();
 
@@ -56,10 +60,12 @@ export const Person = ({
     setIsDragging,
     draggingId,
     setIsHoveringPerson,
+    draggingRef,
     setDraggingRef,
   } = useStoreDragging(
     (state) => ({
       isDragging: state.isDragging,
+      draggingRef: state.draggingRef,
       draggingId: state.draggingId,
       setIsHoveringPerson: state.setIsHoveringPerson,
       setIsDragging: state.setIsDragging,
@@ -87,10 +93,9 @@ export const Person = ({
   // setup easings
   const { glow, scale, followSpeed, opacity } = useSpring({
     glow: selectFeedbackIntensiry(isHovered, isBeingDragged),
-    scale: isBeingDragged ? 1 : 0.8,
+    scale: isBeingDragged ? 0.8 : 0.7,
     opacity: isBeingDragged ? 0.5 : 1,
     followSpeed: isBeingDragged ? 0.75 : 0,
-    // scale: selectFeedbackScale(isBeingDragged, hotspot),
   });
 
   // position tick for the drag back shadow
@@ -104,7 +109,7 @@ export const Person = ({
   useEffect(() => {
     if (ref.current && refGroup.current && !isExists.current) {
       ref.current.geometry.translate(0, PERSON_HEIGHT * 0.5, 0);
-      refGroup.current.position.copy(pos || new Vector3(-26, 0, 11));
+      refGroup.current.position.copy(pos || new Vector3(-26, -1.8, 11));
       isExists.current = true;
       // send the person actor to the machine to use context.self
       actor.send({ type: 'triggerStart', person: actor });
@@ -121,14 +126,26 @@ export const Person = ({
     ref.current.scale.y =
       Math.sin(clock.getElapsedTime() * 10) * 0.01 + scale.get();
 
+    // position on drag
     if (isBeingDragged) {
       refGroup.current.position.lerp(
         new Vector3(camera.position.x, -1, 11),
         followSpeed.get(),
       );
     }
-    // height
-    if (!isBeingDragged) {
+
+    // position on not dragged, on active dropzone
+    if (
+      !isBeingDragged &&
+      draggingRef &&
+      draggingRef.userData.isIdle === false &&
+      draggingRef.userData.dropZone.position
+    ) {
+      draggingRef.position.lerp(draggingRef.userData.dropZone.position, 0.1);
+    }
+
+    // position on not dragged and idle
+    if (!isBeingDragged && draggingRef?.userData.isIdle === true) {
       refGroup.current.position.y = MathUtils.lerp(
         refGroup.current.position.y,
         -1.8,
@@ -166,6 +183,20 @@ export const Person = ({
       type: 'onRemovePersonFromAllHotspots',
       person: actor,
     });
+
+    if (
+      draggingRef &&
+      draggingRef.userData.dropZone &&
+      draggingRef.userData.isIdle
+    ) {
+      updateDropZoneOccupied(
+        draggingRef.userData.dropZone.hotspotType,
+        draggingRef.userData.dropZone.index,
+        null,
+      );
+      draggingRef.userData.isIdle = true;
+      draggingRef.userData.dropZone = null;
+    }
   };
 
   return (

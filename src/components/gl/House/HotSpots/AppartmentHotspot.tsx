@@ -20,7 +20,7 @@ export const AppartmentHotspot = ({
   const refMesh = useRef<Mesh>(null);
   const [isHovered, setIsHovered] = useState(false);
 
-  const { getAvailableDropZone } = useStoreHotspot(
+  const { getAvailableDropZone, updateDropZoneOccupied } = useStoreHotspot(
     (state) => ({
       updateDropZoneOccupied: state.updateDropZoneOccupied,
       updateHotSpotPosition: state.updateHotSpotPosition,
@@ -40,6 +40,7 @@ export const AppartmentHotspot = ({
     setDraggingActorRef,
     setDraggingId,
     setIsDragging,
+    draggingRef,
   } = useStoreDragging(
     (state) => ({
       draggingRef: state.draggingRef,
@@ -53,13 +54,23 @@ export const AppartmentHotspot = ({
     shallow,
   );
 
+  // FIXME : handle register impossible when hopspot is full
   const handleOnClick = () => {
     // on dropping a person on a hotspot
     if (isDragging && draggingActorRef) {
+      // register person in hotspot
       hotspotService.send({
         type: 'onRegisterPerson',
         person: draggingActorRef,
       });
+
+      // save state in mesh userData while machine state isn't fixed
+      const dropZone = getAvailableDropZone(type);
+      if (draggingRef?.userData && dropZone) {
+        draggingRef.userData.isIdle = false;
+        draggingRef.userData.dropZone = dropZone;
+        updateDropZoneOccupied(type, dropZone.index, draggingActorRef.id);
+      }
 
       setDraggingId(null);
       setIsDragging(false);

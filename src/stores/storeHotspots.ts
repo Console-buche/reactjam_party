@@ -16,6 +16,7 @@ type Dropzone = {
   position: Vector3;
   index: number;
   personActorId: string | null;
+  hotspotType: (typeof hotspots)[number];
 };
 
 type HotSpotWithDropSpots = {
@@ -50,24 +51,28 @@ const InitialState: InitialState = {
       position: new Vector3(-30, 0, 0),
       dropzones: [
         {
-          position: new Vector3(-19, -1, 6.8),
+          position: new Vector3(-19, -1.8, 6.8),
           personActorId: null,
           index: 0,
+          hotspotType: 'lobby',
         },
         {
-          position: new Vector3(-16, -1, 7),
+          position: new Vector3(-16, -1.8, 7),
           personActorId: null,
           index: 1,
+          hotspotType: 'lobby',
         },
         {
-          position: new Vector3(-13, -1, 2.5),
+          position: new Vector3(-13, -1.8, 2.5),
           personActorId: null,
           index: 2,
+          hotspotType: 'lobby',
         },
         {
-          position: new Vector3(-11, -1, 4.5),
+          position: new Vector3(-11, -1.8, 4.5),
           personActorId: null,
           index: 3,
+          hotspotType: 'lobby',
         },
       ],
     },
@@ -75,29 +80,34 @@ const InitialState: InitialState = {
       position: new Vector3(10, 0, 0),
       dropzones: [
         {
-          position: new Vector3(4.2, -1, 3.8),
+          position: new Vector3(4.2, -1.8, 3.8),
           personActorId: null,
           index: 0,
+          hotspotType: 'bar',
         },
         {
-          position: new Vector3(4.2, -1, 6.5),
+          position: new Vector3(4.2, -1.8, 6.5),
           personActorId: null,
           index: 1,
+          hotspotType: 'bar',
         },
         {
-          position: new Vector3(6.9, -1, 8.6),
+          position: new Vector3(6.9, -1.8, 8.6),
           personActorId: null,
           index: 2,
+          hotspotType: 'bar',
         },
         {
-          position: new Vector3(4.7, -1, 8.6),
+          position: new Vector3(4.7, -1.8, 8.6),
           personActorId: null,
           index: 3,
+          hotspotType: 'bar',
         },
         {
-          position: new Vector3(10, -1, 10.2),
+          position: new Vector3(10, -1.8, 10.2),
           personActorId: null,
           index: 4,
+          hotspotType: 'bar',
         },
       ],
     },
@@ -105,24 +115,28 @@ const InitialState: InitialState = {
       position: new Vector3(-15, 0, 0),
       dropzones: [
         {
-          position: new Vector3(-13, -1, 7.9),
+          position: new Vector3(-13, -1.8, 7.9),
           personActorId: null,
           index: 0,
+          hotspotType: 'sofa',
         },
         {
-          position: new Vector3(-18, -1, 6.7),
+          position: new Vector3(-18, -1.8, 6.7),
           personActorId: null,
           index: 1,
+          hotspotType: 'sofa',
         },
         {
-          position: new Vector3(-11, -1, 5.1),
+          position: new Vector3(-11, -1.8, 5.1),
           personActorId: null,
           index: 2,
+          hotspotType: 'sofa',
         },
         {
-          position: new Vector3(-13, -1, 0.8),
+          position: new Vector3(-13, -1.8, 0.8),
           personActorId: null,
           index: 3,
+          hotspotType: 'sofa',
         },
       ],
     },
@@ -130,24 +144,28 @@ const InitialState: InitialState = {
       position: new Vector3(-2, 0, 0),
       dropzones: [
         {
-          position: new Vector3(-7, -1, 4.5),
+          position: new Vector3(-7, -1.8, 4.5),
           personActorId: null,
           index: 0,
+          hotspotType: 'dancefloor',
         },
         {
-          position: new Vector3(-4.9, -1, 6.5),
+          position: new Vector3(-4.9, -1.8, 6.5),
           personActorId: null,
           index: 1,
+          hotspotType: 'dancefloor',
         },
         {
-          position: new Vector3(-2.8, -1, 4.9),
+          position: new Vector3(-2.8, -1.8, 4.9),
           personActorId: null,
           index: 2,
+          hotspotType: 'dancefloor',
         },
         {
-          position: new Vector3(0, -1, 4.6),
+          position: new Vector3(0, -1.8, 4.6),
           personActorId: null,
           index: 3,
+          hotspotType: 'dancefloor',
         },
       ],
     },
@@ -155,29 +173,34 @@ const InitialState: InitialState = {
       position: new Vector3(30, 0, 0),
       dropzones: [
         {
-          position: new Vector3(22, -1, 4),
+          position: new Vector3(22, -1.8, 4),
           personActorId: null,
           index: 0,
+          hotspotType: 'buffet',
         },
         {
-          position: new Vector3(27, -1, 7),
+          position: new Vector3(27, -1.8, 7),
           personActorId: null,
           index: 1,
+          hotspotType: 'buffet',
         },
         {
-          position: new Vector3(31, -1, 1),
+          position: new Vector3(31, -1.8, 1),
           personActorId: null,
           index: 2,
+          hotspotType: 'buffet',
         },
         {
-          position: new Vector3(38, -1, 5),
+          position: new Vector3(38, -1.8, 5),
           personActorId: null,
           index: 3,
+          hotspotType: 'buffet',
         },
         {
-          position: new Vector3(26, -1, 0.4),
+          position: new Vector3(26, -1.8, 0.4),
           personActorId: null,
           index: 4,
+          hotspotType: 'buffet',
         },
       ],
     },
@@ -185,19 +208,22 @@ const InitialState: InitialState = {
       position: new Vector3(55, 0, 0),
       dropzones: [
         {
-          position: new Vector3(55, -1, 0),
+          position: new Vector3(55, -1.8, 0),
           personActorId: null,
           index: 0,
+          hotspotType: 'toilet',
         },
         {
-          position: new Vector3(55, -1, 2.7),
+          position: new Vector3(55, -1.8, 2.7),
           personActorId: null,
           index: 1,
+          hotspotType: 'toilet',
         },
         {
-          position: new Vector3(58, -1, 5.3),
+          position: new Vector3(58, -1.8, 5.3),
           personActorId: null,
           index: 2,
+          hotspotType: 'toilet',
         },
       ],
     },
