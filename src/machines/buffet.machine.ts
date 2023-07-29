@@ -1,6 +1,6 @@
 import { hotspotMachine } from './hotspot.machine';
 
-export const buffet = hotspotMachine
+export const buffetMachine = hotspotMachine
   .withContext({
     ...hotspotMachine.context,
     maxPersons: 5,
