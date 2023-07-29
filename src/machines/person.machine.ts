@@ -170,8 +170,7 @@ export const personMachine = createMachine(
                       meters: {
                         ...context.meters,
                         fun: METERS_CONFIG.fun.clamp(
-                          // FIXME: the wrong ratio, should just be * 2 ?
-                          context.meters.fun - METERS_CONFIG.fun.step * 2 * 5,
+                          context.meters.fun - METERS_CONFIG.fun.step * 2,
                         ),
                       },
                     };
@@ -213,31 +212,7 @@ export const personMachine = createMachine(
                 {
                   cond: (context) => context.meters.fun > 0,
                   //update meters
-                  actions: assign((context) => {
-                    const shouldLoseFunFaster =
-                      context.meters.hydration <= 0 ||
-                      context.meters.satiety <= 0 ||
-                      context.meters.urine >= 100;
-
-                    const fun = shouldLoseFunFaster
-                      ?
-                      context.meters.fun - METERS_CONFIG.fun.step * 5
-                      : context.meters.fun;
-
-                    return {
-                      ...context,
-                      meters: {
-                        ...context.meters,
-                        hydration: METERS_CONFIG.hydration.clamp(
-                          context.meters.hydration - METERS_CONFIG.hydration.step * 0.5,
-                        ),
-                        satiety: METERS_CONFIG.satiety.clamp(
-                          context.meters.satiety - METERS_CONFIG.satiety.step * 0.5,
-                        ),
-                        fun,
-                      },
-                    };
-                  }),
+                  actions: 'updateMeters',
                   target: '#Person.meterFlow.Active',
                 },
                 {
@@ -279,5 +254,34 @@ export const personMachine = createMachine(
     predictableActionArguments: true,
     preserveActionOrder: true,
     tsTypes: {} as import('./person.machine.typegen').Typegen0,
+  },
+  {
+    actions: {
+      updateMeters: assign((context) => {
+        const shouldLoseFunFaster =
+          context.meters.hydration <= 0 ||
+          context.meters.satiety <= 0 ||
+          context.meters.urine >= 100;
+
+        const fun = shouldLoseFunFaster
+          ?
+          context.meters.fun - METERS_CONFIG.fun.step * 5
+          : context.meters.fun;
+
+        return {
+          ...context,
+          meters: {
+            ...context.meters,
+            hydration: METERS_CONFIG.hydration.clamp(
+              context.meters.hydration - METERS_CONFIG.hydration.step * 0.5,
+            ),
+            satiety: METERS_CONFIG.satiety.clamp(
+              context.meters.satiety - METERS_CONFIG.satiety.step * 0.5,
+            ),
+            fun,
+          },
+        };
+      })
+    },
   }
 );

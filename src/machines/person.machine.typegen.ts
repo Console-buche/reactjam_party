@@ -18,7 +18,7 @@ export interface Typegen0 {
     services: never;
   };
   eventsCausingActions: {
-
+    "updateMeters": "xstate.after(500)#Person.meterFlow.Active";
   };
   eventsCausingDelays: {
 
