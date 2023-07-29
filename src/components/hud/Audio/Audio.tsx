@@ -15,15 +15,20 @@ export const Audio = () => {
   if (state === 'paused') audioRef.current?.pause();
 
   const hiddenClass = state === 'playing' ? 'audio__hidden' : '';
+
   return (
     <div className="audio__container">
       <audio
         ref={audioRef}
         className={`"audio__player" ${hiddenClass}`}
-        src="/assets/sounds/Snifit-or-Whiffit-PaperMario-Color-Splash.mp3"
         controls
         loop
-      />
+      >
+        <source
+          src="/assets/sounds/Snifit-or-Whiffit-PaperMario-Color-Splash.mp3"
+          type="audio/mpeg"
+        />
+      </audio>
     </div>
   );
 };
