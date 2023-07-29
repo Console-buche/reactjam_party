@@ -1,5 +1,5 @@
 import { MathUtils } from 'three';
-import { assign, createMachine, sendParent } from 'xstate';
+import { assign, createMachine, send, sendParent } from 'xstate';
 import { getRandomName } from '../helpers/getRandomNames';
 
 const METERS_CONFIG = {
@@ -160,6 +160,18 @@ export const personMachine = createMachine(
               };
             }),
           },
+          // on leave
+          onLeave: {
+            target: '#Person.actionFlow.Leaving',
+            actions: (_, __, meta) => {
+              console.log('Leaving, removing person from all hotspots');
+              //FIXME: this is not working
+              sendParent({
+                type: 'onRemovePersonFromAllHotspots',
+                personID: meta._event.origin,
+              });
+            },
+          },
         },
         initial: 'Idle',
         states: {
@@ -206,6 +218,7 @@ export const personMachine = createMachine(
       events: {} as
         | { type: 'triggerStart' } // enable the meterFlow (needs etc.)
         | { type: 'onUnregisterFromAllHotspot' } // when the person is removed from an hotspot
+        | { type: 'onLeave' } // when the person is leaving the party (fun <= 0)
         // actions
         | { type: 'onBuffet' }
         | { type: 'onToilet' }
@@ -221,12 +234,32 @@ export const personMachine = createMachine(
   {
     actions: {
       tickNeeds: assign((context) => {
+        if (context.meters.fun <= 0) {
+          console.log('Person is leaving');
+          send('onLeave');
+          //FIXME: maybe this doesn't work
+          return context;
+        }
+
+        const isLosingFunFast =
+          context.meters.hydration <= 0 ||
+          context.meters.satiety <= 0 ||
+          context.meters.urine >= 100;
+
+        const losingFunSpeed = isLosingFunFast ? 2 : 1;
+
         return {
           ...context,
           meters: {
             ...context.meters,
             hydration: METERS_CONFIG.hydration.clamp(
-              context.meters.hydration + METERS_CONFIG.hydration.incrementValue,
+              context.meters.hydration - METERS_CONFIG.hydration.step,
+            ),
+            satiety: METERS_CONFIG.satiety.clamp(
+              context.meters.satiety - METERS_CONFIG.satiety.step,
+            ),
+            fun: METERS_CONFIG.fun.clamp(
+              context.meters.fun - METERS_CONFIG.fun.step * losingFunSpeed,
             ),
           },
         };
