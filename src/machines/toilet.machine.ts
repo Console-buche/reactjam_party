@@ -9,7 +9,7 @@ export const toiletMachine = hotspotMachine
   .withConfig({
     actions: {
       updatePersons: (context) => {
-        console.log('toilet.updatePersons', context.persons);
+        // console.log('toilet.updatePersons', context.persons);
         context.persons.forEach((p) => p.send('onToilet'));
         return context;
       },
