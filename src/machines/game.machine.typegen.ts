@@ -4,7 +4,7 @@
 export interface Typegen0 {
   '@@xstate/typegen': true;
   internalEvents: {
-    "xstate.after(500)#Game.playing": { type: "xstate.after(500)#Game.playing" };
+    "xstate.after(1000)#Game.playing": { type: "xstate.after(1000)#Game.playing" };
     "xstate.init": { type: "xstate.init" };
   };
   invokeSrcNameMap: {

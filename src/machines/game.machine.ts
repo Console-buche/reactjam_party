@@ -31,8 +31,8 @@ const generateRandomDisasters = (night: number) => {
 const METERS_CONFIG = {
   clock: {
     initialValue: 0,
-    incrementValue: 5,
-    maxValue: 100,
+    incrementValue: 1,
+    maxValue: 600,
     clamp: (v: number) => MathUtils.clamp(v, 0, METERS_CONFIG.clock.maxValue),
   },
 };
@@ -97,11 +97,10 @@ export const gameMachine = createMachine({
     },
     playing: {
       after: {
-        500: [
+        1000: [
           {
             // game tick
             actions: assign((context) => {
-              // console.log('game tick');
               const clock = context.clock + METERS_CONFIG.clock.incrementValue;
 
               return {
@@ -118,16 +117,75 @@ export const gameMachine = createMachine({
         ],
       },
       on: {
-        onPause: {
-          target: 'paused',
+        onPause: 'paused',
+        onIncrementHype: {
+          actions: assign((context, event) => {
+            return {
+              ...context,
+              meters: {
+                ...context.meters,
+                hype: Math.round(context.meters.hype + event.hype),
+              },
+            };
+          }),
+        },
+        onDecrementHype: {
+          actions: assign((context, event) => {
+            return {
+              ...context,
+              meters: {
+                ...context.meters,
+                hype: context.meters.hype - event.hype,
+              },
+            };
+          }),
+        },
+        onAddPerson: {
+          actions: assign((context) => {
+            return {
+              ...context,
+              persons: [
+                ...context.persons,
+                spawn(personMachine, MathUtils.generateUUID()),
+              ],
+            };
+          }),
+        },
+        onRemovePerson: {
+          actions: [
+            send((_, { person }) => ({
+              type: 'onRemovePersonFromAllHotspots',
+              person: person,
+            })),
+            assign((context, { person }) => {
+              console.log('Game.onRemovePerson');
+              person.stop ? person.stop() : null;
+              return {
+                ...context,
+                persons: context.persons.filter(
+                  (actor) => actor.id !== person.id,
+                ),
+              };
+            }),
+          ],
+        },
+        onRemovePersonFromAllHotspots: {
+          actions: (context, event) => {
+            console.log('Game.onRemovePersonFromAllHotspots');
+            Object.keys(context.hotspots).forEach((hotspotName) => {
+              context.hotspots[hotspotName as keyof typeof context.hotspots].send({
+                type: 'onUnregisterPerson',
+                person: event.person,
+              });
+            });
+            return context;
+          },
         },
       },
     },
     paused: {
       on: {
-        onStart: {
-          target: 'playing',
-        },
+        onStart: 'playing',
       },
     },
     finished: {
@@ -135,72 +193,7 @@ export const gameMachine = createMachine({
     },
   },
   on: {
-    onIncrementHype: {
-      actions: assign((context, event) => {
-        return {
-          ...context,
-          meters: {
-            ...context.meters,
-            hype: Math.round(context.meters.hype + event.hype),
-          },
-        };
-      }),
-    },
-    onDecrementHype: {
-      actions: assign((context, event) => {
-        return {
-          ...context,
-          meters: {
-            ...context.meters,
-            hype: context.meters.hype - event.hype,
-          },
-        };
-      }),
-    },
-    onAddPerson: {
-      actions: assign((context) => {
-        return {
-          ...context,
-          persons: [
-            ...context.persons,
-            spawn(personMachine, MathUtils.generateUUID()),
-          ],
-        };
-      }),
-    },
-    onRemovePerson: {
-      actions: [
-        send((_, { person }) => ({
-          type: 'onRemovePersonFromAllHotspots',
-          person: person,
-        })),
-        assign((context, { person }) => {
-          console.log('Game.onRemovePerson');
-          person.stop ? person.stop() : null;
-          return {
-            ...context,
-            persons: context.persons.filter(
-              (actor) => actor.id !== person.id,
-            ),
-          };
-        }),
-      ],
-    },
-    onRemovePersonFromAllHotspots: {
-      actions: (context, event) => {
-        console.log('Game.onRemovePersonFromAllHotspots');
-        Object.keys(context.hotspots).forEach((hotspotName) => {
-          context.hotspots[hotspotName as keyof typeof context.hotspots].send({
-            type: 'onUnregisterPerson',
-            person: event.person,
-          });
-        });
-        return context;
-      },
-    },
-    onGameOver: {
-      target: 'finished',
-    },
+    onGameOver: 'finished'
   },
   // ------------------------------------------
   schema: {
