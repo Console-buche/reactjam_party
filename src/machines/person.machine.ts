@@ -76,10 +76,7 @@ export const personMachine = createMachine(
                   ...context.meters,
                   urine: METERS_CONFIG.urine.clamp(
                     context.meters.urine - METERS_CONFIG.urine.step * 4,
-                  ),
-                  fun: METERS_CONFIG.fun.clamp(
-                    context.meters.fun + METERS_CONFIG.fun.step,
-                  ),
+                  )
                 },
               };
             }),
@@ -98,9 +95,6 @@ export const personMachine = createMachine(
                   ),
                   urine: METERS_CONFIG.urine.clamp(
                     context.meters.urine + METERS_CONFIG.urine.step,
-                  ),
-                  fun: METERS_CONFIG.fun.clamp(
-                    context.meters.fun + METERS_CONFIG.fun.step,
                   ),
                 },
               };
@@ -159,20 +153,9 @@ export const personMachine = createMachine(
                   urine: METERS_CONFIG.urine.clamp(
                     context.meters.urine + METERS_CONFIG.urine.step,
                   ),
-                  fun: METERS_CONFIG.fun.clamp(
-                    context.meters.fun + METERS_CONFIG.fun.step,
-                  ),
                 },
               };
             }),
-          },
-          // on leave
-          onLeave: {
-            target: '#Person.actionFlow.Leaving',
-            actions: sendParent((context) => ({
-              type: 'onRemovePerson',
-              person: context.self,
-            }))
           },
         },
         initial: 'Idle',
@@ -228,8 +211,41 @@ export const personMachine = createMachine(
             after: {
               '500': [
                 {
-                  actions: 'tickNeeds',
+                  cond: (context) => context.meters.fun > 0,
+                  //update meters
+                  actions: assign((context) => {
+                    const shouldLoseFunFaster =
+                      context.meters.hydration <= 0 ||
+                      context.meters.satiety <= 0 ||
+                      context.meters.urine >= 100;
+
+                    const fun = shouldLoseFunFaster
+                      ?
+                      context.meters.fun - METERS_CONFIG.fun.step * 5
+                      : context.meters.fun;
+
+                    return {
+                      ...context,
+                      meters: {
+                        ...context.meters,
+                        hydration: METERS_CONFIG.hydration.clamp(
+                          context.meters.hydration - METERS_CONFIG.hydration.step * 0.5,
+                        ),
+                        satiety: METERS_CONFIG.satiety.clamp(
+                          context.meters.satiety - METERS_CONFIG.satiety.step * 0.5,
+                        ),
+                        fun,
+                      },
+                    };
+                  }),
                   target: '#Person.meterFlow.Active',
+                },
+                {
+                  target: '#Person.actionFlow.Leaving',
+                  actions: sendParent((context) => ({
+                    type: 'onRemovePerson',
+                    person: context.self,
+                  }))
                 },
               ],
             },
@@ -263,41 +279,5 @@ export const personMachine = createMachine(
     predictableActionArguments: true,
     preserveActionOrder: true,
     tsTypes: {} as import('./person.machine.typegen').Typegen0,
-  },
-  {
-    actions: {
-      tickNeeds: assign((context) => {
-        if (context.meters.fun <= 0) {
-          //@ts-ignore send('onLeave') doesn't work
-          context.self.send('onLeave');
-          return context;
-        }
-
-        const shouldLoseFunFaster =
-          context.meters.hydration <= 0 ||
-          context.meters.satiety <= 0 ||
-          context.meters.urine >= 100;
-
-        const fun = shouldLoseFunFaster
-          ? METERS_CONFIG.fun.clamp(
-            context.meters.fun - METERS_CONFIG.fun.step * 2,
-          )
-          : context.meters.fun;
-
-        return {
-          ...context,
-          meters: {
-            ...context.meters,
-            hydration: METERS_CONFIG.hydration.clamp(
-              context.meters.hydration - METERS_CONFIG.hydration.step * 0.5,
-            ),
-            satiety: METERS_CONFIG.satiety.clamp(
-              context.meters.satiety - METERS_CONFIG.satiety.step * 0.5,
-            ),
-            fun,
-          },
-        };
-      }),
-    },
-  },
+  }
 );

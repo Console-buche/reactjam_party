@@ -17,8 +17,7 @@ export interface Typegen0 {
     services: never;
   };
   eventsCausingActions: {
-    "updateHype": "xstate.after(500)#Hotspot.Ticking";
-    "updatePersons": "xstate.after(500)#Hotspot.Ticking";
+    "updatePersons": "xstate.after(500)#Hotspot.Ticking" | "xstate.init";
   };
   eventsCausingDelays: {
 

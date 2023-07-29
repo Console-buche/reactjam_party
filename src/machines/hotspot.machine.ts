@@ -15,17 +15,12 @@ export const hotspotMachine = createMachine(
     initial: 'Ticking',
     states: {
       Ticking: {
+        entry: ["updatePersons", sendParent((context) => ({
+          type: 'onIncrementHype',
+          hype: context.persons.length <= 1 ? 0 : context.persons.length * 1.2,
+        }))],
         after: {
-          '500': [
-            {
-              actions: 'updatePersons',
-              target: 'Ticking',
-            },
-            {
-              actions: 'updateHype',
-              target: 'Ticking',
-            },
-          ],
+          '500': 'Ticking'
         },
       },
     },
@@ -46,15 +41,6 @@ export const hotspotMachine = createMachine(
         // actions: 'test',
       },
       onUnregisterPerson: {
-        // cond: (context, event) => {
-        //   console.log(
-        //     'hotspot.onUnregisterPerson - checking if the person is in the hotspot',
-        //   );
-        //   const isAlreadyInHotspot = Boolean(
-        //     context.persons.find((p) => p.id === event.person.id),
-        //   );
-        //   return isAlreadyInHotspot;
-        // },
         actions: assign((context, event) => {
           console.log(
             'hotspot.onUnregisterPerson - removing the person to the hotspot context',
@@ -87,13 +73,5 @@ export const hotspotMachine = createMachine(
     predictableActionArguments: true,
     preserveActionOrder: true,
     tsTypes: {} as import('./hotspot.machine.typegen').Typegen0,
-  },
-  {
-    actions: {
-      updateHype: sendParent((context) => ({
-        type: 'onIncrementHype',
-        hype: context.persons.length < 1 ? 0 : context.persons.length * 0.2,
-      }))
-    },
-  },
+  }
 );

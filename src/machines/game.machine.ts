@@ -58,18 +58,12 @@ export const gameMachine = createMachine({
     persons: [],
     hotspots: {
       // Cannot transform this in array because we need to access it by name in r3f to map it to the right mesh
-      buffet: interpret(buffetMachine, {
-        id: MathUtils.generateUUID(),
-      }).start(),
-      bar: interpret(barMachine, { id: MathUtils.generateUUID() }).start(),
-      dancefloor: interpret(dancefloorMachine, {
-        id: MathUtils.generateUUID(),
-      }).start(),
-      sofa: interpret(sofaMachine, { id: MathUtils.generateUUID() }).start(),
-      toilet: interpret(toiletMachine, {
-        id: MathUtils.generateUUID(),
-      }).start(),
-      lobby: interpret(lobbyMachine, { id: MathUtils.generateUUID() }).start(),
+      buffet: null as unknown as ActorRefFrom<typeof buffetMachine>,
+      bar: null as unknown as ActorRefFrom<typeof barMachine>,
+      dancefloor: null as unknown as ActorRefFrom<typeof dancefloorMachine>,
+      sofa: null as unknown as ActorRefFrom<typeof sofaMachine>,
+      toilet: null as unknown as ActorRefFrom<typeof toiletMachine>,
+      lobby: null as unknown as ActorRefFrom<typeof lobbyMachine>,
     },
     clock: METERS_CONFIG.clock.initialValue,
     currentNight: 0,
@@ -79,11 +73,18 @@ export const gameMachine = createMachine({
     disasterForTheNight: [],
   },
   entry: assign((context) => {
-    const disasterForTheNight = generateRandomDisasters(context.currentNight);
     console.log('game is starting');
     return {
       ...context,
-      disasterForTheNight,
+      hotspots: {
+        buffet: spawn(buffetMachine),
+        bar: spawn(barMachine),
+        dancefloor: spawn(dancefloorMachine),
+        sofa: spawn(sofaMachine),
+        toilet: spawn(toiletMachine),
+        lobby: spawn(lobbyMachine),
+      },
+      disasterForTheNight: generateRandomDisasters(context.currentNight),
     };
   }),
   initial: 'notStarted',
@@ -130,7 +131,9 @@ export const gameMachine = createMachine({
         },
       },
     },
-    finished: {},
+    finished: {
+      type: 'final',
+    },
   },
   on: {
     onIncrementHype: {
@@ -139,7 +142,7 @@ export const gameMachine = createMachine({
           ...context,
           meters: {
             ...context.meters,
-            hype: context.meters.hype + event.hype,
+            hype: Math.round(context.meters.hype + event.hype),
           },
         };
       }),
