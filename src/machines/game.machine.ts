@@ -2,7 +2,6 @@ import { MathUtils } from 'three';
 import {
   assign,
   createMachine,
-  interpret,
   spawn,
   type ActorRefFrom,
   send,

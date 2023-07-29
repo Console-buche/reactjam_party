@@ -1,5 +1,5 @@
 import { MathUtils } from 'three';
-import { assign, createMachine, send, sendParent, sendTo } from 'xstate';
+import { assign, createMachine, sendParent } from 'xstate';
 import { getRandomName } from '../helpers/getRandomNames';
 
 const METERS_CONFIG = {
