@@ -9,18 +9,22 @@ export const Hud = () => {
   const gameService = useGameMachineProvider();
   const timerPercent = useSelector(gameService, (state) => state.context.clock);
   const hype = useSelector(gameService, (state) => state.context.meters.hype);
+  const guideText = useSelector(
+    gameService,
+    (state) => state.context.guideText,
+  );
 
   return (
-    <div className="hud__container">
+    <>
       <HotSpots />
       <GameMeter elapsedPercent={timerPercent} hypeValue={hype} />
       <Audio />
       <Advisor
-        text={'hello'}
+        text={guideText}
         onSkipText={() => {
           console.log('skip text');
         }}
       />
-    </div>
+    </>
   );
 };
