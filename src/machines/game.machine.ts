@@ -10,6 +10,10 @@ import { MathUtils } from 'three';
 import { personMachine } from './person.machine';
 import { barMachine } from './bar.machine';
 import { toiletMachine } from './toilet.machine';
+import { buffetMachine } from './buffet.machine';
+import { dancefloorMachine } from './dancefloor.machine';
+import { sofaMachine } from './sofa.machine';
+import { lobbyMachine } from './lobby.machine';
 
 const generateRandomDisasters = (night: number) => {
   const getRandomDisasterName = () =>
@@ -36,6 +40,10 @@ const METERS_CONFIG = {
 export type HotSpots = {
   bar: ActorRefFrom<typeof barMachine>;
   toilet: ActorRefFrom<typeof toiletMachine>;
+  buffet: ActorRefFrom<typeof buffetMachine>;
+  dancefloor: ActorRefFrom<typeof dancefloorMachine>;
+  sofa: ActorRefFrom<typeof sofaMachine>;
+  lobby: ActorRefFrom<typeof lobbyMachine>;
 };
 
 const disasterNames = ['onBlackout', 'onPolice', 'onFire'];
@@ -52,6 +60,14 @@ export const gameMachine = createMachine({
       toilet: interpret(toiletMachine, {
         id: MathUtils.generateUUID(),
       }).start(),
+      buffet: interpret(buffetMachine, {
+        id: MathUtils.generateUUID(),
+      }).start(),
+      dancefloor: interpret(dancefloorMachine, {
+        id: MathUtils.generateUUID(),
+      }).start(),
+      sofa: interpret(sofaMachine, { id: MathUtils.generateUUID() }).start(),
+      lobby: interpret(lobbyMachine, { id: MathUtils.generateUUID() }).start(),
     },
     clock: METERS_CONFIG.clock.initialValue,
     currentNight: 0,
