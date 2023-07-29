@@ -19,6 +19,7 @@ import { useStoreDragging } from '../../../stores/storeDragging';
 import { PersonShadowRecall } from './PersonShadowRecall';
 import { Statbar } from './Statbar';
 import { PERSON_HEIGHT } from './person.constants';
+import { useStoreHotspot } from '../../../stores/storeHotspots';
 
 const selectFeedbackIntensiry = (
   isHovered: boolean,
@@ -47,7 +48,6 @@ export const Person = ({
   useCursor(isHovered);
 
   const isExists = useRef(false);
-
   const gameService = useGameMachineProvider();
 
   const {
@@ -78,7 +78,7 @@ export const Person = ({
   const serviceId = actor.id;
 
   const {
-    meters: { pee, thirst },
+    meters: { fun, hydration, satiety, urine },
     name,
   } = useSelector(actor, (state) => state.context);
 
@@ -195,10 +195,12 @@ export const Person = ({
             emissiveMap={tex}
           />
         </a.mesh>
-        <Statbar position-y={4} value={thirst} />
-        <Statbar position-y={4.25} value={pee} />
+        <Statbar label="fun" position-y={4} value={fun} />
+        <Statbar label="hydration" position-y={4.25} value={hydration} />
+        <Statbar label="satiety" position-y={4.5} value={satiety} />
+        <Statbar label="urine" position-y={4.75} value={urine} />
 
-        <Text fontSize={0.3} position-y={4.75} color="white">
+        <Text fontSize={0.3} position-y={5.75} color="white">
           {name}
           <meshStandardMaterial
             toneMapped={false}

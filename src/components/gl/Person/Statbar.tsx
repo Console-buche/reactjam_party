@@ -1,3 +1,4 @@
+import { Text } from '@react-three/drei';
 import { type MeshProps, useFrame } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import { BufferGeometry, MathUtils, Mesh } from 'three';
@@ -28,9 +29,10 @@ const fragmentShader = `
 
 type Statbar = {
   value: number;
+  label: string;
 } & MeshProps;
 
-export const Statbar = ({ value, ...meshProps }: Statbar) => {
+export const Statbar = ({ value, label, ...meshProps }: Statbar) => {
   const ref = useRef<Mesh<BufferGeometry, THREE.ShaderMaterial>>(null);
 
   const uniforms = useMemo(
@@ -64,6 +66,9 @@ export const Statbar = ({ value, ...meshProps }: Statbar) => {
         vertexShader={vertexShader}
         fragmentShader={fragmentShader}
       />
+      <Text fontSize={0.35} position-x={1.2} color="black">
+        {label}
+      </Text>
     </mesh>
   );
 };

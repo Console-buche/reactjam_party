@@ -1,6 +1,6 @@
-import { Canvas, useThree } from '@react-three/fiber';
-import { World } from '../World/World';
 import { Stars } from '@react-three/drei';
+import { Canvas } from '@react-three/fiber';
+import { World } from '../World/World';
 
 export const Scene = () => {
   return (

@@ -7,6 +7,7 @@ import { type Mesh } from 'three';
 import { shallow } from 'zustand/shallow';
 import { useGameMachineProvider } from '../../../../hooks/use';
 import { useStoreDragging } from '../../../../stores/storeDragging';
+import { useStoreHotspot } from '../../../../stores/storeHotspots';
 import { AppartmentHotspotStats } from './AppartmentHotspotStats';
 import type { AppartmentHotSpot } from './types';
 
@@ -19,6 +20,15 @@ export const AppartmentHotspot = ({
   const refMesh = useRef<Mesh>(null);
   const [isHovered, setIsHovered] = useState(false);
 
+  const { getAvailableDropZone } = useStoreHotspot(
+    (state) => ({
+      updateDropZoneOccupied: state.updateDropZoneOccupied,
+      updateHotSpotPosition: state.updateHotSpotPosition,
+      dropzonegetAvailableDropZone: state.getAvailableDropZone,
+      getAvailableDropZone: state.getAvailableDropZone,
+    }),
+    shallow,
+  );
   const gameService = useGameMachineProvider();
   const hotspotService = useSelector(
     gameService,
@@ -32,6 +42,7 @@ export const AppartmentHotspot = ({
     setIsDragging,
   } = useStoreDragging(
     (state) => ({
+      draggingRef: state.draggingRef,
       isDragging: state.isDragging,
       setIsDragging: state.setIsDragging,
       setDraggingActorRef: state.setDraggingActorRef,
@@ -49,6 +60,7 @@ export const AppartmentHotspot = ({
         type: 'onRegisterPerson',
         person: draggingActorRef,
       });
+
       setDraggingId(null);
       setIsDragging(false);
       setDraggingActorRef(null);
@@ -91,29 +103,31 @@ export const AppartmentHotspot = ({
   };
 
   return (
-    // @ts-ignore
-    <a.group scale={scale} onClick={handleOnClick}>
+    <>
       {/* @ts-ignore */}
-      <a.mesh
-        ref={refMesh}
-        onPointerEnter={handleOnPointerEnter}
-        onPointerLeave={handleOnPointerLeave}
-        geometry={geometry}
-        material={materials}
-        {...props}
-        material-tonedMapped={false}
-        material-emissive={0xffffff}
-        material-emissiveIntensity={glow}
-        material-map={materials.map}
-        material-emissiveMap={materials.map}
-        name="Hotspot"
-        userData={{ service: hotspotService }}
-      >
-        <AppartmentHotspotStats
-          service={hotspotService}
-          textPosition={[1.25, -2, 1]}
-        />
-      </a.mesh>
-    </a.group>
+      <a.group scale={scale} onClick={handleOnClick}>
+        {/* @ts-ignore */}
+        <a.mesh
+          ref={refMesh}
+          onPointerEnter={handleOnPointerEnter}
+          onPointerLeave={handleOnPointerLeave}
+          geometry={geometry}
+          material={materials}
+          {...props}
+          material-tonedMapped={false}
+          material-emissive={0xffffff}
+          material-emissiveIntensity={glow}
+          material-map={materials.map}
+          material-emissiveMap={materials.map}
+          name="Hotspot"
+          userData={{ service: hotspotService }}
+        >
+          <AppartmentHotspotStats
+            service={hotspotService}
+            textPosition={[1.25, 5, 1]}
+          />
+        </a.mesh>
+      </a.group>
+    </>
   );
 };

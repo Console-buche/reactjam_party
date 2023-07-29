@@ -148,16 +148,20 @@ export const AppartmentV6 = forwardRef<
           position={[32.539, 5.079, -2.267]}
           scale={1.251}
         />
-        <mesh
-          geometry={nodes.DJ_1001.geometry}
-          material={materials.DJ_1}
-          position={[0, 0.107, 0]}
-        />
+
         <mesh
           geometry={nodes.boombox_large_1001.geometry}
           material={materials.boombox_large_1}
           position={[0, 0.576, 0]}
         />
+
+        <AppartmentHotspot
+          type="dancefloor"
+          materials={materials.DJ_1}
+          position={[0, 0.107, 0]}
+          geometry={nodes.DJ_1001.geometry}
+        />
+
         <mesh
           geometry={nodes.sofa_3001.geometry}
           material={materials.sofa_3}
@@ -167,15 +171,9 @@ export const AppartmentV6 = forwardRef<
           geometry={nodes.Cube002.geometry}
           material={materials['16_clean plaster texture-seamless.001']}
         />
-        {/* <mesh
-          geometry={nodes.sofa_2001.geometry}
-          material={materials.sofa_2}
-          position={[-16.512, 0.613, 4.434]}
-          scale={1.182}
-        /> */}
 
         <AppartmentHotspot
-          type="bar" //FIXME : add correct type, this is a placeholder for the sofa
+          type="sofa" //FIXME : add correct type, this is a placeholder for the sofa
           geometry={nodes.sofa_2001.geometry}
           materials={materials.sofa_2}
           position={[-16.512, 0.613, 4.434]}
@@ -370,9 +368,10 @@ export const AppartmentV6 = forwardRef<
           position={[-23.221, 9.236, 15.079]}
           scale={[0.604, 11.172, 0.604]}
         />
-        <mesh
+        <AppartmentHotspot
+          type="buffet"
           geometry={nodes.table_dining_3.geometry}
-          material={materials.table_dining_3}
+          materials={materials.table_dining_3}
           position={[29.501, 1.188, 6.433]}
           rotation={[Math.PI / 2, 0, 0]}
           scale={4.791}
