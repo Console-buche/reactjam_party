@@ -1,5 +1,5 @@
 import { MathUtils } from 'three';
-import { assign, createMachine, send, sendParent } from 'xstate';
+import { assign, createMachine, send, sendParent, sendTo } from 'xstate';
 import { getRandomName } from '../helpers/getRandomNames';
 
 const METERS_CONFIG = {
@@ -173,19 +173,27 @@ export const personMachine = createMachine(
           },
           // on leave
           onLeave: {
-            target: '#Person.actionFlow.Leaving',
+            // target: '#Person.actionFlow.Leaving',
             actions: (context) => {
-              console.log('Leaving, removing person from gameService');
-              //FIXME: this is probably not working
-              sendParent({
+              console.log('onLeave');
+              //FIXME: FUCK THIS, how do I do
+              //TODO: FUCK THIS, how do I do
+              const sp = sendParent({
                 type: 'onRemovePerson',
                 person: context.self,
               });
-              // sendParent({
-              //   type: 'onRemovePersonFromAllHotspots',
-              //   person: context.self,
-              // });
-              return context;
+              const st = sendTo('GameService', {
+                type: 'onRemovePerson',
+                person: context.self,
+              });
+              const s = send('onRemovePerson', { to: 'GameService' });
+
+              // I can return any of the three value it doesnt change shit
+              // I tried replacing `GameService` by `Game`, it also doesn't do shit
+              // the id of the machine is defined inside useMachine() in App.tsx
+              // I also tried to put machine id instead of service id (Game vs GameService)
+              // I don't know how to solve this mess.
+              return st;
             },
           },
         },
@@ -201,7 +209,8 @@ export const personMachine = createMachine(
                       meters: {
                         ...context.meters,
                         fun: METERS_CONFIG.fun.clamp(
-                          context.meters.fun - METERS_CONFIG.fun.step * 2,
+                          // FIXME: the wrong ratio, should just be * 2 ?
+                          context.meters.fun - METERS_CONFIG.fun.step * 2 * 5,
                         ),
                       },
                     };

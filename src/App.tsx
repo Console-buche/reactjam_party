@@ -8,7 +8,10 @@ import { Scene } from './components/gl/Scene/Scene';
 import { Hud } from './components/hud/Hud';
 
 function App() {
-  const [state, , service] = useMachine(gameMachine);
+  const [state, , service] = useMachine(gameMachine, {
+    devTools: true,
+    id: 'GameService',
+  });
   const leva = useControls({
     'Display machines JSON': false,
     'Invite Person': button(() => service.send({ type: 'onAddPerson' })),
