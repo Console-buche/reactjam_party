@@ -1,0 +1,17 @@
+.audio__container {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  z-index: 2;
+}
+
+.audio__player {
+  position: relative;
+}
+
+.audio__hidden {
+  display: none;
+}

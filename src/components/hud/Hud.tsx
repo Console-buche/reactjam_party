@@ -2,8 +2,9 @@ import { useSelector } from '@xstate/react';
 import { useState } from 'react';
 import { useGameMachineProvider } from '../../hooks/use';
 import { Advisor } from './Advisor/Advisor';
-import { GameMeter } from './gameMeter/GameMeter';
-import { HotSpots } from './hotspots/HotSpots';
+import { GameMeter } from './GameMeter/GameMeter';
+import { HotSpots } from './Hotspots/HotSpots';
+import { Audio } from './Audio/Audio';
 
 export const Hud = () => {
   const gameService = useGameMachineProvider();
@@ -22,6 +23,7 @@ export const Hud = () => {
       </button>
       <HotSpots />
       <GameMeter elapsedPercent={timerPercent} hypeValue={hype} />
+      <Audio />
       <Advisor isClicked={isClicked} />
     </>
   );
