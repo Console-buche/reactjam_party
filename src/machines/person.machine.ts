@@ -4,33 +4,29 @@ import { getRandomName } from '../helpers/getRandomNames';
 
 const METERS_CONFIG = {
   hydration: {
-    initialValue: 0,
-    incrementValue: 10,
-    decrementValue: 10,
+    initialValue: 75,
+    step: 10,
     maxValue: 100,
     clamp: (v: number) =>
       MathUtils.clamp(v, 0, METERS_CONFIG.hydration.maxValue),
   },
-  urine: {
-    initialValue: 100,
-    incrementValue: 10,
-    decrementValue: 10,
-    maxValue: 100,
-    clamp: (v: number) => MathUtils.clamp(v, 0, METERS_CONFIG.urine.maxValue),
-  },
   fun: {
-    initialValue: 100,
-    incrementValue: 10,
-    decrementValue: 10,
+    initialValue: 75,
+    step: 10,
     maxValue: 100,
     clamp: (v: number) => MathUtils.clamp(v, 0, METERS_CONFIG.fun.maxValue),
   },
   satiety: {
-    initialValue: 100,
-    incrementValue: 10,
-    decrementValue: 10,
+    initialValue: 75,
+    step: 10,
     maxValue: 100,
     clamp: (v: number) => MathUtils.clamp(v, 0, METERS_CONFIG.satiety.maxValue),
+  },
+  urine: {
+    initialValue: 25,
+    step: 10,
+    maxValue: 100,
+    clamp: (v: number) => MathUtils.clamp(v, 0, METERS_CONFIG.urine.maxValue),
   },
 };
 
@@ -76,31 +72,89 @@ export const personMachine = createMachine(
           onToilet: {
             target: '#Person.actionFlow.Pissing',
             actions: assign((context) => {
+              console.log('pissing, updating meters');
               return {
                 ...context,
                 meters: {
                   ...context.meters,
                   urine: METERS_CONFIG.urine.clamp(
-                    context.meters.urine - METERS_CONFIG.urine.decrementValue,
+                    context.meters.urine - METERS_CONFIG.urine.step,
                   ),
                 },
               };
             }),
           },
+          // on hotspot bar
           onBar: {
             target: '#Person.actionFlow.Drinking',
             actions: assign((context) => {
-              console.log('person is drinking');
+              console.log('drinking, updating meters');
               return {
                 ...context,
                 meters: {
                   ...context.meters,
                   hydration: METERS_CONFIG.hydration.clamp(
-                    context.meters.hydration -
-                      METERS_CONFIG.hydration.decrementValue,
+                    context.meters.hydration + METERS_CONFIG.hydration.step,
                   ),
                   urine: METERS_CONFIG.urine.clamp(
-                    context.meters.urine + METERS_CONFIG.urine.incrementValue,
+                    context.meters.urine + METERS_CONFIG.urine.step * 2,
+                  ),
+                },
+              };
+            }),
+          },
+          // on hotspot dancefloor
+          onDancefloor: {
+            target: '#Person.actionFlow.Dancing',
+            actions: assign((context) => {
+              console.log('Dancing, updating meters');
+              return {
+                ...context,
+                meters: {
+                  ...context.meters,
+                  fun: METERS_CONFIG.fun.clamp(
+                    context.meters.fun + METERS_CONFIG.fun.step * 2,
+                  ),
+                  satiety: METERS_CONFIG.satiety.clamp(
+                    context.meters.satiety - METERS_CONFIG.satiety.step,
+                  ),
+                },
+              };
+            }),
+          },
+          // on hotspot sofa
+          onSofa: {
+            target: '#Person.actionFlow.Sitting',
+            actions: assign((context) => {
+              console.log('Sitting, updating meters');
+              return {
+                ...context,
+                meters: {
+                  ...context.meters,
+                  fun: METERS_CONFIG.fun.clamp(
+                    context.meters.fun + METERS_CONFIG.fun.step * 0.5,
+                  ),
+                  hydration: METERS_CONFIG.hydration.clamp(
+                    context.meters.hydration - METERS_CONFIG.hydration.step,
+                  ),
+                },
+              };
+            }),
+          },
+          // on hotspot buffet
+          onBuffet: {
+            target: '#Person.actionFlow.Eating',
+            actions: assign((context) => {
+              console.log('Eating, updating meters');
+              return {
+                ...context,
+                meters: {
+                  ...context.meters,
+                  satiety: METERS_CONFIG.satiety.clamp(
+                    context.meters.satiety + METERS_CONFIG.satiety.step,
+                  ),
+                  urine: METERS_CONFIG.urine.clamp(
+                    context.meters.urine + METERS_CONFIG.urine.step * 0.5,
                   ),
                 },
               };
