@@ -145,7 +145,7 @@ export const gameMachine = createMachine({
         },
         onRemovePersonFromAllHotspots: {
           actions: (context, event) => {
-            console.log('Game.onRemovePersonFromAllHotspots');
+            // console.log('Game.onRemovePersonFromAllHotspots');
             Object.keys(context.hotspots).forEach((hotspotName) => {
               context.hotspots[
                 hotspotName as keyof typeof context.hotspots

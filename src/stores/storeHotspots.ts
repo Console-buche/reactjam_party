@@ -240,8 +240,8 @@ export const useStoreHotspot = create<InitialState & Actions>((set, get) => ({
   ...InitialState,
 
   getAvailableDropZone(hotspot) {
-    console.log(hotspot);
-    console.log(get().hotspots[hotspot].dropzones);
+    // console.log(hotspot);
+    // console.log(get().hotspots[hotspot].dropzones);
     return get().hotspots[hotspot].dropzones.find(
       (d) => d.personActorId === null,
     );

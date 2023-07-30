@@ -27,9 +27,9 @@ export const hotspotMachine = createMachine(
     on: {
       onRegisterPerson: {
         actions: assign((context, event) => {
-          console.log(
-            'hotspot.onRegisterPerson - adding the person to the hotspot context',
-          );
+          // console.log(
+          //   'hotspot.onRegisterPerson - adding the person to the hotspot context',
+          // );
           if (context.persons.find((e) => e.id === event.person.id)) {
             return context;
           }
@@ -42,9 +42,9 @@ export const hotspotMachine = createMachine(
       },
       onUnregisterPerson: {
         actions: assign((context, event) => {
-          console.log(
-            'hotspot.onUnregisterPerson - removing the person to the hotspot context',
-          );
+          // console.log(
+          //   'hotspot.onUnregisterPerson - removing the person to the hotspot context',
+          // );
           return {
             ...context,
             persons: context.persons.filter((p) => p.id !== event.person.id),
