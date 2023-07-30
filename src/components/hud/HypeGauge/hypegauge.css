@@ -1,0 +1,17 @@
+.hype__gauge__container {
+  position: absolute;
+  top: 30px;
+  left: 30px;
+}
+
+.hype__gauge__container img {
+  display: block;
+  max-width: 150px;
+}
+
+.hype__gauge__needle {
+  position: absolute;
+  top: -18px;
+  transform-origin: 50% 90%;
+  transition: transform 0.5s ease;
+}

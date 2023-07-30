@@ -5,6 +5,7 @@ import { Clock } from './Clock/Clock';
 import { HotSpots } from './Hotspots/HotSpots';
 import { Audio } from './Audio/Audio';
 import { Menu } from './Menu/Menu';
+import { HypeGauge } from './HypeGauge/HypeGauge';
 
 import './hud.css';
 
@@ -21,9 +22,10 @@ export const Hud = () => {
   return (
     <>
       {state !== 'playing' && <div className="hud__faded" />}
+      <Audio />
       <HotSpots />
       <Clock elapsedPercent={timerPercent} />
-      <Audio />
+      <HypeGauge hype={hype} />
       <Advisor
         text={guideText}
         onSkipText={() => {
