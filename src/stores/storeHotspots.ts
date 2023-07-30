@@ -206,10 +206,10 @@ const InitialState: InitialState = {
       ],
     },
     toilet: {
-      position: new Vector3(55, 0, 0),
+      position: new Vector3(50, 0, 0),
       dropzones: [
         {
-          position: new Vector3(55, -1.8, 0),
+          position: new Vector3(50, -1.8, 0),
           personActorId: null,
           index: 0,
           hotspotType: 'toilet',
