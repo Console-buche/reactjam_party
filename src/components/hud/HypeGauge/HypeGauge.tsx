@@ -7,10 +7,23 @@ type Props = {
   hype: number;
 };
 
+const getImageNameFromHype = (hype: number) => {
+  if (hype < 50) {
+    return 'lame';
+  }
+  if (hype >= 50 && hype < 75) {
+    return 'fun';
+  }
+  return 'overload';
+};
+
 export const HypeGauge = ({ hype }: Props) => {
   return (
     <div className="hype__gauge__container">
-      <img src="/assets/hud/gauge.png" alt="hype gauge meter" />
+      <img
+        src={`/assets/hud/gauge_${getImageNameFromHype(hype)}.png`}
+        alt="hype gauge meter"
+      />
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 326 226"
