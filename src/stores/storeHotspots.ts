@@ -174,31 +174,31 @@ const InitialState: InitialState = {
       position: new Vector3(30, 0, 0),
       dropzones: [
         {
-          position: new Vector3(22, -1.8, 4),
+          position: new Vector3(22, -1.8, 9),
           personActorId: null,
           index: 0,
           hotspotType: 'buffet',
         },
         {
-          position: new Vector3(27, -1.8, 7),
+          position: new Vector3(27, -1.8, 10),
           personActorId: null,
           index: 1,
           hotspotType: 'buffet',
         },
         {
-          position: new Vector3(31, -1.8, 1),
+          position: new Vector3(31, -1.8, 10),
           personActorId: null,
           index: 2,
           hotspotType: 'buffet',
         },
         {
-          position: new Vector3(38, -1.8, 5),
+          position: new Vector3(38, -1.8, 7),
           personActorId: null,
           index: 3,
           hotspotType: 'buffet',
         },
         {
-          position: new Vector3(26, -1.8, 0.4),
+          position: new Vector3(26, -1.8, 4),
           personActorId: null,
           index: 4,
           hotspotType: 'buffet',
