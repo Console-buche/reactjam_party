@@ -12,24 +12,12 @@ export const World = () => {
   const gameService = useGameMachineProvider();
   const persons = useSelector(gameService, (state) => state.context.persons);
 
-  // debug dropzones, keep while feature hasn't been bullet proofed
-  // const dropZones = useStoreHotspot((state) => state.hotspots);
-
-  // const zones = Object.entries(dropZones).flatMap(([_, data]) =>
-  //   data.dropzones.map((zone) => zone.position),
-  // );
-
   return (
     <group>
       <Cam />
 
-      {/* Debug dropzones */}
-      {/* {zones.map((pos, i) => (
-        <Box position={pos} key={i} />
-      ))} */}
-
-      <AppartmentV8 position-y={-0.5} />
       <Suspense fallback={null}>
+        <AppartmentV8 position-y={-0.5} />
         {persons.map((actor) => (
           <Person key={actor.id} refFloor={refFloor} actor={actor} />
         ))}
