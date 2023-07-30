@@ -47,7 +47,6 @@ export const gameMachine = createMachine({
     guideText: '',
   },
   entry: assign((context) => {
-    console.log('game is starting');
     return {
       ...context,
       hotspots: {
@@ -198,9 +197,9 @@ export const gameMachine = createMachine({
       | { type: 'onAddPerson' }
       | { type: 'onRemovePerson'; person: ActorRefFrom<typeof personMachine> }
       | {
-          type: 'onRemovePersonFromAllHotspots';
-          person: ActorRefFrom<typeof personMachine>;
-        }
+        type: 'onRemovePersonFromAllHotspots';
+        person: ActorRefFrom<typeof personMachine>;
+      }
       | { type: 'onStart' }
       | { type: 'onPause' }
       | { type: 'onGameOver' }
