@@ -213,21 +213,9 @@ const InitialState: InitialState = {
       position: new Vector3(50, 0, 0),
       dropzones: [
         {
-          position: new Vector3(50, -1.8, 0),
-          personActorId: null,
-          index: 0,
-          hotspotType: 'toilet',
-        },
-        {
           position: new Vector3(55, -1.8, 2.7),
           personActorId: null,
-          index: 1,
-          hotspotType: 'toilet',
-        },
-        {
-          position: new Vector3(58, -1.8, 5.3),
-          personActorId: null,
-          index: 2,
+          index: 0,
           hotspotType: 'toilet',
         },
       ],
@@ -266,7 +254,7 @@ export const useStoreHotspot = create<InitialState & Actions>((set, get) => ({
   },
 
   cleanupHotspotDropzoneFromRemovedPersons(hotspotType, allExistingPersons) {
-    // console.log(allExistingPersons);
+    console.log(allExistingPersons);
     set((state) => {
       const hotspot = state.hotspots[hotspotType];
 
@@ -278,7 +266,7 @@ export const useStoreHotspot = create<InitialState & Actions>((set, get) => ({
           );
 
           if (!personInDropzoneStillExists && d.personActorId !== null) {
-            // console.log('cleanup removd person');
+            console.log('cleanup removd person');
             d.personActorId = null;
           }
           return d;
