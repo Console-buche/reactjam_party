@@ -43,6 +43,11 @@ export const Cam = () => {
         polarAngle={DEG2RAD * 83}
         minPolarAngle={DEG2RAD * 83}
         maxPolarAngle={DEG2RAD * 83}
+        touches={{
+          one: 64,
+          two: 64,
+          three: 64,
+        }}
         mouseButtons={{
           left: 2,
           wheel: 0,
