@@ -4,7 +4,7 @@ Command: npx gltfjsx@6.2.10 appartment_v8.gltf -t -K -T
 Files: appartment_v8.gltf [31.48MB] >assets appartment_v8-transformed.glb [2.42MB] (92%)
 */
 
-import { Text, useGLTF } from '@react-three/drei';
+import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { type GLTF } from 'three-stdlib';
 import { AppartmentHotspot } from './HotSpots/AppartmentHotspot';
@@ -224,7 +224,7 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           material={materials.graffitti_gamejam}
           material-toneMapped={false}
           material-emissive={0x800080}
-          material-emissiveIntensity={10}
+          material-emissiveIntensity={20}
           material-emissiveMap={materials.graffitti_gamejam.map}
         />
         {/* <mesh
@@ -236,7 +236,7 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           material={materials.graffitti_react}
           material-toneMapped={false}
           material-emissive={0x800080}
-          material-emissiveIntensity={10}
+          material-emissiveIntensity={20}
           material-emissiveMap={materials.graffitti_gamejam.map}
         />
         <mesh
@@ -356,21 +356,21 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           material={materials.light_2}
           material-toneMapped={false}
           material-emissive={0xfafa00}
-          material-emissiveIntensity={0.35}
+          material-emissiveIntensity={1}
         />
         <mesh
           geometry={nodes.light_.geometry}
           material={materials.light_}
           material-toneMapped={false}
           material-emissive={0xfafa00}
-          material-emissiveIntensity={0.35}
+          material-emissiveIntensity={1}
         />
         <mesh
           geometry={nodes.neon_2.geometry}
           material={materials.neon_2}
           material-toneMapped={false}
           material-emissive={0x800080}
-          material-emissiveIntensity={6}
+          material-emissiveIntensity={20}
         />
         <mesh
           geometry={nodes.Cube003.geometry}
@@ -399,7 +399,7 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           materials={materials.table_dining_3}
           stats={({ maxPersonsCount, personsCount }) => (
             <AppartmentHotspotStats
-              textPosition={[33.25, -2, 3]}
+              textPosition={[33.25, -1.5, 3]}
               maxPersonsCount={maxPersonsCount}
               personsCount={personsCount}
             />
@@ -449,7 +449,7 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           scale={-6.044}
           material-toneMapped={false}
           material-emissive={0x800080}
-          material-emissiveIntensity={10}
+          material-emissiveIntensity={20}
           material-map={materials.graffitti_party.map}
           material-emissiveMap={materials.graffitti_party.map}
         />
@@ -473,6 +473,7 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           position={[-2.058, 3.288, 3.274]}
           rotation={[Math.PI / 2, 0, 0]}
           scale={7.907}
+          material-tonedMapped={false}
           geometry={nodes.BOX_WITH_DJ.geometry}
           stats={({ maxPersonsCount, personsCount }) => (
             <AppartmentHotspotStats
