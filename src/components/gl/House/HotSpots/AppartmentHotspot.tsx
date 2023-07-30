@@ -58,6 +58,9 @@ export const AppartmentHotspot = ({
 
   // FIXME : handle register impossible when hopspot is full
   const handleOnClick = () => {
+    if (persons.length === maxPersons) {
+      return;
+    }
     // on dropping a person on a hotspot
     if (isDragging && draggingActorRef) {
       // register person in hotspot
