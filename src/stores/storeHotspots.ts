@@ -134,7 +134,7 @@ const InitialState: InitialState = {
           hotspotType: 'sofa',
         },
         {
-          position: new Vector3(-13, -1.8, 0.8),
+          position: new Vector3(-16, -1.8, 0.8),
           personActorId: null,
           index: 3,
           hotspotType: 'sofa',
