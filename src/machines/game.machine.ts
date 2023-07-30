@@ -66,7 +66,8 @@ export const gameMachine = createMachine({
       on: {
         onStart: {
           target: 'playing',
-        },
+          actions: send('onAddPerson')
+        }
       },
     },
     playing: {
