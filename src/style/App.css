@@ -16,7 +16,19 @@
   font-weight: 900; /* Black weight */
 }
 
+@font-face {
+  font-family: 'Eraser';
+  src: url('./assets/fonts/Eraser-Regular.ttf') format('truetype');
+  font-weight: 400; /* Regular weight */
+}
+
+@font-face {
+  font-family: 'Eraser';
+  src: url('./assets/fonts/Poppins-Dust.ttf') format('truetype');
+  font-weight: 900; /* Black weight */
+}
 
 body {
   margin: 0;
+  font-family: 'Poppins', sans-serif;
 }
