@@ -19,6 +19,7 @@ export const useMenuItems = () => {
   const menuItemsByStates = {
     notStarted: {
       image: './assets/hud/menu.png',
+      offsetY: 0,
       items: [
         {
           name: 'Start Game',
@@ -30,6 +31,7 @@ export const useMenuItems = () => {
     },
     paused: {
       image: './assets/hud/menu.png',
+      offsetY: 0,
       items: [
         {
           name: 'Resume',
@@ -40,7 +42,8 @@ export const useMenuItems = () => {
       ],
     },
     finished: {
-      image: './assets/hud/menu.png',
+      image: './assets/hud/empty_menu.png',
+      offsetY: 200,
       items: [
         {
           name: 'Restart',
