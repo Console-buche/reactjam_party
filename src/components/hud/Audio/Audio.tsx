@@ -14,7 +14,8 @@ export const Audio = () => {
   if (state === 'playing') audioRef.current?.play();
   if (state === 'paused') audioRef.current?.pause();
 
-  const hiddenClass = state === 'playing' ? 'audio__hidden' : '';
+  const hiddenClass =
+    state === 'playing' || state === 'notStarted' ? 'audio__hidden' : '';
 
   return (
     <div className="audio__container">

@@ -1,7 +1,8 @@
 .audio__container {
   position: absolute;
-  top: 0;
-  width: 100%;
+  top: 138px;
+  left: 428px;
+  transform: rotate(4deg);
   display: flex;
   justify-content: center;
   gap: 20px;
