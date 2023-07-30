@@ -11,7 +11,6 @@ export const hotspots = [
 
 import { Vector3 } from 'three';
 import { create } from 'zustand';
-import type { HotSpots } from '../machines/game.machine';
 
 type Dropzone = {
   position: Vector3;

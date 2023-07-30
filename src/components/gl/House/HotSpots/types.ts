@@ -1,11 +1,11 @@
 import type { BufferGeometry, MeshStandardMaterial } from 'three';
 import type {} from 'xstate';
-import type { HotSpots } from '../../../../machines/game.machine';
+import type { hotspots } from '../../../../stores/storeHotspots';
 
 export type AppartmentHotSpot = {
   geometry: BufferGeometry;
   materials: MeshStandardMaterial;
-  type: keyof HotSpots;
+  type: (typeof hotspots)[number];
   stats: ({
     maxPersonsCount,
     personsCount,

@@ -3,7 +3,7 @@ import { useCursor } from '@react-three/drei';
 import { type MeshProps } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
 import { useRef, useState } from 'react';
-import { DoubleSide, type Mesh } from 'three';
+import { type Mesh } from 'three';
 import { shallow } from 'zustand/shallow';
 import { useGameMachineProvider } from '../../../../hooks/use';
 import { useStoreDragging } from '../../../../stores/storeDragging';
@@ -68,13 +68,7 @@ export const AppartmentHotspot = ({
 
       // save state in mesh userData while machine state isn't fixed
       const dropZone = getAvailableDropZone(type);
-      console.log(
-        ' :::::::::::::::::::::::::::::::::::::::    looking for a dropzone in : ',
-        type,
-        draggingActorRef.id,
-      );
 
-      console.log('--------------------- found in : ', dropZone);
       if (draggingRef?.userData && dropZone) {
         draggingRef.userData.isIdle = false;
         draggingRef.userData.dropZone = dropZone;
