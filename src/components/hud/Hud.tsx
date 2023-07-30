@@ -6,19 +6,24 @@ import { HotSpots } from './Hotspots/HotSpots';
 import { Audio } from './Audio/Audio';
 import { Menu } from './Menu/Menu';
 import { HypeGauge } from './HypeGauge/HypeGauge';
+import { METERS_CONFIG } from '../../machines/game.machine';
 
 import './hud.css';
 
 export const Hud = () => {
   const gameService = useGameMachineProvider();
   const state = useSelector(gameService, (state) => state.value);
-  const timerPercent = useSelector(gameService, (state) => state.context.clock);
+  const absoluteTimer = useSelector(
+    gameService,
+    (state) => state.context.clock,
+  );
   const hype = useSelector(gameService, (state) => state.context.meters.hype);
   const guideText = useSelector(
     gameService,
     (state) => state.context.guideText,
   );
 
+  const timerPercent = (absoluteTimer / METERS_CONFIG.clock.maxValue) * 100;
   return (
     <>
       {state !== 'playing' && <div className="hud__faded" />}

@@ -13,7 +13,7 @@ import { personMachine } from './person.machine';
 import { sofaMachine } from './sofa.machine';
 import { toiletMachine } from './toilet.machine';
 
-const METERS_CONFIG = {
+export const METERS_CONFIG = {
   clock: {
     initialValue: 0,
     incrementValue: 1,
@@ -80,6 +80,10 @@ export const gameMachine = createMachine({
               return {
                 ...context,
                 clock: METERS_CONFIG.clock.clamp(clock),
+                // meters: {
+                //   ...context.meters,
+                //   hype: MathUtils.clamp(context.meters.hype - 1, 0, 10000),
+                // },
               };
             }),
             target: 'playing',
