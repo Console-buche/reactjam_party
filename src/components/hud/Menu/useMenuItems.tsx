@@ -1,5 +1,5 @@
-import { useGameMachineProvider } from "../../../hooks/use";
-import { useSelector } from "@xstate/react";
+import { useGameMachineProvider } from '../../../hooks/use';
+import { useSelector } from '@xstate/react';
 
 const githubItem = {
   name: 'Github',
@@ -19,7 +19,8 @@ export const useMenuItems = () => {
   const menuItemsByStates = {
     notStarted: {
       image: './assets/hud/menu.png',
-      offsetY: 0,
+      menuItemOffset: '75%',
+      prependElements: null,
       items: [
         {
           name: 'Start Game',
@@ -31,7 +32,8 @@ export const useMenuItems = () => {
     },
     paused: {
       image: './assets/hud/menu.png',
-      offsetY: 0,
+      menuItemOffset: '75%',
+      prependElements: null,
       items: [
         {
           name: 'Resume',
@@ -43,7 +45,8 @@ export const useMenuItems = () => {
     },
     finished: {
       image: './assets/hud/empty_menu.png',
-      offsetY: 200,
+      menuItemOffset: '90%',
+      prependElements: <div className="menu__title">Game Over</div>,
       items: [
         {
           name: 'Restart',
@@ -55,4 +58,4 @@ export const useMenuItems = () => {
     },
   };
   return menuItemsByStates[state as keyof typeof menuItemsByStates];
-}
+};
