@@ -21,7 +21,7 @@ export const HypeGauge = ({ hype }: Props) => {
           <path
             d="M291 203 L 165 193 165 213Z"
             stroke="#c20000"
-            stroke-width="0.5"
+            strokeWidth="0.5"
             fill="#c20000"
           ></path>
           <circle
