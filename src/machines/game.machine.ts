@@ -73,24 +73,29 @@ export const gameMachine = createMachine({
       after: {
         1000: [
           {
+            cond: (context) => context.clock >= METERS_CONFIG.clock.maxValue,
+            target: 'finished',
+            actions: () => {
+              console.log('Game over, no more time');
+            }
+          },
+          {
+            cond: (context) => context.persons.length === 0,
+            target: 'finished',
+            actions: () => {
+              console.log('Game over, no more persons');
+            }
+          },
+          {
             // game tick
             actions: assign((context) => {
               const clock = context.clock + METERS_CONFIG.clock.incrementValue;
-
               return {
                 ...context,
                 clock: METERS_CONFIG.clock.clamp(clock),
-                // meters: {
-                //   ...context.meters,
-                //   hype: MathUtils.clamp(context.meters.hype - 1, 0, 10000),
-                // },
               };
             }),
             target: 'playing',
-          },
-          {
-            cond: (context) => context.clock >= METERS_CONFIG.clock.maxValue,
-            target: 'finished',
           },
         ],
       },
