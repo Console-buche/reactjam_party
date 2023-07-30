@@ -19,7 +19,7 @@ export const Cam = () => {
 
   useEffect(() => {
     cameraControlsRef.current?.setBoundary(
-      new Box3(new Vector3(-26, 2, 0), new Vector3(55.5, 2, 0)),
+      new Box3(new Vector3(-26, 2, 0), new Vector3(60, 2, 0)),
     );
 
     const pos = hotspotWithPositions.lobby.position.clone();
