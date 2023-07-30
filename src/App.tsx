@@ -9,29 +9,21 @@ import { Hud } from './components/hud/Hud';
 import { useEffect } from 'react';
 
 function App() {
-  const [state, , service] = useMachine(gameMachine, {
-    devTools: true,
+  const [, , service] = useMachine(gameMachine, {
     id: 'GameService',
   });
 
-  const leva = useControls({
-    'Display machines JSON': false,
+  useControls({
     'Invite Person': button(() => service.send({ type: 'onAddPerson' })),
-    Start: button(() => service.send({ type: 'onStart' })),
-    Pause: button(() => service.send({ type: 'onPause' })),
-    'End Game': button(() => service.send({ type: 'onGameOver' })),
   });
 
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
-      console.log('User pressed: ', event.key);
-
-      if (event.key === 'Escape') {
-        event.preventDefault();
-        service.getSnapshot().value === 'playing'
-          ? service.send({ type: 'onPause' })
-          : service.send({ type: 'onStart' });
-      }
+      if (event.key !== 'Escape') return;
+      event.preventDefault();
+      service.getSnapshot().value === 'playing'
+        ? service.send({ type: 'onPause' })
+        : service.send({ type: 'onStart' });
     };
 
     document.addEventListener('keydown', keyDownHandler);
@@ -42,7 +34,6 @@ function App() {
 
   return (
     <GameMachineProvider value={service}>
-      {leva['Display machines JSON'] && JSON.stringify(state.context)}
       <Scene />
       <Hud />
     </GameMachineProvider>

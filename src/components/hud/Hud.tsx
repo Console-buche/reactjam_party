@@ -6,6 +6,8 @@ import { HotSpots } from './Hotspots/HotSpots';
 import { Audio } from './Audio/Audio';
 import { Menu } from './Menu/Menu';
 
+import './hud.css';
+
 export const Hud = () => {
   const gameService = useGameMachineProvider();
   const state = useSelector(gameService, (state) => state.value);
@@ -18,6 +20,7 @@ export const Hud = () => {
 
   return (
     <>
+      {state !== 'playing' && <div className="hud__faded" />}
       <HotSpots />
       <GameMeter elapsedPercent={timerPercent} hypeValue={hype} />
       <Audio />

@@ -1,0 +1,8 @@
+.hud__faded {
+  position: absolute;
+  inset: 0;
+  opacity: 0.5;
+  background-color: black;
+  width: 100vw;
+  height: 100vh;
+}
