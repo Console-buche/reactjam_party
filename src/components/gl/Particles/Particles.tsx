@@ -98,8 +98,10 @@ export const Particles = ({
     }
 
     const newPositions = moveParticles(
+      // @ts-ignore-line
       Array.from(ref.current.geometry.attributes.position.array),
       initialSpeeds,
+      // @ts-ignore-line
       initialPositions,
       boundBot,
       boundTop,
