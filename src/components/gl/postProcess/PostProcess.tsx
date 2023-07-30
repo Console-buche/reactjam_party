@@ -1,5 +1,6 @@
 import {
   Bloom,
+  BrightnessContrast,
   EffectComposer,
   ToneMapping,
 } from '@react-three/postprocessing';
@@ -17,6 +18,7 @@ export const PostProcess = () => {
         averageLuminance={4}
         adaptationRate={10}
       />
+      <BrightnessContrast contrast={0.1} />
     </EffectComposer>
   );
 };
