@@ -26,7 +26,7 @@ export const Menu = () => {
     <div className="menu__container">
       <div className="menu__absolute__wrapper">
         <img
-          src="./assets/images/invite.png"
+          src="./assets/hud/menu.png"
           alt="invitation"
           className="menu__image"
         />
