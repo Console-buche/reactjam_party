@@ -69,7 +69,7 @@ export const personMachine = createMachine(
           onToilet: {
             target: '#Person.actionFlow.Pissing',
             actions: assign((context) => {
-              console.log('pissing, updating meters', context.name);
+              // console.log('pissing, updating meters', context.name);
               return {
                 ...context,
                 meters: {
@@ -104,7 +104,7 @@ export const personMachine = createMachine(
           onDancefloor: {
             target: '#Person.actionFlow.Dancing',
             actions: assign((context) => {
-              console.log('Dancing, updating meters', context.name);
+              // console.log('Dancing, updating meters', context.name);
               return {
                 ...context,
                 meters: {
@@ -123,7 +123,7 @@ export const personMachine = createMachine(
           onSofa: {
             target: '#Person.actionFlow.Sitting',
             actions: assign((context) => {
-              console.log('Sitting, updating meters', context.name);
+              // console.log('Sitting, updating meters', context.name);
               return {
                 ...context,
                 meters: {
@@ -142,7 +142,7 @@ export const personMachine = createMachine(
           onBuffet: {
             target: '#Person.actionFlow.Eating',
             actions: assign((context) => {
-              console.log('Eating, updating meters', context.name);
+              // console.log('Eating, updating meters', context.name);
               return {
                 ...context,
                 meters: {
