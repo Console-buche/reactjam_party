@@ -355,15 +355,17 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           geometry={nodes.light_2.geometry}
           material={materials.light_2}
           material-toneMapped={false}
-          material-emissive={0xfafa00}
-          material-emissiveIntensity={1}
+          material-emissiveMap={materials.light_.map}
+          material-emissive={0xffffff}
+          material-emissiveIntensity={0.35}
         />
         <mesh
           geometry={nodes.light_.geometry}
           material={materials.light_}
           material-toneMapped={false}
-          material-emissive={0xfafa00}
-          material-emissiveIntensity={1}
+          material-emissiveMap={materials.light_.map}
+          material-emissive={0xffffff}
+          material-emissiveIntensity={0.35}
         />
         <mesh
           geometry={nodes.neon_2.geometry}
