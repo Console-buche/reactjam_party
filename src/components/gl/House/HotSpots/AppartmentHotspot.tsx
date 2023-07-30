@@ -97,7 +97,10 @@ export const AppartmentHotspot = ({
   const { glow, scale } = useSpring({
     from: { glow: 0, scale: [1, 1, 1] },
     to: [
-      { glow: 2, scale: [1, 1.025, 1.075] },
+      {
+        glow: isDragging ? 2 : 0,
+        scale: isDragging ? [1, 1.025, 1.075] : [1, 1, 1],
+      },
       { glow: 0, scale: [1, 1, 1] },
     ],
     loop: isDragging,
@@ -132,7 +135,7 @@ export const AppartmentHotspot = ({
           material={materials}
           {...props}
           material-tonedMapped={false}
-          material-emissive={0xffffff}
+          material-emissive={0x800080}
           material-emissiveIntensity={glow}
           material-map={materials.map}
           material-emissiveMap={materials.map}
