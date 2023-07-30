@@ -4,7 +4,7 @@ Command: npx gltfjsx@6.2.10 appartment_v8.gltf -t -K -T
 Files: appartment_v8.gltf [31.48MB] >assets appartment_v8-transformed.glb [2.42MB] (92%)
 */
 
-import { useGLTF } from '@react-three/drei';
+import { Text, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { type GLTF } from 'three-stdlib';
 import { AppartmentHotspot } from './HotSpots/AppartmentHotspot';
@@ -163,7 +163,6 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           scale={1.182}
           stats={({ maxPersonsCount, personsCount }) => (
             <AppartmentHotspotStats
-              textPosition={[3.25, -1.1, 1]}
               maxPersonsCount={maxPersonsCount}
               personsCount={personsCount}
             />
@@ -210,7 +209,6 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           position={[7.986, 1.23, 6.416]}
           stats={({ maxPersonsCount, personsCount }) => (
             <AppartmentHotspotStats
-              textPosition={[1.25, 2, 1]}
               maxPersonsCount={maxPersonsCount}
               personsCount={personsCount}
             />
@@ -321,7 +319,7 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           type="toilet"
           stats={({ maxPersonsCount, personsCount }) => (
             <AppartmentHotspotStats
-              textPosition={[1.25, 5, 1]}
+              textPosition={[1, 3.5, 0]}
               maxPersonsCount={maxPersonsCount}
               personsCount={personsCount}
             />
@@ -401,12 +399,13 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           materials={materials.table_dining_3}
           stats={({ maxPersonsCount, personsCount }) => (
             <AppartmentHotspotStats
-              textPosition={[1.25, 10, 3]}
+              textPosition={[33.25, -2, 3]}
               maxPersonsCount={maxPersonsCount}
               personsCount={personsCount}
             />
           )}
         />
+
         <mesh
           geometry={nodes.frame_1.geometry}
           material={materials.frame_1}
@@ -477,7 +476,8 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           geometry={nodes.BOX_WITH_DJ.geometry}
           stats={({ maxPersonsCount, personsCount }) => (
             <AppartmentHotspotStats
-              textPosition={[-5.5, 5, 3]}
+              rotation={[Math.PI / -2, 0, 0]}
+              scale={0.15}
               maxPersonsCount={maxPersonsCount}
               personsCount={personsCount}
             />

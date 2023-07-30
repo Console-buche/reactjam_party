@@ -1,17 +1,19 @@
 import { useSpring, a } from '@react-spring/three';
 import { Text } from '@react-three/drei';
-import type { MeshProps } from '@react-three/fiber';
+import type { GroupProps, MeshProps } from '@react-three/fiber';
 import { Particles } from '../../Particles/Particles';
 
 type AppartmentHotspotStats = {
-  textPosition: MeshProps['position'];
+  textPosition?: MeshProps['position'];
   personsCount: number;
   maxPersonsCount: number;
-};
+} & GroupProps;
 
 export const AppartmentHotspotStats = ({
   maxPersonsCount,
   personsCount,
+  textPosition,
+  ...props
 }: AppartmentHotspotStats) => {
   const fillRatio = personsCount / maxPersonsCount;
   const scaleFromFillRatio = fillRatio * 0.5 + 1;
@@ -26,8 +28,8 @@ export const AppartmentHotspotStats = ({
   });
 
   return (
-    <a.group scale={scale}>
-      <Text fontSize={0.7} renderOrder={1}>
+    <a.group scale={scale} {...props}>
+      <Text fontSize={0.7} renderOrder={1} position={textPosition}>
         {personsCount}/{maxPersonsCount}
         {/* @ts-ignore */}
         <a.meshStandardMaterial
