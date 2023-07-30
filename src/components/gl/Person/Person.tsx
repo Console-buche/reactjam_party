@@ -1,14 +1,15 @@
 import { a, useSpring } from '@react-spring/three';
-import { Text, useCursor, useTexture } from '@react-three/drei';
+import { useCursor } from '@react-three/drei';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   BufferGeometry,
   Group,
   Material,
   MathUtils,
   Mesh,
+  TextureLoader,
   Vector3,
 } from 'three';
 import type { ActorRefFrom } from 'xstate';
@@ -17,9 +18,8 @@ import { personMachine } from '../../../machines/person.machine';
 import { useStoreDragging } from '../../../stores/storeDragging';
 import { useStoreHotspot } from '../../../stores/storeHotspots';
 import { PersonShadowRecall } from './PersonShadowRecall';
-import { Statbar } from './Statbar';
-import { PERSON_HEIGHT } from './person.constants';
 import { Statbars } from './Statbars';
+import { PERSON_HEIGHT } from './person.constants';
 
 const selectFeedbackIntensiry = (
   isHovered: boolean,
@@ -82,7 +82,6 @@ export const Person = ({
   const ref = useRef<Mesh>(null);
   const beforeDragPosition = useRef<Vector3>(new Vector3(0, 0, 0));
   const refGroup = useRef<Group>(null);
-  const tex = useTexture('assets/dudess.png');
   const serviceId = actor.id;
 
   const {
@@ -90,12 +89,17 @@ export const Person = ({
     name,
   } = useSelector(actor, (state) => state.context);
 
+  // const tex = useTexture(`assets/characters/${name}.png`);
+  const tex = useMemo(
+    () => new TextureLoader().load(`assets/characters/${name}.png`),
+    [],
+  );
   const isBeingDragged = draggingId === serviceId;
 
   // setup easings
   const { glow, scale, followSpeed, opacity } = useSpring({
     glow: selectFeedbackIntensiry(isHovered, isBeingDragged),
-    scale: isBeingDragged ? 0.8 : 0.7,
+    scale: isBeingDragged ? [0.8, 0.9, 0.8] : [0.7, 0.8, 0.7],
     opacity: isBeingDragged ? 0.5 : 1,
     followSpeed: isBeingDragged ? 0.75 : 0,
   });
@@ -126,7 +130,7 @@ export const Person = ({
     // wobble
     ref.current.lookAt(new Vector3(camera.position.x, 0, camera.position.z));
     ref.current.scale.y =
-      Math.sin(clock.getElapsedTime() * 10) * 0.01 + scale.get();
+      Math.sin(clock.getElapsedTime() * 10) * 0.01 + scale.get()[1];
 
     // position on drag
     if (isBeingDragged) {
@@ -216,6 +220,7 @@ export const Person = ({
         <a.mesh
           ref={ref}
           uuid={serviceId}
+          // @ts-ignore
           scale={scale}
           name="Person"
           userData={{ service: actor }}

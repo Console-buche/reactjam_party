@@ -1,8 +1,7 @@
-import { Text, useTexture } from '@react-three/drei';
-import { type MeshProps, useFrame } from '@react-three/fiber';
+import { useTexture } from '@react-three/drei';
+import { useFrame, type MeshProps } from '@react-three/fiber';
 import { useMemo, useRef } from 'react';
 import { BufferGeometry, MathUtils, Mesh } from 'three';
-import { DEG2RAD } from 'three/src/math/MathUtils';
 import type { METERS_CONFIG } from '../../../machines/person.machine';
 
 const vertexShader = `
@@ -16,8 +15,10 @@ const vertexShader = `
 const fragmentShader = `
     uniform float percent;
     uniform sampler2D iconTexture;
-    varying vec2 vUv;
+    uniform float time;
+    uniform float moreIsGood;
 
+    varying vec2 vUv;
 
     void main() {
 
@@ -29,17 +30,19 @@ const fragmentShader = `
         iconTexture *= 1.4;
       }
 
+      float blink = sin(time * 10.0) * 0.5 + 0.5;
+      float clampedBlink = clamp(blink, 0.15, 1.0);
       
 
-        // if (vUv.x > percent && vUv.y > 0.05 && vUv.y < 0.95 && vUv.x < 0.99 && vUv.x > 0.01) {
+      if (moreIsGood == 1. ? percent < 0.3 : percent > 0.66) {
+          iconTexture *= clampedBlink;
+          iconTexture *= vec4(1.5, 0.5, 0.5, 1.); // add red tint when danger
+        }
+      
+      
 
-        //     discard;
 
-        // }
-
-        // float dangerFactor = percent / 
-
-        gl_FragColor = iconTexture;
+      gl_FragColor = iconTexture;
     }
 `;
 
@@ -57,6 +60,8 @@ export const Statbar = ({ value, statName, ...meshProps }: Statbar) => {
     () => ({
       percent: { value: 0.01 },
       iconTexture: { value: tex },
+      time: { value: 0 },
+      moreIsGood: { value: statName === 'urine' ? 0.0 : 1.0 },
     }),
     [tex],
   );
@@ -73,6 +78,8 @@ export const Statbar = ({ value, statName, ...meshProps }: Statbar) => {
       value / 100,
       0.1,
     );
+
+    ref.current.material.uniforms.time.value += 0.015;
 
     ref.current.material.uniformsNeedUpdate = true;
   });

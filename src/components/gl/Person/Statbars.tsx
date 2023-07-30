@@ -25,9 +25,9 @@ export const Statbars = ({ values }: Statbars) => {
               key={key}
               statName={key}
               value={value}
-              position={new Vector3(0, 4.75, 0)}
+              position={new Vector3(0, 5.5, 0)}
               position-x={offsetX}
-              position-y={4.75 + offsetY}
+              position-y={5.5 + offsetY}
             />
           );
         },

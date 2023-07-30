@@ -1,26 +1,15 @@
 import { MathUtils } from 'three';
 
 const names = [
-  'Simbala',
-  'Plumbob',
-  'Llamanade',
-  'Gibberish',
-  'Wuhoo',
+  'SimberlyAndWuhoo',
   'BellaGoth',
-  'Simoleon',
+  'Llamanade',
   'Woohookie',
-  'Simberly',
-  'Llamalette',
-  'Whippna',
   'Simmette',
-  'BobNewbie',
-  'Zigaloo',
   'SulSul',
-  'Freetushi',
+  'Zigaloo',
+  'Dancemachine',
   'Vadish',
-  'Retgirb',
-  'Blahort',
-  'Graaable',
 ];
 
 export const getRandomName = () =>
