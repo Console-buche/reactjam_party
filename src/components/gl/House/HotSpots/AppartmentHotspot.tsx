@@ -113,7 +113,7 @@ export const AppartmentHotspot = ({
     from: { glow: 0, scale: [1, 1, 1] },
     to: [
       {
-        glow: isDragging ? 2 : 0,
+        glow: isDragging ? 1.5 : 0,
         scale: isDragging ? [1, 1.025, 1.075] : [1, 1, 1],
       },
       { glow: 0, scale: [1, 1, 1] },
@@ -147,16 +147,24 @@ export const AppartmentHotspot = ({
           onPointerEnter={handleOnPointerEnter}
           onPointerLeave={handleOnPointerLeave}
           geometry={geometry}
-          material={materials}
+          // material={materials}
+          // material-tonedMapped={false}
+          // material-emissive={0xffffff}
+          // material-emissiveIntensity={glow}
+          // material-map={materials.map}
+          // material-emissiveMap={materials.map}
           {...props}
-          material-tonedMapped={false}
-          material-emissive={0x800080}
-          material-emissiveIntensity={glow}
-          material-map={materials.map}
-          material-emissiveMap={materials.map}
           name="Hotspot"
           userData={{ service: hotspotService }}
         >
+          <a.meshStandardMaterial
+            {...materials}
+            toneMapped={false}
+            emissive={0xffffff}
+            emissiveIntensity={glow}
+            map={materials.map}
+            emissiveMap={materials.map}
+          />
           {stats({
             maxPersonsCount: maxPersons,
             personsCount: persons.length,
