@@ -99,8 +99,8 @@ export const Person = ({
   // setup easings
   const { glow, scale, followSpeed, opacity } = useSpring({
     glow: selectFeedbackIntensiry(isHovered, isBeingDragged),
-    scale: isBeingDragged ? [0.8, 0.95, 0.8] : [0.7, 0.9, 0.7],
-    opacity: isBeingDragged ? 0.7 : 1,
+    scale: isBeingDragged ? [0.8, 0.9, 0.8] : [0.7, 0.8, 0.7],
+    opacity: isBeingDragged ? 0.5 : 1,
     followSpeed: isBeingDragged ? 0.75 : 0,
   });
 
