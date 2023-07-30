@@ -6,3 +6,11 @@
   width: 100vw;
   height: 100vh;
 }
+
+.relative {
+  position: relative;
+}
+
+.absolute {
+  position: absolute;
+}

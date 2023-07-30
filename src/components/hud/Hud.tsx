@@ -1,7 +1,7 @@
 import { useSelector } from '@xstate/react';
 import { useGameMachineProvider } from '../../hooks/use';
 import { Advisor } from './Advisor/Advisor';
-import { GameMeter } from './GameMeter/GameMeter';
+import { Clock } from './Clock/Clock';
 import { HotSpots } from './Hotspots/HotSpots';
 import { Audio } from './Audio/Audio';
 import { Menu } from './Menu/Menu';
@@ -22,7 +22,7 @@ export const Hud = () => {
     <>
       {state !== 'playing' && <div className="hud__faded" />}
       <HotSpots />
-      <GameMeter elapsedPercent={timerPercent} hypeValue={hype} />
+      <Clock elapsedPercent={timerPercent} />
       <Audio />
       <Advisor
         text={guideText}
