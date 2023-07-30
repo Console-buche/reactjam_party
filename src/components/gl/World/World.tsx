@@ -18,11 +18,12 @@ export const World = () => {
 
       <Suspense fallback={null}>
         <AppartmentV8 position-y={-0.5} />
-        {persons.map((actor) => (
-          <Person key={actor.id} refFloor={refFloor} actor={actor} />
-        ))}
       </Suspense>
-
+      {persons.map((actor) => (
+        <Suspense fallback={null}>
+          <Person key={actor.id} refFloor={refFloor} actor={actor} />
+        </Suspense>
+      ))}
       <PostProcess />
     </group>
   );
