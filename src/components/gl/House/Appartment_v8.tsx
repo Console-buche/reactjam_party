@@ -4,7 +4,7 @@ Command: npx gltfjsx@6.2.10 appartment_v8.gltf -t -K -T
 Files: appartment_v8.gltf [31.48MB] >assets appartment_v8-transformed.glb [2.42MB] (92%)
 */
 
-import { Text, useGLTF } from '@react-three/drei';
+import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 import { type GLTF } from 'three-stdlib';
 import { AppartmentHotspot } from './HotSpots/AppartmentHotspot';
@@ -136,7 +136,9 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
         <mesh
           geometry={nodes.wooden_floor3001.geometry}
           material={materials.wooden_floor3}
-        />
+        >
+          <meshLambertMaterial {...materials.wooden_floor3} />
+        </mesh>
         <mesh
           geometry={nodes.bookshelf001.geometry}
           material={materials.bookshelf}
@@ -154,7 +156,6 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           position={[-16.512, 0.613, 4.434]}
           scale={1.182}
         /> */}
-
         <AppartmentHotspot
           type="sofa" //FIXME : add correct type, this is a placeholder for the sofa
           geometry={nodes.sofa_2001.geometry}
@@ -168,7 +169,6 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
             />
           )}
         />
-
         <mesh
           geometry={nodes.closet_without_chair001.geometry}
           material={materials.closet_without_chair}
@@ -196,7 +196,6 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           material={materials['plant_1.001']}
           position={[-0.063, 0, -3.28]}
         />
-
         {/* <mesh
           geometry={nodes.bar001.geometry}
           material={materials.bar}
@@ -214,7 +213,6 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
             />
           )}
         />
-
         {/* <mesh
           geometry={nodes.graffitti_gamejam.geometry}
           material={materials.graffitti_gamejam}
@@ -224,7 +222,7 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           material={materials.graffitti_gamejam}
           material-toneMapped={false}
           material-emissive={0x800080}
-          material-emissiveIntensity={10}
+          material-emissiveIntensity={20}
           material-emissiveMap={materials.graffitti_gamejam.map}
         />
         {/* <mesh
@@ -236,7 +234,7 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           material={materials.graffitti_react}
           material-toneMapped={false}
           material-emissive={0x800080}
-          material-emissiveIntensity={10}
+          material-emissiveIntensity={20}
           material-emissiveMap={materials.graffitti_gamejam.map}
         />
         <mesh
@@ -286,10 +284,17 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           position={[0.97, -0.242, 0]}
           material-toneMapped={false}
           material-emissive={0xfafa00}
-          material-emissiveIntensity={2}
+          material-emissiveIntensity={6}
           material-emissiveMap={materials.lamp_1.map}
         />
-        <mesh geometry={nodes.window006.geometry} material={materials.window} />
+        <mesh
+          geometry={nodes.window006.geometry}
+          material={materials.window}
+          material-toneMapped={false}
+          material-emissive={0x800080}
+          material-emissiveIntensity={8}
+          material-emissiveMap={materials.window.map}
+        />
         <mesh
           geometry={nodes.armchair001.geometry}
           material={materials.armchair}
@@ -356,21 +361,21 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           material={materials.light_2}
           material-toneMapped={false}
           material-emissive={0xfafa00}
-          material-emissiveIntensity={0.35}
+          material-emissiveIntensity={1}
         />
         <mesh
           geometry={nodes.light_.geometry}
           material={materials.light_}
           material-toneMapped={false}
           material-emissive={0xfafa00}
-          material-emissiveIntensity={0.35}
+          material-emissiveIntensity={1}
         />
         <mesh
           geometry={nodes.neon_2.geometry}
           material={materials.neon_2}
           material-toneMapped={false}
           material-emissive={0x800080}
-          material-emissiveIntensity={6}
+          material-emissiveIntensity={20}
         />
         <mesh
           geometry={nodes.Cube003.geometry}
@@ -399,13 +404,12 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           materials={materials.table_dining_3}
           stats={({ maxPersonsCount, personsCount }) => (
             <AppartmentHotspotStats
-              textPosition={[33.25, -2, 3]}
+              textPosition={[33.25, -1.5, 3]}
               maxPersonsCount={maxPersonsCount}
               personsCount={personsCount}
             />
           )}
         />
-
         <mesh
           geometry={nodes.frame_1.geometry}
           material={materials.frame_1}
@@ -449,7 +453,7 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           scale={-6.044}
           material-toneMapped={false}
           material-emissive={0x800080}
-          material-emissiveIntensity={10}
+          material-emissiveIntensity={20}
           material-map={materials.graffitti_party.map}
           material-emissiveMap={materials.graffitti_party.map}
         />
@@ -466,12 +470,12 @@ export const AppartmentV8 = (props: JSX.IntrinsicElements['group']) => {
           rotation={[Math.PI / 2, 0, 0]}
           scale={7.907}
         /> */}
-
         <AppartmentHotspot
           type="dancefloor"
           materials={materials.BOX_WITH_DJ}
           position={[-2.058, 3.288, 3.274]}
           rotation={[Math.PI / 2, 0, 0]}
+          material-tonedMapped={false}
           scale={7.907}
           geometry={nodes.BOX_WITH_DJ.geometry}
           stats={({ maxPersonsCount, personsCount }) => (
