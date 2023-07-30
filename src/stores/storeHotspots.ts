@@ -31,6 +31,10 @@ type InitialState = {
 };
 
 type Actions = {
+  cleanupHotspotDropzoneFromRemovedPersons: (
+    hotspotType: (typeof hotspots)[number],
+    allExistingPersons: string[],
+  ) => void;
   getAvailableDropZone: (
     hotspot: (typeof hotspots)[number],
   ) => Dropzone | undefined;
@@ -257,6 +261,37 @@ export const useStoreHotspot = create<InitialState & Actions>((set, get) => ({
       });
       return {
         hotspots,
+      };
+    });
+  },
+
+  cleanupHotspotDropzoneFromRemovedPersons(hotspotType, allExistingPersons) {
+    console.log(allExistingPersons);
+    set((state) => {
+      const hotspot = state.hotspots[hotspotType];
+
+      const dropzonesWithRemovedPersons = Array.from(hotspot.dropzones).map(
+        (dropzone) => {
+          const d = dropzone;
+          const personInDropzoneStillExists = allExistingPersons.find(
+            (p) => p === d.personActorId,
+          );
+
+          if (!personInDropzoneStillExists && d.personActorId !== null) {
+            console.log('cleanup removd person');
+            d.personActorId = null;
+          }
+          return d;
+        },
+      );
+      return {
+        hotspots: {
+          ...state.hotspots,
+          [hotspotType]: {
+            ...state.hotspots[hotspotType],
+            dropzones: dropzonesWithRemovedPersons,
+          },
+        },
       };
     });
   },

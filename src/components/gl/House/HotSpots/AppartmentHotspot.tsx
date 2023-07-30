@@ -1,6 +1,6 @@
 import { a, easings, useSpring } from '@react-spring/three';
 import { useCursor } from '@react-three/drei';
-import { type MeshProps } from '@react-three/fiber';
+import { useFrame, type MeshProps } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
 import { useRef, useState } from 'react';
 import { type Mesh } from 'three';
@@ -20,12 +20,18 @@ export const AppartmentHotspot = ({
   const refMesh = useRef<Mesh>(null);
   const [isHovered, setIsHovered] = useState(false);
 
-  const { getAvailableDropZone, updateDropZoneOccupied } = useStoreHotspot(
+  const {
+    getAvailableDropZone,
+    updateDropZoneOccupied,
+    cleanupHotspotDropzoneFromRemovedPersons,
+  } = useStoreHotspot(
     (state) => ({
       updateDropZoneOccupied: state.updateDropZoneOccupied,
       updateHotSpotPosition: state.updateHotSpotPosition,
       dropzonegetAvailableDropZone: state.getAvailableDropZone,
       getAvailableDropZone: state.getAvailableDropZone,
+      cleanupHotspotDropzoneFromRemovedPersons:
+        state.cleanupHotspotDropzoneFromRemovedPersons,
     }),
     shallow,
   );
@@ -36,6 +42,15 @@ export const AppartmentHotspot = ({
   );
 
   const { persons, maxPersons } = useSelector(hotspotService, (s) => s.context);
+
+  useFrame(({ clock }) => {
+    if (Math.floor(clock.getElapsedTime()) % 2 === 0) {
+      cleanupHotspotDropzoneFromRemovedPersons(
+        type,
+        persons.map((p) => p.id),
+      );
+    }
+  });
 
   const {
     draggingActorRef,

@@ -1,7 +1,6 @@
-import { useSpring, a } from '@react-spring/three';
+import { a, useSpring } from '@react-spring/three';
 import { Text } from '@react-three/drei';
-import type { GroupProps, MeshProps } from '@react-three/fiber';
-import { Particles } from '../../Particles/Particles';
+import { type GroupProps, type MeshProps } from '@react-three/fiber';
 
 type AppartmentHotspotStats = {
   textPosition?: MeshProps['position'];

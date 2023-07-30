@@ -85,7 +85,7 @@ export const personMachine = createMachine(
           onBar: {
             target: '#Person.actionFlow.Drinking',
             actions: assign((context) => {
-              console.log('drinking, updating meters', context.name);
+              // console.log('drinking, updating meters', context.name);
               return {
                 ...context,
                 meters: {
