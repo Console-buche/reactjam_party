@@ -17,7 +17,7 @@ export const hotspotMachine = createMachine(
       Ticking: {
         entry: ["updatePersons", sendParent((context) => ({
           type: 'onIncrementHype',
-          hype: context.persons.length <= 1 ? 0 : context.persons.length * 1.2,
+          hype: context.persons.length <= 1 ? 0 : context.persons.length * 5,
         }))],
         after: {
           '500': 'Ticking'
