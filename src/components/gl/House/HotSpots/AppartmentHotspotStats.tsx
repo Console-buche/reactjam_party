@@ -40,9 +40,6 @@ export const AppartmentHotspotStats = ({
           depthWrite={false}
         />
       </Text>
-      {/* <group position-y={5}>
-        <Particles count={3} animate />
-      </group> */}
     </a.group>
   );
 };
