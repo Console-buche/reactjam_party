@@ -105,11 +105,16 @@ export const personMachine = createMachine(
             target: '#Person.actionFlow.Dancing',
             actions: assign((context) => {
               // console.log('Dancing, updating meters', context.name);
+              const shouldntEarnFun =
+                context.meters.hydration <= 0 ||
+                context.meters.satiety <= 0 ||
+                context.meters.urine >= 100;
+
               return {
                 ...context,
                 meters: {
                   ...context.meters,
-                  fun: METERS_CONFIG.fun.clamp(
+                  fun: shouldntEarnFun ? context.meters.fun : METERS_CONFIG.fun.clamp(
                     context.meters.fun + METERS_CONFIG.fun.step * 3,
                   ),
                   satiety: METERS_CONFIG.satiety.clamp(
@@ -124,11 +129,17 @@ export const personMachine = createMachine(
             target: '#Person.actionFlow.Sitting',
             actions: assign((context) => {
               // console.log('Sitting, updating meters', context.name);
+
+              const shouldntEarnFun =
+                context.meters.hydration <= 0 ||
+                context.meters.satiety <= 0 ||
+                context.meters.urine >= 100;
+
               return {
                 ...context,
                 meters: {
                   ...context.meters,
-                  fun: METERS_CONFIG.fun.clamp(
+                  fun: shouldntEarnFun ? context.meters.fun : METERS_CONFIG.fun.clamp(
                     context.meters.fun + METERS_CONFIG.fun.step * 1.5,
                   ),
                   hydration: METERS_CONFIG.hydration.clamp(
