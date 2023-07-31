@@ -42,10 +42,11 @@ export const gameMachine = createMachine({
     meters: {
       hype: 0,
       maxHype: 0,
-      maxPersons: 0,
+      maxPersons: 1,
     },
     disasterForTheNight: [],
     guideText: '',
+    lostReason: '',
   },
   entry: assign((context) => {
     return {
@@ -78,16 +79,24 @@ export const gameMachine = createMachine({
           {
             cond: (context) => context.clock >= METERS_CONFIG.clock.maxValue,
             target: 'finished',
-            actions: () => {
-              console.log('Game over, no more time');
-            }
+            actions: assign((context) => {
+              console.log('Game over, end of the night');
+              return {
+                ...context,
+                lostReason: 'It\'s the end of the night',
+              }
+            })
           },
           {
             cond: (context) => context.persons.length === 0,
             target: 'finished',
-            actions: () => {
+            actions: assign((context) => {
               console.log('Game over, no more persons');
-            }
+              return {
+                ...context,
+                lostReason: 'Everyone left the party',
+              }
+            })
           },
           {
             // game tick
@@ -139,7 +148,7 @@ export const gameMachine = createMachine({
               ...context,
               meters: {
                 ...context.meters,
-                maxPersons: Math.max(context.meters.maxPersons, context.persons.length)
+                maxPersons: Math.max(context.meters.maxPersons, context.persons.length + 1)
               },
               persons: [
                 ...context.persons,
@@ -231,6 +240,7 @@ export const gameMachine = createMachine({
       };
       disasterForTheNight: Record<number, (typeof disasterNames)[number]>[];
       guideText: string;
+      lostReason: string;
     },
     events: {} as
       | { type: 'onIncrementHype'; hype: number }

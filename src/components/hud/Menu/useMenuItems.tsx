@@ -11,6 +11,10 @@ const githubItem = {
 export const useMenuItems = () => {
   const gameService = useGameMachineProvider();
   const state = useSelector(gameService, (state) => state.value);
+  const lostReason = useSelector(
+    gameService,
+    (state) => state.context.lostReason,
+  );
 
   const howToPlayItem = {
     name: 'How to play',
@@ -57,12 +61,14 @@ export const useMenuItems = () => {
     },
     finished: {
       image: './assets/hud/empty_menu.png',
-      menuItemOffset: '90%',
+      menuItemOffset: '40%',
       prependElements: (
-        <>
+        <div className="center recap__endgame">
           <Score />
+          <hr />
           <div className="menu__title red">Game Over</div>
-        </>
+          <div className="red">{lostReason}</div>
+        </div>
       ),
       items: [
         {
