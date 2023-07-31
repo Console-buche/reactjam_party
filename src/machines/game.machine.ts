@@ -1,5 +1,5 @@
 import { MathUtils } from 'three';
-import { assign, createMachine, send, spawn, type ActorRefFrom, actions } from 'xstate';
+import { assign, createMachine, send, spawn, type ActorRefFrom } from 'xstate';
 import {
   disasterNames,
   generateRandomDisasters,
@@ -103,7 +103,13 @@ export const gameMachine = createMachine({
         ],
       },
       on: {
-        onPause: 'paused',
+        onPause: {
+          target: 'paused',
+          actions: (context) => {
+            context.persons.forEach((person) => person.send('triggerPause'));
+            Object.keys(context.hotspots).forEach((hotspotName) => { context.hotspots[hotspotName as keyof typeof context.hotspots].send('triggerPause') });
+          }
+        },
         onIncrementHype: {
           actions: assign((context, event) => {
             return {
@@ -178,7 +184,13 @@ export const gameMachine = createMachine({
     },
     paused: {
       on: {
-        onStart: 'playing',
+        onStart: {
+          target: 'playing',
+          actions: (context) => {
+            context.persons.forEach((person) => person.send('triggerStart'));
+            Object.keys(context.hotspots).forEach((hotspotName) => { context.hotspots[hotspotName as keyof typeof context.hotspots].send('triggerStart') });
+          }
+        },
         onHowToPlay: 'howToPlay',
       },
     },

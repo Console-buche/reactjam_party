@@ -207,6 +207,11 @@ export const personMachine = createMachine(
             },
           },
           Active: {
+            on: {
+              triggerPause: {
+                target: '#Person.meterFlow.Inactive',
+              },
+            },
             after: {
               '500': [
                 {
@@ -241,6 +246,7 @@ export const personMachine = createMachine(
       },
       events: {} as
         | { type: 'triggerStart'; person: unknown } // enable the meterFlow (needs etc.)
+        | { type: 'triggerPause' } // disable the meterFlow (needs etc.)
         | { type: 'onUnregisterFromAllHotspot' } // when the person is removed from an hotspot
         | { type: 'onLeave' } // when the person is leaving the party (fun <= 0)
         // actions

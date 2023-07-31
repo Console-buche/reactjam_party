@@ -14,10 +14,18 @@ export const hotspotMachine = createMachine(
     },
     initial: 'Ticking',
     states: {
+      Inactive: {
+        on: {
+          triggerStart: 'Ticking',
+        },
+      },
       Ticking: {
+        on: {
+          triggerPause: 'Inactive',
+        },
         entry: ["updatePersons", sendParent((context) => ({
           type: 'onIncrementHype',
-          hype: context.persons.length <= 1 ? 0 : context.persons.length * 5,
+          hype: context.persons.length < 1 ? 0 : context.persons.length * 5,
         }))],
         after: {
           '500': 'Ticking'
@@ -59,6 +67,8 @@ export const hotspotMachine = createMachine(
         name: string;
       },
       events: {} as
+        | { type: 'triggerStart' }
+        | { type: 'triggerPause' }
         | { type: 'onUpdatePerson' }
         | {
           type: 'onRegisterPerson';
