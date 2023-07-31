@@ -1,5 +1,4 @@
 import { useMachine } from '@xstate/react';
-import { button, useControls } from 'leva';
 import { GameMachineProvider } from './hooks/use';
 import { gameMachine } from './machines/game.machine';
 
@@ -11,10 +10,6 @@ import { useEffect } from 'react';
 function App() {
   const [, , service] = useMachine(gameMachine, {
     id: 'GameService',
-  });
-
-  useControls({
-    'Invite Person': button(() => service.send({ type: 'onAddPerson' })),
   });
 
   useEffect(() => {

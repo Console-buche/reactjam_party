@@ -53,6 +53,9 @@ dependencies:
   three-stdlib:
     specifier: ^2.23.13
     version: 2.23.13(three@0.149.0)
+  web-audio-daw:
+    specifier: ^4.13.2
+    version: 4.13.2
   xstate:
     specifier: ^4.38.1
     version: 4.38.1
@@ -6470,6 +6473,10 @@ packages:
     resolution: {integrity: sha512-7At1WUettjcSRHXCyYtTselblcHl9PJFFVKiCAy/bY97+BPZXSQ2wbq0P9s8tK2G7dFQfNnlJnPAiArVBVBsfA==}
     dev: false
 
+  /tunajs@1.0.15:
+    resolution: {integrity: sha512-es0bgyTHP8ftyWEot7YqLlLH30yZqHUTT6K5TKFhVqIB1Y6Cuu8WvBunfTVQSmzrpuhz15PQjyen7uuwi4gjdw==}
+    dev: false
+
   /type-check@0.4.0:
     resolution: {integrity: sha512-XleUoc9uwGXqjWwXaUTZAmzMcFZ5858QA2vvx1Ur5xIcixXIP+8LnFDgRplU30us6teqdlskFfu+ae4K79Ooew==}
     engines: {node: '>= 0.8.0'}
@@ -6650,6 +6657,13 @@ packages:
     resolution: {integrity: sha512-XHPEwS0q6TaxcvG85+8EYkbiCux2XtWG2mkc47Ng2A77BQu9+DqIOJldST4HgPkuea7dvKSj5VgX3P1d4rW8Tg==}
     dependencies:
       defaults: 1.0.4
+    dev: false
+
+  /web-audio-daw@4.13.2:
+    resolution: {integrity: sha512-PdcqFXZemxlJtUT1/eROxcMZ6UB6Mu9g73DOORBcWbRdlISTvOObZToEYMf2M/lGyo+eOGqFPYtVsYmW3RrvcA==}
+    dependencies:
+      lodash: 4.17.21
+      tunajs: 1.0.15
     dev: false
 
   /webgl-constants@1.1.1:
