@@ -1,7 +1,7 @@
 import { clamp } from 'three/src/math/MathUtils';
 import './hypegauge.css';
 
-const hypeToDegree = (hype: number) => clamp(hype * 0.3 - 230, -220, 40);
+const hypeToDegree = (hype: number) => clamp(hype / 8 - 230, -220, 40);
 
 type Props = {
   hype: number;

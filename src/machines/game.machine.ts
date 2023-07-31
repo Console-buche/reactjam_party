@@ -190,6 +190,10 @@ export const gameMachine = createMachine({
                 persons: context.persons.filter(
                   (actor) => actor.id !== person.id,
                 ),
+                meters: {
+                  ...context.meters,
+                  hype: context.meters.hype - 400,
+                },
               };
             }),
           ],
