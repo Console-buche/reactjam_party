@@ -102,7 +102,6 @@ export const gameMachine = createMachine({
           {
             // game tick
             actions: assign((context) => {
-              console.log(context.meters.hype);
               const clock = context.clock + METERS_CONFIG.clock.incrementValue;
               return {
                 ...context,

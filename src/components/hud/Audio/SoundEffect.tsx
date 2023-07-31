@@ -49,7 +49,6 @@ export const SoundEffect = () => {
   useEffect(() => {
     Object.keys(hotspots).forEach((key) => {
       const currentHotspot = hotspots[key as keyof typeof hotspots];
-      console.log(currentHotspot.id);
       currentHotspot.subscribe((state) => {
         // console.log(state.event.type, 'triggered');
         if (state.event.type !== 'onRegisterPerson') return;
@@ -70,7 +69,6 @@ export const SoundEffect = () => {
     gameService.subscribe((state) => {
       // console.log(state.event.type);
       if (!soundEffects[state.event.type as keyof typeof soundEffects]) return;
-      console.log(state.event.type, 'triggered');
       const currentSoundEffect =
         soundEffects[state.event.type as keyof typeof soundEffects];
 
