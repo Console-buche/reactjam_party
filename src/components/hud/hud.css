@@ -22,3 +22,50 @@
 .center {
   text-align: center;
 }
+
+/* light shake */
+@keyframes light-shake {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(2px, 2px) rotate(2deg);
+  }
+  50% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  75% {
+    transform: translate(-2px, 2px) rotate(-2deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+.light-shake {
+  animation: light-shake 0.1s infinite;
+}
+
+/* hard shake */
+@keyframes hard-shake {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  25% {
+    transform: translate(3px, 3px) rotate(3deg) scale(1.1);
+    filter: drop-shadow(0 0 0.75rem #da1b1b);
+  }
+  50% {
+    transform: translate(0, 0) rotate(0deg) scale(1);
+  }
+  75% {
+    transform: translate(-3px, 3px) rotate(-3deg) scale(1.1);
+    filter: drop-shadow(0 0 1.3rem #da1b1b);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+.hard-shake {
+  animation: hard-shake 0.1s infinite;
+}

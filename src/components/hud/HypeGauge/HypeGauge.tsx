@@ -8,18 +8,21 @@ type Props = {
 };
 
 const getImageNameFromHype = (hype: number) => {
-  if (hype < 50) {
-    return 'lame';
-  }
-  if (hype >= 50 && hype < 75) {
-    return 'fun';
-  }
+  if (hypeToDegree(hype) <= -127) return 'lame';
+  if (hypeToDegree(hype) < 40) return 'fun';
   return 'overload';
 };
 
 export const HypeGauge = ({ hype }: Props) => {
+  const shake =
+    hypeToDegree(hype) <= -127
+      ? ''
+      : hypeToDegree(hype) < 40
+      ? 'light-shake'
+      : 'hard-shake';
+
   return (
-    <div className="hype__gauge__container">
+    <div className={`hype__gauge__container ${shake}`}>
       <img
         src={`/assets/hud/gauge_${getImageNameFromHype(hype)}.png`}
         alt="hype gauge meter"
