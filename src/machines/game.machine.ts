@@ -1,6 +1,5 @@
 import { MathUtils } from 'three';
-import { assign, createMachine, send, spawn, type ActorRefFrom } from 'xstate';
-
+import { assign, createMachine, send, spawn, type ActorRefFrom, actions } from 'xstate';
 import {
   disasterNames,
   generateRandomDisasters,
@@ -42,6 +41,8 @@ export const gameMachine = createMachine({
     currentNight: 0,
     meters: {
       hype: 0,
+      maxHype: 0,
+      maxPersons: 0,
     },
     disasterForTheNight: [],
     guideText: '',
@@ -67,7 +68,8 @@ export const gameMachine = createMachine({
         onStart: {
           target: 'playing',
           actions: send('onAddPerson')
-        }
+        },
+        onHowToPlay: 'howToPlay',
       },
     },
     playing: {
@@ -109,6 +111,7 @@ export const gameMachine = createMachine({
               meters: {
                 ...context.meters,
                 hype: Math.round(context.meters.hype + event.hype),
+                maxHype: Math.max(context.meters.hype + event.hype, context.meters.maxHype),
               },
             };
           }),
@@ -128,6 +131,10 @@ export const gameMachine = createMachine({
           actions: assign((context) => {
             return {
               ...context,
+              meters: {
+                ...context.meters,
+                maxPersons: Math.max(context.meters.maxPersons, context.persons.length)
+              },
               persons: [
                 ...context.persons,
                 spawn(personMachine, MathUtils.generateUUID()),
@@ -172,10 +179,20 @@ export const gameMachine = createMachine({
     paused: {
       on: {
         onStart: 'playing',
+        onHowToPlay: 'howToPlay',
+      },
+    },
+    howToPlay: {
+      on: {
+        onPause: 'paused',
+        onStart: 'playing',
+        onNotStarted: 'notStarted',
       },
     },
     finished: {
-      type: 'final',
+      on: {
+        onHowToPlay: 'howToPlay'
+      },
     },
   },
   on: {
@@ -197,6 +214,8 @@ export const gameMachine = createMachine({
       currentNight: number;
       meters: {
         hype: number;
+        maxHype: number;
+        maxPersons: number;
       };
       disasterForTheNight: Record<number, (typeof disasterNames)[number]>[];
       guideText: string;
@@ -212,6 +231,8 @@ export const gameMachine = createMachine({
       }
       | { type: 'onStart' }
       | { type: 'onPause' }
+      | { type: 'onHowToPlay' }
+      | { type: 'onNotStarted' }
       | { type: 'onGameOver' }
       | { type: 'onBlackout' }
       | { type: 'onPolice' }

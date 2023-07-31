@@ -1,5 +1,6 @@
 import { useGameMachineProvider } from '../../../hooks/use';
 import { useSelector } from '@xstate/react';
+import { Score } from '../Score/Score';
 
 const githubItem = {
   name: 'Github',
@@ -7,14 +8,14 @@ const githubItem = {
     window.open('https://github.com/Console-buche/reactjam_party', '_blank'),
 };
 
-const howToPlayItem = {
-  name: 'How to play',
-  action: () => console.log('how to play'),
-};
-
 export const useMenuItems = () => {
   const gameService = useGameMachineProvider();
   const state = useSelector(gameService, (state) => state.value);
+
+  const howToPlayItem = {
+    name: 'How to play',
+    action: () => gameService.send('onHowToPlay'),
+  };
 
   const menuItemsByStates = {
     notStarted: {
@@ -43,10 +44,26 @@ export const useMenuItems = () => {
         githubItem,
       ],
     },
+    howToPlay: {
+      image: './assets/hud/how_to_play.png',
+      menuItemOffset: '1%',
+      prependElements: null,
+      items: [
+        {
+          name: 'Back to Menu',
+          action: () => gameService.send('onPause'),
+        },
+      ],
+    },
     finished: {
       image: './assets/hud/empty_menu.png',
       menuItemOffset: '90%',
-      prependElements: <div className="menu__title">Game Over</div>,
+      prependElements: (
+        <>
+          <Score />
+          <div className="menu__title red">Game Over</div>
+        </>
+      ),
       items: [
         {
           name: 'Restart',

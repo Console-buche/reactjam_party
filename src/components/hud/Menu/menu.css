@@ -1,6 +1,6 @@
 .menu__container {
   font-family: 'Eraser', sans-serif;
-  font-size: clamp(16px, 4vw, 38px);
+  font-size: clamp(12px, 4vw, 38px);
 
   position: fixed;
   margin: auto;
@@ -36,7 +36,7 @@
 }
 
 .menu__title {
-  font-size: clamp(16px, 4vw, 38px);
+  font-size: clamp(12px, 4vw, 75px);
   margin-bottom: 20px;
 }
 
