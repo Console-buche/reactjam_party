@@ -254,7 +254,7 @@ export const useStoreHotspot = create<InitialState & Actions>((set, get) => ({
   },
 
   cleanupHotspotDropzoneFromRemovedPersons(hotspotType, allExistingPersons) {
-    console.log(allExistingPersons);
+    // console.log(allExistingPersons);
     set((state) => {
       const hotspot = state.hotspots[hotspotType];
 
@@ -266,7 +266,7 @@ export const useStoreHotspot = create<InitialState & Actions>((set, get) => ({
           );
 
           if (!personInDropzoneStillExists && d.personActorId !== null) {
-            console.log('cleanup removd person');
+            // console.log('cleanup removd person');
             d.personActorId = null;
           }
           return d;
