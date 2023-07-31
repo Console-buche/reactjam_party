@@ -47,6 +47,7 @@ export const gameMachine = createMachine({
     disasterForTheNight: [],
     guideText: '',
     lostReason: '',
+    lastSpawnHypeThreshold: 0,
   },
   entry: assign((context) => {
     return {
@@ -101,6 +102,7 @@ export const gameMachine = createMachine({
           {
             // game tick
             actions: assign((context) => {
+              console.log(context.meters.hype);
               const clock = context.clock + METERS_CONFIG.clock.incrementValue;
               return {
                 ...context,
@@ -120,16 +122,34 @@ export const gameMachine = createMachine({
           }
         },
         onIncrementHype: {
-          actions: assign((context, event) => {
-            return {
-              ...context,
-              meters: {
-                ...context.meters,
-                hype: Math.round(context.meters.hype + event.hype),
-                maxHype: Math.max(context.meters.hype + event.hype, context.meters.maxHype),
-              },
-            };
-          }),
+          actions: [
+            send((context, event) => {
+              const sum = context.meters.hype + event.hype;
+              const shouldSpawn = sum >= (context.lastSpawnHypeThreshold + 400) * 1.3;
+              if (shouldSpawn) {
+                console.log(`lastSpawnHypeThreshold was ${context.lastSpawnHypeThreshold}, you needed ${(context.lastSpawnHypeThreshold + 400) * 1.3}, next is ${(sum + 400) * 1.3}`)
+                return {
+                  type: 'onAddPerson',
+                }
+              }
+              // basically do nothing
+              return { type: 'onStart' }
+            }),
+            assign((context, event) => {
+              const sum = context.meters.hype + event.hype;
+              const shouldSpawn = sum >= (context.lastSpawnHypeThreshold + 400) * 1.3;
+              const lastSpawnHypeThreshold = shouldSpawn ? sum : context.lastSpawnHypeThreshold;
+
+              return {
+                ...context,
+                lastSpawnHypeThreshold,
+                meters: {
+                  ...context.meters,
+                  hype: Math.round(context.meters.hype + event.hype),
+                  maxHype: Math.max(context.meters.hype + event.hype, context.meters.maxHype),
+                },
+              };
+            })],
         },
         onDecrementHype: {
           actions: assign((context, event) => {
@@ -241,6 +261,7 @@ export const gameMachine = createMachine({
       disasterForTheNight: Record<number, (typeof disasterNames)[number]>[];
       guideText: string;
       lostReason: string;
+      lastSpawnHypeThreshold: number;
     },
     events: {} as
       | { type: 'onIncrementHype'; hype: number }
