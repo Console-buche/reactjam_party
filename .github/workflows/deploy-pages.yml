@@ -9,7 +9,8 @@ jobs:
   build-and-deploy:
     name: main - Build and deploy
     runs-on: ubuntu-latest
-    permissions: read-all
+    permissions:
+      contents: write
     steps:
       - name: cloning repo 🛎
         uses: actions/checkout@v3
