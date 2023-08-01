@@ -9,12 +9,12 @@ export const Clock = ({ elapsedPercent }: Props) => {
     <div className="gameMeter__container">
       <div className="relative">
         <img
-          src="/assets/hud/clock.png"
+          src="./assets/hud/clock.png"
           alt="meter"
           style={{ filter: `grayscale(1)` }}
         />
         <img
-          src="/assets/hud/clock.png"
+          src="./assets/hud/clock.png"
           alt="meter"
           className="absolute"
           style={{ clipPath: `inset(0 ${100 - elapsedPercent}% 0 0)` }}

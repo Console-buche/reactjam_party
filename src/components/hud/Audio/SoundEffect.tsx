@@ -6,38 +6,38 @@ import { useSelector } from '@xstate/react';
 const soundEffects = {
   onAddPerson: new Wad({
     //@ts-ignore (it works, but the types are wrong)
-    source: '/assets/sounds/onAddPerson.mp3',
+    source: './assets/sounds/onAddPerson.mp3',
     volume: 0.1,
   }),
   onRemovePerson: new Wad({
     //@ts-ignore (it works, but the types are wrong)
-    source: '/assets/sounds/onRemovePerson.mp3',
+    source: './assets/sounds/onRemovePerson.mp3',
     volume: 0.3,
   }),
   bar: new Wad({
     //@ts-ignore (it works, but the types are wrong)
-    source: '/assets/sounds/bar.mp3',
+    source: './assets/sounds/bar.mp3',
     volume: 0.3,
   }),
   buffet: new Wad({
     //@ts-ignore (it works, but the types are wrong)
-    source: '/assets/sounds/buffet.mp3',
+    source: './assets/sounds/buffet.mp3',
     volume: 0.3,
     offset: 1.1,
   }),
   dancefloor: new Wad({
     //@ts-ignore (it works, but the types are wrong)
-    source: '/assets/sounds/dancefloor.mp3',
+    source: './assets/sounds/dancefloor.mp3',
     volume: 0.3,
   }),
   toilet: new Wad({
     //@ts-ignore (it works, but the types are wrong)
-    source: '/assets/sounds/toilet.mp3',
+    source: './assets/sounds/toilet.mp3',
     volume: 0.3,
   }),
   sofa: new Wad({
     //@ts-ignore (it works, but the types are wrong)
-    source: '/assets/sounds/sofa.mp3',
+    source: './assets/sounds/sofa.mp3',
     volume: 0.3,
   }),
 } as const;

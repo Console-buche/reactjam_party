@@ -28,7 +28,7 @@ export const BackgroundMusic = () => {
         loop
       >
         <source
-          src="/assets/sounds/Snifit-or-Whiffit-PaperMario-Color-Splash.mp3"
+          src="./assets/sounds/Snifit-or-Whiffit-PaperMario-Color-Splash.mp3"
           type="audio/mpeg"
         />
       </audio>
