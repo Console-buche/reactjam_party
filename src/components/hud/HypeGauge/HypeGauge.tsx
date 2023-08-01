@@ -24,7 +24,7 @@ export const HypeGauge = ({ hype }: Props) => {
   return (
     <div className={`hype__gauge__container ${shake}`}>
       <img
-        src={`/assets/hud/gauge_${getImageNameFromHype(hype)}.png`}
+        src={`./assets/hud/gauge_${getImageNameFromHype(hype)}.png`}
         alt="hype gauge meter"
       />
       <svg
