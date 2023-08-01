@@ -15,15 +15,22 @@ jobs:
       - name: cloning repo 🛎
         uses: actions/checkout@v3
 
+        # Sadly we need this BEFORE actions/setup-node to enable pnpm caching
+        # wait until https://github.com/actions/setup-node/pull/651 is merged before remove
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 7
+
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           cache: 'pnpm'
           node-version-file: '.nvmrc'
 
-      - name: Enable Node package managers
-        shell: bash
-        run: corepack enable
+      #  See line :18
+      # - name: Enable Node package managers
+      #   shell: bash
+      #   run: corepack enable
 
       - name: Install dependencies
         shell: bash
