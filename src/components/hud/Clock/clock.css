@@ -12,3 +12,11 @@
   max-width: 100vw;
   transition: all 1s linear;
 }
+
+@media (max-width:1024px) {
+
+  .gameMeter__container img {
+    max-width:75vw;
+  }
+  
+}
