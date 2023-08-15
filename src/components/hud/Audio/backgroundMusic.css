@@ -9,6 +9,7 @@
   left: 10px; 
   width: 120px;
   filter: grayscale(1);
+  transition: 0.15s filter;
 }
 
 
