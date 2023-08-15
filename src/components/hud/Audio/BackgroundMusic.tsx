@@ -1,6 +1,6 @@
 import { useSelector } from '@xstate/react';
+import { useEffect, useRef, useState } from 'react';
 import { useGameMachineProvider } from '../../../hooks/use';
-import { useRef } from 'react';
 import './backgroundMusic.css';
 
 export const BackgroundMusic = () => {
@@ -8,30 +8,55 @@ export const BackgroundMusic = () => {
   const gameService = useGameMachineProvider();
   const state = useSelector(gameService, (state) => state.value);
 
-  if (audioRef.current && audioRef.current.volume !== 0.1)
-    audioRef.current.volume = 0.1;
+  const [isPlaying, setIsPlaying] = useState(false);
 
-  if (state === 'playing') audioRef.current?.play();
-  if (state === 'paused') audioRef.current?.pause();
+  useEffect(() => {
+    if (audioRef.current && audioRef.current.volume !== 0.1)
+      audioRef.current.volume = 0.1;
+  }, []);
 
-  const hiddenClass =
-    state === 'playing' || state === 'notStarted' || state === 'howToPlay'
-      ? 'audio__hidden'
-      : '';
+  const playMusic = (play: boolean) => {
+    if (!audioRef.current) return;
+
+    if (play) {
+      audioRef.current.play();
+      setIsPlaying(true);
+      return;
+    }
+
+    audioRef.current.pause();
+    setIsPlaying(false);
+  };
+
+  useEffect(() => {
+    if (state === 'playing') {
+      playMusic(true);
+    } else {
+      playMusic(false);
+    }
+  }, [state]);
+
+  const handleOnClick = () => {
+    if (!audioRef.current) return;
+
+    isPlaying ? audioRef.current.pause() : audioRef.current.play();
+    setIsPlaying(!isPlaying);
+  };
 
   return (
-    <div className="audio__container">
-      <audio
-        ref={audioRef}
-        className={`"audio__player" ${hiddenClass}`}
-        controls
-        loop
-      >
+    <>
+      <audio ref={audioRef} className="audio__player" controls loop>
         <source
           src="./assets/sounds/Snifit-or-Whiffit-PaperMario-Color-Splash.mp3"
           type="audio/mpeg"
         />
       </audio>
-    </div>
+      <img
+        src="./assets/icons/speaker.png"
+        alt="audio icon"
+        className={`audio__icon ${isPlaying ? 'audio__icon--playing' : ''}`}
+        onClick={handleOnClick}
+      />
+    </>
   );
 };

@@ -23,6 +23,15 @@
   text-align: center;
 }
 
+.header__container {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+}
+
 /* light shake */
 @keyframes light-shake {
   0% {
@@ -68,4 +77,19 @@
 
 .hard-shake {
   animation: hard-shake 0.1s infinite;
+}
+
+@media (max-width:1024px) {
+
+  .header__container {
+    flex-direction: column;
+    gap: 0;
+    right:0;
+    bottom:0;
+    margin:auto;
+    width: fit-content;
+    justify-content: flex-start;
+    gap:0;
+  }
+
 }

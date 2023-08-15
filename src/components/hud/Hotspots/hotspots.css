@@ -1,12 +1,3 @@
-.hotspots__container {
-  position: absolute;
-  top: 0;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  z-index: 2;
-}
 
 .hotspots__card {
   position: relative;

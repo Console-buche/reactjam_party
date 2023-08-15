@@ -1,18 +1,28 @@
-.audio__container {
-  position: absolute;
-  top: 138px;
-  left: 428px;
-  transform: rotate(4deg);
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  z-index: 2;
-}
-
 .audio__player {
-  position: relative;
+  display: none
 }
 
-.audio__hidden {
-  display: none;
+
+.audio__icon {
+  position: absolute; 
+  bottom: 0; 
+  left: 10px; 
+  width: 120px;
+  filter: grayscale(1);
+  transition: 0.15s filter;
+}
+
+
+.audio__icon--playing {
+  filter: grayscale(0);
+}
+
+@media (max-width: 1024px) {
+
+  .audio__icon {
+    top:0;
+    left:10px;
+    transform:rotateX(180deg);
+  }
+
 }
