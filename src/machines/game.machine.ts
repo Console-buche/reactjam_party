@@ -69,7 +69,7 @@ export const gameMachine = createMachine({
       on: {
         onStart: {
           target: 'playing',
-          actions: send('onAddPerson')
+          actions: send('onAddPerson'),
         },
         onHowToPlay: 'howToPlay',
       },
@@ -84,9 +84,9 @@ export const gameMachine = createMachine({
               console.log('Game over, end of the night');
               return {
                 ...context,
-                lostReason: 'It\'s the end of the night',
-              }
-            })
+                lostReason: "It's the end of the night",
+              };
+            }),
           },
           {
             cond: (context) => context.persons.length === 0,
@@ -96,8 +96,8 @@ export const gameMachine = createMachine({
               return {
                 ...context,
                 lostReason: 'Everyone left the party',
-              }
-            })
+              };
+            }),
           },
           {
             // game tick
@@ -117,27 +117,41 @@ export const gameMachine = createMachine({
           target: 'paused',
           actions: (context) => {
             context.persons.forEach((person) => person.send('triggerPause'));
-            Object.keys(context.hotspots).forEach((hotspotName) => { context.hotspots[hotspotName as keyof typeof context.hotspots].send('triggerPause') });
-          }
+            Object.keys(context.hotspots).forEach((hotspotName) => {
+              context.hotspots[
+                hotspotName as keyof typeof context.hotspots
+              ].send('triggerPause');
+            });
+          },
         },
         onIncrementHype: {
           actions: [
             send((context, event) => {
               const sum = context.meters.hype + event.hype;
-              const shouldSpawn = sum >= (context.lastSpawnHypeThreshold + 400) * 1.3;
+              const shouldSpawn =
+                sum >= (context.lastSpawnHypeThreshold + 400) * 1.3;
               if (shouldSpawn) {
-                console.log(`lastSpawnHypeThreshold was ${context.lastSpawnHypeThreshold}, you needed ${(context.lastSpawnHypeThreshold + 400) * 1.3}, next is ${(sum + 400) * 1.3}`)
+                console.log(
+                  `lastSpawnHypeThreshold was ${
+                    context.lastSpawnHypeThreshold
+                  }, you needed ${
+                    (context.lastSpawnHypeThreshold + 400) * 1.3
+                  }, next is ${(sum + 400) * 1.3}`,
+                );
                 return {
                   type: 'onAddPerson',
-                }
+                };
               }
               // basically do nothing
-              return { type: 'onStart' }
+              return { type: 'onStart' };
             }),
             assign((context, event) => {
               const sum = context.meters.hype + event.hype;
-              const shouldSpawn = sum >= (context.lastSpawnHypeThreshold + 400) * 1.3;
-              const lastSpawnHypeThreshold = shouldSpawn ? sum : context.lastSpawnHypeThreshold;
+              const shouldSpawn =
+                sum >= (context.lastSpawnHypeThreshold + 400) * 1.3;
+              const lastSpawnHypeThreshold = shouldSpawn
+                ? sum
+                : context.lastSpawnHypeThreshold;
 
               return {
                 ...context,
@@ -145,10 +159,14 @@ export const gameMachine = createMachine({
                 meters: {
                   ...context.meters,
                   hype: Math.round(context.meters.hype + event.hype),
-                  maxHype: Math.max(context.meters.hype + event.hype, context.meters.maxHype),
+                  maxHype: Math.max(
+                    context.meters.hype + event.hype,
+                    context.meters.maxHype,
+                  ),
                 },
               };
-            })],
+            }),
+          ],
         },
         onDecrementHype: {
           actions: assign((context, event) => {
@@ -163,16 +181,23 @@ export const gameMachine = createMachine({
         },
         onAddPerson: {
           actions: assign((context) => {
+            const newPerson = spawn(personMachine, MathUtils.generateUUID());
+
+            context.hotspots.lobby.send({
+              type: 'onRegisterPerson',
+              person: newPerson,
+            });
+
             return {
               ...context,
               meters: {
                 ...context.meters,
-                maxPersons: Math.max(context.meters.maxPersons, context.persons.length + 1)
+                maxPersons: Math.max(
+                  context.meters.maxPersons,
+                  context.persons.length + 1,
+                ),
               },
-              persons: [
-                ...context.persons,
-                spawn(personMachine, MathUtils.generateUUID()),
-              ],
+              persons: [...context.persons, newPerson],
             };
           }),
         },
@@ -220,8 +245,12 @@ export const gameMachine = createMachine({
           target: 'playing',
           actions: (context) => {
             context.persons.forEach((person) => person.send('triggerStart'));
-            Object.keys(context.hotspots).forEach((hotspotName) => { context.hotspots[hotspotName as keyof typeof context.hotspots].send('triggerStart') });
-          }
+            Object.keys(context.hotspots).forEach((hotspotName) => {
+              context.hotspots[
+                hotspotName as keyof typeof context.hotspots
+              ].send('triggerStart');
+            });
+          },
         },
         onHowToPlay: 'howToPlay',
       },
@@ -235,7 +264,7 @@ export const gameMachine = createMachine({
     },
     finished: {
       on: {
-        onHowToPlay: 'howToPlay'
+        onHowToPlay: 'howToPlay',
       },
     },
   },
@@ -272,9 +301,9 @@ export const gameMachine = createMachine({
       | { type: 'onAddPerson' }
       | { type: 'onRemovePerson'; person: ActorRefFrom<typeof personMachine> }
       | {
-        type: 'onRemovePersonFromAllHotspots';
-        person: ActorRefFrom<typeof personMachine>;
-      }
+          type: 'onRemovePersonFromAllHotspots';
+          person: ActorRefFrom<typeof personMachine>;
+        }
       | { type: 'onStart' }
       | { type: 'onPause' }
       | { type: 'onHowToPlay' }
