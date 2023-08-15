@@ -1,13 +1,11 @@
 import { useSelector } from '@xstate/react';
 import { useGameMachineProvider } from '../../hooks/use';
-import { Advisor } from './Advisor/Advisor';
-import { Clock } from './Clock/Clock';
-import { HotSpots } from './Hotspots/HotSpots';
-import { Audio } from './Audio/Audio';
-import { Menu } from './Menu/Menu';
-import { HypeGauge } from './HypeGauge/HypeGauge';
 import { METERS_CONFIG } from '../../machines/game.machine';
-
+import { Advisor } from './Advisor/Advisor';
+import { Audio } from './Audio/Audio';
+import { Clock } from './Clock/Clock';
+import { HudHeader } from './Hud.header';
+import { Menu } from './Menu/Menu';
 import './hud.css';
 
 export const Hud = () => {
@@ -17,7 +15,6 @@ export const Hud = () => {
     gameService,
     (state) => state.context.clock,
   );
-  const hype = useSelector(gameService, (state) => state.context.meters.hype);
   const guideText = useSelector(
     gameService,
     (state) => state.context.guideText,
@@ -28,9 +25,8 @@ export const Hud = () => {
     <>
       {state !== 'playing' && <div className="hud__faded" />}
       <Audio />
-      <HotSpots />
+      <HudHeader />
       <Clock elapsedPercent={timerPercent} />
-      <HypeGauge hype={hype} />
       <Advisor
         text={guideText}
         onSkipText={() => {

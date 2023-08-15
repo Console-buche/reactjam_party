@@ -1,7 +1,6 @@
 .hype__gauge__container {
-  position: absolute;
+  position: relative;
   top: 30px;
-  left: 30px;
 }
 
 .hype__gauge__container img {
@@ -14,4 +13,12 @@
   top: -18px;
   transform-origin: 50% 90%;
   transition: transform 0.5s ease;
+}
+
+@media (max-width: 1024px) {
+ 
+  .hype__gauge__container {
+    top:0;
+  }
+
 }

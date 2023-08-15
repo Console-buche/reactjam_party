@@ -40,7 +40,7 @@ export const HotSpots = () => {
   };
 
   return (
-    <div className="hotspots__container">
+    <>
       {hotspots.map((hotspot) => (
         <div
           className="hotspots__card"
@@ -65,6 +65,6 @@ export const HotSpots = () => {
           <div className="hotspots__card__stats">{getStats(hotspot)}</div>
         </div>
       ))}
-    </div>
+    </>
   );
 };
