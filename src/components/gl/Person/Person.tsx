@@ -20,6 +20,7 @@ import { useStoreHotspot } from '../../../stores/storeHotspots';
 import { PersonShadowRecall } from './PersonShadowRecall';
 import { Statbars } from './Statbars';
 import { PERSON_HEIGHT } from './person.constants';
+import { useGameMachineProvider } from '../../../hooks/use';
 
 const selectFeedbackIntensiry = (
   isHovered: boolean,
@@ -44,6 +45,8 @@ export const Person = ({
   actor: ActorRefFrom<typeof personMachine>;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const gameService = useGameMachineProvider();
+  // const hotspots = useSelector(gameService, (state) => state.context.hotspots);
 
   useCursor(isHovered);
 
@@ -78,6 +81,31 @@ export const Person = ({
     }),
     shallow,
   );
+
+  const deleteRefOnRemove = (draggingRef: Group) => {
+    setIsDragging(false);
+    setDraggingId(null);
+    setDraggingActorRef(null);
+    setDraggingRef(null);
+    draggingRef.userData.isIdle = true;
+    draggingRef.userData.dropZone = null;
+  };
+
+  useEffect(() => {
+    gameService.subscribe((state) => {
+      const isPersonExists = state.context.persons.find(
+        (person) => person.id === actor.id,
+      );
+
+      if (
+        state.event.type === 'onRemovePerson' &&
+        !isPersonExists &&
+        draggingRef
+      ) {
+        deleteRefOnRemove(draggingRef);
+      }
+    });
+  }, []);
 
   const ref = useRef<Mesh>(null);
   const beforeDragPosition = useRef<Vector3>(new Vector3(0, 0, 0));
@@ -175,12 +203,8 @@ export const Person = ({
 
     clearHotSpotsDropZonesForActor(actor.id);
     if (isBeingDragged && draggingRef) {
-      setIsDragging(false);
-      setDraggingId(null);
-      setDraggingActorRef(null);
-      setDraggingRef(null);
-      draggingRef.userData.isIdle = true;
-      draggingRef.userData.dropZone = null;
+      deleteRefOnRemove(draggingRef);
+
       return;
     }
 
