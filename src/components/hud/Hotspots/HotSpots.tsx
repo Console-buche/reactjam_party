@@ -19,6 +19,7 @@ export const HotSpots = () => {
     (state) => state.context,
   );
   const sofa = useSelector(hotspotsServices.sofa, (state) => state.context);
+  const lobby = useSelector(hotspotsServices.lobby, (state) => state.context);
   const cameraControls = useStoreCam((state) => state.controls);
   const hotspotWithPositions = useStoreHotspot((state) => state.hotspots);
 
@@ -34,6 +35,8 @@ export const HotSpots = () => {
         return dancefloor.persons.length;
       case 'sofa':
         return sofa.persons.length;
+      case 'lobby':
+        return lobby.persons.length;
       default:
         return 0;
     }
