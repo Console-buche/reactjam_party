@@ -1,13 +1,12 @@
 import { a, easings, useSpring } from '@react-spring/three';
 import { useCursor } from '@react-three/drei';
-import { useFrame, type MeshProps } from '@react-three/fiber';
+import { type MeshProps } from '@react-three/fiber';
 import { useSelector } from '@xstate/react';
 import { useRef, useState } from 'react';
 import { type Mesh } from 'three';
 import { shallow } from 'zustand/shallow';
 import { useGameMachineProvider } from '../../../../hooks/use';
 import { useStoreDragging } from '../../../../stores/storeDragging';
-import { useStoreHotspot } from '../../../../stores/storeHotspots';
 import type { AppartmentHotSpot } from './types';
 
 export const AppartmentHotspot = ({
@@ -20,21 +19,6 @@ export const AppartmentHotspot = ({
   const refMesh = useRef<Mesh>(null);
   const [isHovered, setIsHovered] = useState(false);
 
-  const {
-    getAvailableDropZone,
-    updateDropZoneOccupied,
-    cleanupHotspotDropzoneFromRemovedPersons,
-  } = useStoreHotspot(
-    (state) => ({
-      updateDropZoneOccupied: state.updateDropZoneOccupied,
-      updateHotSpotPosition: state.updateHotSpotPosition,
-      dropzonegetAvailableDropZone: state.getAvailableDropZone,
-      getAvailableDropZone: state.getAvailableDropZone,
-      cleanupHotspotDropzoneFromRemovedPersons:
-        state.cleanupHotspotDropzoneFromRemovedPersons,
-    }),
-    shallow,
-  );
   const gameService = useGameMachineProvider();
   const hotspotService = useSelector(
     gameService,
@@ -43,21 +27,11 @@ export const AppartmentHotspot = ({
 
   const { persons, maxPersons } = useSelector(hotspotService, (s) => s.context);
 
-  useFrame(({ clock }) => {
-    if (Math.floor(clock.getElapsedTime()) % 2 === 0) {
-      cleanupHotspotDropzoneFromRemovedPersons(
-        type,
-        persons.map((p) => p.id),
-      );
-    }
-  });
-
   const {
     draggingActorRef,
     setDraggingActorRef,
     setDraggingId,
     setIsDragging,
-    draggingRef,
   } = useStoreDragging(
     (state) => ({
       draggingRef: state.draggingRef,
@@ -83,15 +57,6 @@ export const AppartmentHotspot = ({
         type: 'onRegisterPerson',
         person: draggingActorRef,
       });
-
-      // save state in mesh userData while machine state isn't fixed
-      const dropZone = getAvailableDropZone(type);
-
-      if (draggingRef?.userData && dropZone) {
-        draggingRef.userData.isIdle = false;
-        draggingRef.userData.dropZone = dropZone;
-        updateDropZoneOccupied(type, dropZone.index, draggingActorRef.id);
-      }
 
       setDraggingId(null);
       setIsDragging(false);
