@@ -1,7 +1,7 @@
 import { a, useSpring } from '@react-spring/three';
 import { useCursor } from '@react-three/drei';
 import { useFrame, type ThreeEvent } from '@react-three/fiber';
-import { useSelector } from '@xstate/react';
+import { useActor, useSelector } from '@xstate/react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   BufferGeometry,
@@ -14,13 +14,12 @@ import {
 } from 'three';
 import type { ActorRefFrom } from 'xstate';
 import { shallow } from 'zustand/shallow';
+import { useGameMachineProvider } from '../../../hooks/use';
 import { personMachine } from '../../../machines/person.machine';
 import { useStoreDragging } from '../../../stores/storeDragging';
-import { useStoreHotspot } from '../../../stores/storeHotspots';
 import { PersonShadowRecall } from './PersonShadowRecall';
 import { Statbars } from './Statbars';
 import { PERSON_HEIGHT } from './person.constants';
-import { useGameMachineProvider } from '../../../hooks/use';
 
 const selectFeedbackIntensiry = (
   isHovered: boolean,
@@ -35,6 +34,26 @@ const selectFeedbackIntensiry = (
   return 0;
 };
 
+function useCurrentDropzone(
+  currentHotSpot: 'sofa' | 'bar' | 'dancefloor' | 'buffet' | 'toilet' | null,
+  actorId: string,
+) {
+  const gameService = useGameMachineProvider();
+  const hotspots = useSelector(gameService, (state) => state.context.hotspots);
+  const hotSpot =
+    currentHotSpot !== null ? hotspots[currentHotSpot] : hotspots.lobby;
+
+  const [hotSpotState] = useActor(hotSpot);
+
+  if (currentHotSpot === null) {
+    return null;
+  }
+
+  return hotSpotState?.context.dropzones.find(
+    (dz) => dz.personActorId === actorId,
+  )?.position;
+}
+
 export const Person = ({
   refFloor,
   pos,
@@ -46,16 +65,14 @@ export const Person = ({
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   const gameService = useGameMachineProvider();
-  // const hotspots = useSelector(gameService, (state) => state.context.hotspots);
+  const currentHotSpot = useSelector(
+    actor,
+    (state) => state.context.currentHotSpot,
+  );
+
+  const targetDropZone = useCurrentDropzone(currentHotSpot, actor.id);
 
   useCursor(isHovered);
-
-  const { updateDropZoneOccupied, clearHotSpotsDropZonesForActor } =
-    useStoreHotspot((state) => ({
-      updateDropZoneOccupied: state.updateDropZoneOccupied,
-      clearHotSpotsDropZonesForActor: state.clearHotSpotsDropZonesForActor,
-      getAvailableDropZone: state.getAvailableDropZone,
-    }));
 
   const isExists = useRef(false);
 
@@ -82,13 +99,11 @@ export const Person = ({
     shallow,
   );
 
-  const deleteRefOnRemove = (draggingRef: Group) => {
+  const deleteRefOnRemove = () => {
     setIsDragging(false);
     setDraggingId(null);
     setDraggingActorRef(null);
     setDraggingRef(null);
-    draggingRef.userData.isIdle = true;
-    draggingRef.userData.dropZone = null;
   };
 
   useEffect(() => {
@@ -102,7 +117,7 @@ export const Person = ({
         !isPersonExists &&
         draggingRef
       ) {
-        deleteRefOnRemove(draggingRef);
+        deleteRefOnRemove();
       }
     });
   }, []);
@@ -169,17 +184,12 @@ export const Person = ({
     }
 
     // position on not dragged, on active dropzone
-    if (
-      !isBeingDragged &&
-      draggingRef &&
-      draggingRef.userData.isIdle === false &&
-      draggingRef.userData.dropZone.position
-    ) {
-      draggingRef.position.lerp(draggingRef.userData.dropZone.position, 0.1);
+    if (!isBeingDragged && targetDropZone) {
+      refGroup.current.position.lerp(targetDropZone, 0.1);
     }
 
     // position on not dragged and idle
-    if (!isBeingDragged && draggingRef?.userData.isIdle === true) {
+    if (!isBeingDragged) {
       refGroup.current.position.y = MathUtils.lerp(
         refGroup.current.position.y,
         -1.8,
@@ -201,12 +211,9 @@ export const Person = ({
   const handleOnClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
 
-    clearHotSpotsDropZonesForActor(actor.id);
-    if (isBeingDragged && draggingRef) {
-      deleteRefOnRemove(draggingRef);
-
-      return;
-    }
+    actor.send({
+      type: 'onUnregisterFromAllHotspot',
+    });
 
     // find intersects on the sene
     setDraggingRef(refGroup.current);
@@ -214,23 +221,6 @@ export const Person = ({
     setIsDragging(true);
     setDraggingId(actor.id);
     setDraggingActorRef(actor);
-    actor.send({
-      type: 'onUnregisterFromAllHotspot',
-    });
-
-    if (
-      draggingRef &&
-      draggingRef.userData.dropZone &&
-      draggingRef.userData.isIdle
-    ) {
-      updateDropZoneOccupied(
-        draggingRef.userData.dropZone.hotspotType,
-        draggingRef.userData.dropZone.index,
-        null,
-      );
-      draggingRef.userData.isIdle = true;
-      draggingRef.userData.dropZone = null;
-    }
   };
 
   return (
@@ -286,15 +276,6 @@ export const Person = ({
             },
           }}
         />
-
-        {/* <Text fontSize={0.3} position-y={5.75} color="white">
-          {name}
-          <meshStandardMaterial
-            toneMapped={false}
-            emissive={'#ffffff'}
-            emissiveIntensity={1.2}
-          />
-        </Text> */}
       </group>
       <PersonShadowRecall
         beforeDragPosition={beforeDragPosition.current}

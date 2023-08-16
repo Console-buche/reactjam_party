@@ -19,6 +19,16 @@ export interface Typegen0 {
     services: never;
   };
   eventsCausingActions: {
+    onIdle:
+      | 'onBar'
+      | 'onBuffet'
+      | 'onDancefloor'
+      | 'onSofa'
+      | 'onToilet'
+      | 'onUnregisterFromAllHotspot'
+      | 'xstate.after(500)#Person.actionFlow.Idle'
+      | 'xstate.after(500)#Person.meterFlow.Active'
+      | 'xstate.init';
     updateMeters: 'xstate.after(500)#Person.meterFlow.Active';
   };
   eventsCausingDelays: {};

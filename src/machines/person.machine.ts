@@ -46,6 +46,7 @@ export const personMachine = createMachine(
     context: {
       name: '',
       self: null as unknown,
+      currentHotSpot: null,
       meters: {
         fun: METERS_CONFIG.fun.initialValue,
         satiety: METERS_CONFIG.satiety.initialValue,
@@ -72,6 +73,7 @@ export const personMachine = createMachine(
               // console.log('pissing, updating meters', context.name);
               return {
                 ...context,
+                currentHotSpot: 'toilet' as const,
                 meters: {
                   ...context.meters,
                   urine: METERS_CONFIG.urine.clamp(
@@ -88,6 +90,7 @@ export const personMachine = createMachine(
               // console.log('drinking, updating meters', context.name);
               return {
                 ...context,
+                currentHotSpot: 'bar' as const,
                 meters: {
                   ...context.meters,
                   hydration: METERS_CONFIG.hydration.clamp(
@@ -112,11 +115,14 @@ export const personMachine = createMachine(
 
               return {
                 ...context,
+                currentHotSpot: 'dancefloor' as const,
                 meters: {
                   ...context.meters,
-                  fun: shouldntEarnFun ? context.meters.fun : METERS_CONFIG.fun.clamp(
-                    context.meters.fun + METERS_CONFIG.fun.step * 3,
-                  ),
+                  fun: shouldntEarnFun
+                    ? context.meters.fun
+                    : METERS_CONFIG.fun.clamp(
+                        context.meters.fun + METERS_CONFIG.fun.step * 3,
+                      ),
                   satiety: METERS_CONFIG.satiety.clamp(
                     context.meters.satiety - METERS_CONFIG.satiety.step,
                   ),
@@ -137,11 +143,14 @@ export const personMachine = createMachine(
 
               return {
                 ...context,
+                currentHotSpot: 'sofa' as const,
                 meters: {
                   ...context.meters,
-                  fun: shouldntEarnFun ? context.meters.fun : METERS_CONFIG.fun.clamp(
-                    context.meters.fun + METERS_CONFIG.fun.step * 1.5,
-                  ),
+                  fun: shouldntEarnFun
+                    ? context.meters.fun
+                    : METERS_CONFIG.fun.clamp(
+                        context.meters.fun + METERS_CONFIG.fun.step * 1.5,
+                      ),
                   hydration: METERS_CONFIG.hydration.clamp(
                     context.meters.hydration - METERS_CONFIG.hydration.step,
                   ),
@@ -156,6 +165,7 @@ export const personMachine = createMachine(
               // console.log('Eating, updating meters', context.name);
               return {
                 ...context,
+                currentHotSpot: 'buffet' as const,
                 meters: {
                   ...context.meters,
                   satiety: METERS_CONFIG.satiety.clamp(
@@ -172,6 +182,7 @@ export const personMachine = createMachine(
         initial: 'Idle',
         states: {
           Idle: {
+            entry: 'onIdle',
             after: {
               '500': [
                 {
@@ -248,6 +259,13 @@ export const personMachine = createMachine(
       context: {} as {
         name: string;
         self: unknown;
+        currentHotSpot:
+          | 'sofa'
+          | 'dancefloor'
+          | 'bar'
+          | 'buffet'
+          | 'toilet'
+          | null;
         meters: {
           fun: number; // more is good
           hydration: number; // more is good
@@ -274,6 +292,12 @@ export const personMachine = createMachine(
   },
   {
     actions: {
+      onIdle: assign((context) => {
+        return {
+          ...context,
+          currentHotSpot: null,
+        };
+      }),
       updateMeters: assign((context) => {
         const shouldLoseFunFaster =
           context.meters.hydration <= 0 ||
