@@ -112,12 +112,6 @@ export const AppartmentHotspot = ({
           onPointerEnter={handleOnPointerEnter}
           onPointerLeave={handleOnPointerLeave}
           geometry={geometry}
-          // material={materials}
-          // material-tonedMapped={false}
-          // material-emissive={0xffffff}
-          // material-emissiveIntensity={glow}
-          // material-map={materials.map}
-          // material-emissiveMap={materials.map}
           {...props}
           name="Hotspot"
           userData={{ service: hotspotService }}

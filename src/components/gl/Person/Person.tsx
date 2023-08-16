@@ -276,15 +276,6 @@ export const Person = ({
             },
           }}
         />
-
-        {/* <Text fontSize={0.3} position-y={5.75} color="white">
-          {name}
-          <meshStandardMaterial
-            toneMapped={false}
-            emissive={'#ffffff'}
-            emissiveIntensity={1.2}
-          />
-        </Text> */}
       </group>
       <PersonShadowRecall
         beforeDragPosition={beforeDragPosition.current}
