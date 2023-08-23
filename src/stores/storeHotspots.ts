@@ -32,7 +32,7 @@ type Actions = {
 const InitialState: InitialState = {
   hotspots: {
     lobby: {
-      position: new Vector3(-30, 0, 0),
+      position: new Vector3(-25, 0, 0),
     },
     bar: {
       position: new Vector3(10, 0, 0),
