@@ -26,7 +26,7 @@ export const Hud = () => {
       {state !== 'playing' && <div className="hud__faded" />}
       <Audio />
       <HudHeader />
-      <Clock elapsedPercent={timerPercent} />
+      <Clock elapsedPercent={timerPercent} maxTime={METERS_CONFIG.clock.maxValue} elapsedTime={absoluteTimer} />
       <Advisor
         text={guideText}
         onSkipText={() => {
