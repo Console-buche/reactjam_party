@@ -6,6 +6,20 @@
   pointer-events: none;
 }
 
+.gameMeter__timeLeft {
+  position: absolute;
+  font-size: 60px;
+  bottom: 0;
+  text-align: center;
+  right: 0;
+  color: white;
+  left: 0;
+  margin: auto;
+  z-index: 3;
+  mix-blend-mode: overlay;
+  font-weight: bold;
+}
+
 .gameMeter__container img {
   display: block;
   inset: 0;

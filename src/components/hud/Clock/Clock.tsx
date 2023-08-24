@@ -2,9 +2,18 @@ import './clock.css';
 
 type Props = {
   elapsedPercent: number;
+  maxTime: number;
+  elapsedTime: number;
 };
 
-export const Clock = ({ elapsedPercent }: Props) => {
+function formatSecondsToMinutesAndSeconds(seconds: number) {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+}
+
+export const Clock = ({ elapsedPercent, elapsedTime, maxTime }: Props) => {
+
   return (
     <div className="gameMeter__container">
       <div className="relative">
@@ -13,6 +22,9 @@ export const Clock = ({ elapsedPercent }: Props) => {
           alt="meter"
           style={{ filter: `grayscale(1)` }}
         />
+        <div className="gameMeter__timeLeft">
+          {formatSecondsToMinutesAndSeconds(maxTime - elapsedTime)}
+        </div>
         <img
           src="./assets/hud/clock.png"
           alt="meter"
