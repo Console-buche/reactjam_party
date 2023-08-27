@@ -34,6 +34,7 @@ export const HotSpots = () => {
         return 'satiety'
       case 'toilet':
         return 'urine'
+      case 'sofa':
       case 'dancefloor':
         return 'fun'
       default:
