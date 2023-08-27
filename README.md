@@ -1,27 +1,17 @@
-pe# React + TypeScript + Vite
+# Keep The Hype Up
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project was created for the React Game Jam of 2023.
 
-Currently, two official plugins are available:
+Jam theme was “Party”, so Neolectron and I teamed up to create a sim-like, party manager game.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Keep the hype up… Or lose !
 
-## Expanding the ESLint configuration
+Goal is pretty simple : you’re hosting a party and your goal is to make it the best party possible. Welcome your guests, give them what they want, be it food, drinks, fun, or a place to answer nature’s call.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+You have the night (10 mins) to get as much Hype score as possible. If all of your guest leave, the party’s over! 
 
-- Configure the top-level `parserOptions` property like this:
+### On the tech side
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
-```
+Since this was a React game jam well the game’s written in React / Typescript.
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+The state flow is handled with xState and the graphics part done with Three.js / R3F.
