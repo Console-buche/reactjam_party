@@ -5,6 +5,8 @@ import './hotspots.css';
 import { useStoreCam } from '../../../stores/storeCam';
 import { Vector3 } from 'three';
 
+type HotSpotStatIcon = 'fun' | 'hydration' | 'satiety' | 'urine'
+
 export const HotSpots = () => {
   const gameService = useGameMachineProvider();
   const hotspotsServices = useSelector(
@@ -22,6 +24,23 @@ export const HotSpots = () => {
   const lobby = useSelector(hotspotsServices.lobby, (state) => state.context);
   const cameraControls = useStoreCam((state) => state.controls);
   const hotspotWithPositions = useStoreHotspot((state) => state.hotspots);
+
+
+  const getIconFromHotspot = (hotSpot: (typeof hotspots)[number]): HotSpotStatIcon | null => {
+    switch (hotSpot) {
+      case 'bar':
+        return 'hydration'
+      case 'buffet':
+        return 'satiety'
+      case 'toilet':
+        return 'urine'
+      case 'sofa':
+      case 'dancefloor':
+        return 'fun'
+      default:
+        return null
+    }
+  }
 
   const getStats = (hotSpot: (typeof hotspots)[number]) => {
     switch (hotSpot) {
@@ -60,11 +79,21 @@ export const HotSpots = () => {
             );
           }}
         >
+
           <img
             src={`./assets/hud/button_${hotspot}.png`}
             alt="hotspot"
             style={{ objectFit: 'contain', width: '100%' }}
           />
+
+
+          {getIconFromHotspot(hotspot) && <img
+            src={`./assets/icons/${getIconFromHotspot(hotspot)}.png`}
+            alt="hotspot"
+            style={{ objectFit: 'contain', width: '40%', position: 'absolute', bottom: 10, left: 0 }}
+          />
+          }
+
           <div className="hotspots__card__stats">{getStats(hotspot)}</div>
         </div>
       ))}
